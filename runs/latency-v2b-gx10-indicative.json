@@ -1,0 +1,43 @@
+{
+  "machine": "aarch64",
+  "arch": "aarch64",
+  "indicative": true,
+  "sizes_mb": {
+    "v2b": 1166.806738,
+    "v2b-int8": 305.283214
+  },
+  "rows": [
+    {
+      "precision": "fp32",
+      "threads": 1,
+      "choices": 4,
+      "p50_ms": 59.027843875810504,
+      "p95_ms": 69.34745016042143,
+      "int8_top1_agree": 1.0
+    },
+    {
+      "precision": "int8",
+      "threads": 1,
+      "choices": 4,
+      "p50_ms": 25.395130971446633,
+      "p95_ms": 29.85635087825358,
+      "int8_top1_agree": 1.0
+    },
+    {
+      "precision": "fp32",
+      "threads": 1,
+      "choices": 77,
+      "p50_ms": 395.97494644112885,
+      "p95_ms": 422.2536693094298,
+      "int8_top1_agree": 0.925
+    },
+    {
+      "precision": "int8",
+      "threads": 1,
+      "choices": 77,
+      "p50_ms": 119.80932438746095,
+      "p95_ms": 127.34822935890406,
+      "int8_top1_agree": 0.925
+    }
+  ]
+}

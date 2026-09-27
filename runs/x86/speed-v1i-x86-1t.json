@@ -1,0 +1,143 @@
+{
+  "meta": {
+    "name": "v1i",
+    "machine": "x86_64",
+    "cpu": "x86_64",
+    "x86": true,
+    "python": "3.11.14"
+  },
+  "rows": [
+    {
+      "side": "cpu",
+      "precision": "fp32",
+      "threads": 1,
+      "batch": 1,
+      "state": "short",
+      "choices": 4,
+      "p50_ms": 23.83,
+      "p95_ms": 27.06,
+      "decisions_per_s": 42.0
+    },
+    {
+      "side": "cpu",
+      "precision": "fp32",
+      "threads": 1,
+      "batch": 1,
+      "state": "short",
+      "choices": 20,
+      "p50_ms": 75.38,
+      "p95_ms": 79.82,
+      "decisions_per_s": 13.3
+    },
+    {
+      "side": "cpu",
+      "precision": "fp32",
+      "threads": 1,
+      "batch": 1,
+      "state": "short",
+      "choices": 77,
+      "p50_ms": 180.84,
+      "p95_ms": 186.27,
+      "decisions_per_s": 5.5
+    },
+    {
+      "side": "cpu",
+      "precision": "fp32",
+      "threads": 1,
+      "batch": 1,
+      "state": "long",
+      "choices": 4,
+      "p50_ms": 96.27,
+      "p95_ms": 104.4,
+      "decisions_per_s": 10.4
+    },
+    {
+      "side": "cpu",
+      "precision": "fp32",
+      "threads": 1,
+      "batch": 1,
+      "state": "long",
+      "choices": 20,
+      "p50_ms": 179.16,
+      "p95_ms": 192.72,
+      "decisions_per_s": 5.6
+    },
+    {
+      "side": "cpu",
+      "precision": "fp32",
+      "threads": 1,
+      "batch": 1,
+      "state": "long",
+      "choices": 77,
+      "p50_ms": 407.19,
+      "p95_ms": 441.06,
+      "decisions_per_s": 2.5
+    },
+    {
+      "side": "cpu",
+      "precision": "int8",
+      "threads": 1,
+      "batch": 1,
+      "state": "short",
+      "choices": 4,
+      "p50_ms": 19.64,
+      "p95_ms": 22.75,
+      "decisions_per_s": 50.9
+    },
+    {
+      "side": "cpu",
+      "precision": "int8",
+      "threads": 1,
+      "batch": 1,
+      "state": "short",
+      "choices": 20,
+      "p50_ms": 42.25,
+      "p95_ms": 46.25,
+      "decisions_per_s": 23.7
+    },
+    {
+      "side": "cpu",
+      "precision": "int8",
+      "threads": 1,
+      "batch": 1,
+      "state": "short",
+      "choices": 77,
+      "p50_ms": 83.12,
+      "p95_ms": 91.51,
+      "decisions_per_s": 12.0
+    },
+    {
+      "side": "cpu",
+      "precision": "int8",
+      "threads": 1,
+      "batch": 1,
+      "state": "long",
+      "choices": 4,
+      "p50_ms": 102.36,
+      "p95_ms": 113.0,
+      "decisions_per_s": 9.8
+    },
+    {
+      "side": "cpu",
+      "precision": "int8",
+      "threads": 1,
+      "batch": 1,
+      "state": "long",
+      "choices": 20,
+      "p50_ms": 126.03,
+      "p95_ms": 142.5,
+      "decisions_per_s": 7.9
+    },
+    {
+      "side": "cpu",
+      "precision": "int8",
+      "threads": 1,
+      "batch": 1,
+      "state": "long",
+      "choices": 77,
+      "p50_ms": 203.88,
+      "p95_ms": 220.6,
+      "decisions_per_s": 4.9
+    }
+  ]
+}

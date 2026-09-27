@@ -1,0 +1,59 @@
+{
+  "revisions": {
+    "Qwen/Qwen2.5-0.5B": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+    "Qwen/Qwen3.5-0.8B-Base": "dc7cdfe2ee4154fa7e30f5b51ca41bfa40174e68",
+    "jaredpalmer/kev-0.5b": "9ce2fd39db3a397c89733f94af948e3d1fdfffcd",
+    "jaredpalmer/kev-0.8b": "54f4f8777356cd5bbbb6c6919c657f26e6f2f6d8",
+    "convaiinnovations/laya": "aa8c91ca088ec597df95a0d1c76b3063cb2ae5e8",
+    "convaiinnovations/laya-multilingual": "82d57fc4f2d1be3d2caac494045f2ec51d0842f3"
+  },
+  "systems": {
+    "decima-small": {
+      "vocab_table": 96014208,
+      "body": 21639552,
+      "head": 4735109,
+      "unused": 0,
+      "source": "checkpoints/v1i/best param_counts()",
+      "total": 122388869,
+      "non_embedding": 26374661
+    },
+    "kev-0.5b": {
+      "vocab_table": 136134656,
+      "body": 357898112,
+      "head": 459264,
+      "unused": 0,
+      "lora_merged": 8798208,
+      "source": "Qwen/Qwen2.5-0.5B@060db64 (tied embeddings) + jaredpalmer/kev-0.5b@9ce2fd3 head.pt",
+      "total": 494492032,
+      "non_embedding": 358357376
+    },
+    "kev-0.8b": {
+      "vocab_table": 254279680,
+      "body": 498113344,
+      "head": 524800,
+      "unused": 121045760,
+      "lora_merged": 10822656,
+      "source": "Qwen/Qwen3.5-0.8B-Base@dc7cdfe (tied embeddings) + jaredpalmer/kev-0.8b@54f4f87 head.pt",
+      "total": 752917824,
+      "non_embedding": 498638144
+    },
+    "laya": {
+      "vocab_table": 51576832,
+      "body": 343204864,
+      "head": 26512134,
+      "unused": 0,
+      "source": "convaiinnovations/laya@aa8c91c model.safetensors",
+      "total": 421293830,
+      "non_embedding": 369716998
+    },
+    "laya-multilingual": {
+      "vocab_table": 196608000,
+      "body": 110331648,
+      "head": 14969350,
+      "unused": 0,
+      "source": "convaiinnovations/laya-multilingual@82d57fc model.safetensors",
+      "total": 321908998,
+      "non_embedding": 125300998
+    }
+  }
+}

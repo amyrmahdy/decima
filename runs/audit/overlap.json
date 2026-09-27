@@ -1,0 +1,653 @@
+{
+  "min_chars": 8,
+  "train_rows": {
+    "teacher-invented": 90248,
+    "teacher-relabelled": 224553,
+    "jev-style": 6047,
+    "gold-nli": 399256,
+    "gold-cls": 298400
+  },
+  "suites": {
+    "kev/banking77": {
+      "n": 150,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "kev/agnews": {
+      "n": 150,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "kev/boolq": {
+      "n": 150,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "kev/mnli": {
+      "n": 150,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "kev/sst5": {
+      "n": 150,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "kev/yelp": {
+      "n": 150,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "kev/agnews-yn": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "kev/yelp-yn": {
+      "n": 150,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-en": {
+      "n": 300,
+      "overlap": 0.013333333333333334,
+      "sources": {
+        "teacher-relabelled": 4
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.9133333333333333,
+          "clean": 0.9155405405405406
+        },
+        "v0": {
+          "all": 0.82,
+          "clean": 0.8209459459459459
+        },
+        "kev-0.5b": {
+          "all": 0.7533333333333333,
+          "clean": 0.7533783783783784
+        },
+        "laya": {
+          "all": 0.7833333333333333,
+          "clean": 0.7837837837837838
+        },
+        "laya-multilingual": {
+          "all": 0.6566666666666666,
+          "clean": 0.6554054054054054
+        }
+      }
+    },
+    "laya/massive-de": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-fr": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-es": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-pt": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-ru": {
+      "n": 300,
+      "overlap": 0.11666666666666667,
+      "sources": {
+        "teacher-relabelled": 35
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.8933333333333333,
+          "clean": 0.879245283018868
+        },
+        "v0": {
+          "all": 0.75,
+          "clean": 0.7547169811320755
+        },
+        "kev-0.5b": {
+          "all": 0.62,
+          "clean": 0.6
+        },
+        "laya": {
+          "all": 0.29333333333333333,
+          "clean": 0.29056603773584905
+        },
+        "laya-multilingual": {
+          "all": 0.5,
+          "clean": 0.4830188679245283
+        }
+      }
+    },
+    "laya/massive-tr": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-ar": {
+      "n": 300,
+      "overlap": 0.06666666666666667,
+      "sources": {
+        "teacher-relabelled": 20
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.8666666666666667,
+          "clean": 0.8642857142857143
+        },
+        "v0": {
+          "all": 0.7033333333333334,
+          "clean": 0.7142857142857143
+        },
+        "kev-0.5b": {
+          "all": 0.38,
+          "clean": 0.37142857142857144
+        },
+        "laya": {
+          "all": 0.12666666666666668,
+          "clean": 0.11785714285714285
+        },
+        "laya-multilingual": {
+          "all": 0.38666666666666666,
+          "clean": 0.3821428571428571
+        }
+      }
+    },
+    "laya/massive-hi": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-ta": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-zh": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-ja": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-ko": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/massive-sw": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-en": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-de": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-fr": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-es": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-ru": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-tr": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-ar": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-hi": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-ur": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-vi": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-th": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-el": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-bg": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-zh": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "laya/xnli-sw": {
+      "n": 300,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "decima/sst5/en": {
+      "n": 1000,
+      "overlap": 0.001,
+      "sources": {
+        "teacher-relabelled": 1
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.514,
+          "clean": 0.5145145145145145
+        },
+        "v0": {
+          "all": 0.484,
+          "clean": 0.4844844844844845
+        },
+        "kev-0.8b": {
+          "all": 0.539,
+          "clean": 0.5395395395395396
+        },
+        "laya": {
+          "all": 0.305,
+          "clean": 0.3053053053053053
+        },
+        "laya-multilingual": {
+          "all": 0.268,
+          "clean": 0.2682682682682683
+        }
+      }
+    },
+    "decima/agnews/en": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "decima/xnli/en": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "decima/xnli/ar": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "decima/xnli/ru": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "decima/farstail/fa": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "decima/massive/en": {
+      "n": 1000,
+      "overlap": 0.006,
+      "sources": {
+        "teacher-relabelled": 6
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.876,
+          "clean": 0.8752515090543259
+        },
+        "v0": {
+          "all": 0.672,
+          "clean": 0.6710261569416499
+        },
+        "kev-0.8b": {
+          "all": 0.609,
+          "clean": 0.607645875251509
+        },
+        "laya": {
+          "all": 0.458,
+          "clean": 0.4567404426559356
+        },
+        "laya-multilingual": {
+          "all": 0.473,
+          "clean": 0.47283702213279677
+        }
+      }
+    },
+    "decima/massive/fa": {
+      "n": 1000,
+      "overlap": 0.047,
+      "sources": {
+        "teacher-relabelled": 47
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.846,
+          "clean": 0.844700944386149
+        },
+        "v0": {
+          "all": 0.635,
+          "clean": 0.633788037775446
+        },
+        "kev-0.8b": {
+          "all": 0.567,
+          "clean": 0.5603357817418678
+        },
+        "laya": {
+          "all": 0.038,
+          "clean": 0.03987408184679958
+        },
+        "laya-multilingual": {
+          "all": 0.313,
+          "clean": 0.31584470094438616
+        }
+      }
+    },
+    "decima/massive/ar": {
+      "n": 1000,
+      "overlap": 0.047,
+      "sources": {
+        "teacher-relabelled": 47
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.76,
+          "clean": 0.7565582371458552
+        },
+        "v0": {
+          "all": 0.451,
+          "clean": 0.4522560335781742
+        },
+        "kev-0.8b": {
+          "all": 0.425,
+          "clean": 0.42707240293809023
+        },
+        "laya": {
+          "all": 0.078,
+          "clean": 0.07974816369359916
+        },
+        "laya-multilingual": {
+          "all": 0.282,
+          "clean": 0.28436516264428124
+        }
+      }
+    },
+    "decima/massive/ru": {
+      "n": 1000,
+      "overlap": 0.05,
+      "sources": {
+        "teacher-relabelled": 50
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.837,
+          "clean": 0.8315789473684211
+        },
+        "v0": {
+          "all": 0.591,
+          "clean": 0.5936842105263158
+        },
+        "kev-0.8b": {
+          "all": 0.565,
+          "clean": 0.5484210526315789
+        },
+        "laya": {
+          "all": 0.185,
+          "clean": 0.1863157894736842
+        },
+        "laya-multilingual": {
+          "all": 0.389,
+          "clean": 0.3863157894736842
+        }
+      }
+    },
+    "decima/banking77/en": {
+      "n": 1000,
+      "overlap": 0.002,
+      "sources": {
+        "teacher-relabelled": 2
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.887,
+          "clean": 0.8867735470941884
+        },
+        "v0": {
+          "all": 0.622,
+          "clean": 0.6222444889779559
+        },
+        "kev-0.8b": {
+          "all": 0.819,
+          "clean": 0.8186372745490982
+        },
+        "laya": {
+          "all": 0.378,
+          "clean": 0.3787575150300601
+        },
+        "laya-multilingual": {
+          "all": 0.424,
+          "clean": 0.4228456913827655
+        }
+      }
+    },
+    "decima/clinc150/en": {
+      "n": 1000,
+      "overlap": 0.003,
+      "sources": {
+        "teacher-relabelled": 3
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.875,
+          "clean": 0.8746238716148446
+        },
+        "v0": {
+          "all": 0.573,
+          "clean": 0.571715145436309
+        },
+        "kev-0.8b": {
+          "all": 0.621,
+          "clean": 0.6198595787362087
+        },
+        "laya": {
+          "all": 0.434,
+          "clean": 0.43329989969909727
+        },
+        "laya-multilingual": {
+          "all": 0.53,
+          "clean": 0.5295887662988967
+        }
+      }
+    },
+    "jevbench/public": {
+      "n": 231,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "typed/test": {
+      "n": 2000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/amazonpolarity": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/imdb": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/appreviews": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/yelpreviews": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/rottentomatoes": {
+      "n": 1000,
+      "overlap": 0.33,
+      "sources": {
+        "teacher-relabelled": 330
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.857,
+          "clean": 0.8507462686567164
+        },
+        "v0": {
+          "all": 0.846,
+          "clean": 0.826865671641791
+        }
+      }
+    },
+    "btzsc/financialphrasebank": {
+      "n": 690,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/emotiondair": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/empathetic": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/banking77": {
+      "n": 929,
+      "overlap": 0.001076426264800861,
+      "sources": {
+        "teacher-relabelled": 1
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.8589881593110872,
+          "clean": 0.8588362068965517
+        },
+        "v0": {
+          "all": 0.6576964477933261,
+          "clean": 0.6584051724137931
+        }
+      }
+    },
+    "btzsc/biasframes_intent": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/massive": {
+      "n": 950,
+      "overlap": 0.010526315789473684,
+      "sources": {
+        "teacher-relabelled": 10
+      },
+      "accuracy_all_vs_clean": {
+        "v1i": {
+          "all": 0.7947368421052632,
+          "clean": 0.7946808510638298
+        },
+        "v0": {
+          "all": 0.5978947368421053,
+          "clean": 0.597872340425532
+        }
+      }
+    },
+    "btzsc/agnews": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/yahootopics": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/trueteacher": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/manifesto": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/capsotu": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/biasframes_offensive": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/biasframes_sex": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/wikitoxic_toxicaggregated": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/wikitoxic_obscene": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/wikitoxic_threat": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    },
+    "btzsc/wikitoxic_insult": {
+      "n": 1000,
+      "overlap": 0.0,
+      "sources": {}
+    }
+  }
+}

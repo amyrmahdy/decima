@@ -1,0 +1,978 @@
+{
+ "items": "runs/items/jdi.jsonl",
+ "kit_commit": "see bench.suites_public.JDI_KIT_COMMIT",
+ "per_suite": {
+  "jdi/bfcl": 4768,
+  "jdi/toolret": 5329,
+  "jdi/apibank": 508,
+  "jdi/banking77": 3080,
+  "jdi/clinc150": 5500,
+  "jdi/routerbench-0shot": 10006,
+  "jdi/routerbench-5shot": 9994,
+  "jdi/home-appliance": 2895,
+  "jdi/sgd": 2500,
+  "jdi/contractnli": 2091,
+  "jdi/anli": 3200,
+  "jdi/bpomp": 5000,
+  "jdi/humicroedit": 2628,
+  "jdi/pop909": 2000,
+  "jdi/cfcolor": 5000,
+  "jdi/mmlu": 14033,
+  "jdi/gpqa-diamond": 196,
+  "jdi/arc-easy": 2376,
+  "jdi/arc-challenge": 1172,
+  "jdi/winogrande": 1267,
+  "jdi/hellaswag": 10042,
+  "jdi/gsm8k-4choice": 1319,
+  "jdi/gsm8k-10choice": 1319,
+  "jdi/chessbench": 5000,
+  "jdi/musr": 752,
+  "jdi/sata-bench": 15517,
+  "jdi/simplebench": 10,
+  "jdi/bright": 519,
+  "jdi/esci": 5000,
+  "jdi/acos": 318945,
+  "jdi/finentity": 2129,
+  "jdi/isarcasmeval-a-en": 1400,
+  "jdi/isarcasmeval-a-ar": 1400,
+  "jdi/isarcasmeval-b-en": 8400,
+  "jdi/isarcasmeval-c-en": 200,
+  "jdi/isarcasmeval-c-ar": 200,
+  "jdi/vast": 3006,
+  "jdi/nli4ct": 5500,
+  "jdi/cruxeval": 570,
+  "jdi/cladder": 5000,
+  "jdi/forecastbench": 10139,
+  "jdi/habermas": 1676
+ },
+ "systems": {
+  "v0-truncated": {
+   "index": 25.72544335831093,
+   "balanced_skill": 2.481190176547699,
+   "chance_index": 27.10560951246952,
+   "areas": {
+    "knowledge": 0.28497653906004866,
+    "language": 0.24690142503736684,
+    "retrieval": 0.12411425406399992,
+    "tools": 0.25586637076169844,
+    "arts": 0.37441357899243244
+   },
+   "area_skill": {
+    "knowledge": 0.02336434738123692,
+    "language": 0.010912579039340354,
+    "retrieval": 0.01816158463482554,
+    "tools": 0.05627543932758411,
+    "arts": 0.015345558444398008
+   },
+   "benchmarks": {
+    "24": {
+     "raw": 0.29646965600630576,
+     "skill": 0.06195954134174101,
+     "random": 0.25,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.29646965600630576,
+       "random": 0.25,
+       "skill": 0.06195954134174101,
+       "coverage": 1,
+       "cases": 14033
+      }
+     ]
+    },
+    "25": {
+     "raw": 0.2602040816326531,
+     "skill": 0.013605442176870763,
+     "random": 0.25,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.2602040816326531,
+       "random": 0.25,
+       "skill": 0.013605442176870763,
+       "coverage": 1,
+       "cases": 196
+      }
+     ]
+    },
+    "30": {
+     "raw": 0.1652767247915087,
+     "skill": 0.0036643922163254925,
+     "random": 0.175,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "GSM8K-10choice",
+       "raw": 0.07505686125852919,
+       "random": 0.1,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 1319
+      },
+      {
+       "track": "GSM8K-4choice",
+       "raw": 0.25549658832448824,
+       "random": 0.25,
+       "skill": 0.007328784432650985,
+       "coverage": 1,
+       "cases": 1319
+      }
+     ]
+    },
+    "43": {
+     "raw": 0.40350877192982454,
+     "skill": 0.053611035019042616,
+     "random": 0.36971874129768867,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.40350877192982454,
+       "random": 0.36971874129768867,
+       "skill": 0.053611035019042616,
+       "coverage": 1,
+       "cases": 570
+      }
+     ]
+    },
+    "44": {
+     "raw": 0.4958,
+     "skill": 0.0,
+     "random": 0.5,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.4958,
+       "random": 0.5,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 5000
+      }
+     ]
+    },
+    "31": {
+     "raw": 0.0886,
+     "skill": 0.0073456735334416524,
+     "random": 0.0818556110623024,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0886,
+       "random": 0.0818556110623024,
+       "skill": 0.0073456735334416524,
+       "coverage": 1,
+       "cases": 5000
+      }
+     ]
+    },
+    "11": {
+     "raw": 0.3311564563340764,
+     "skill": 0.03273773711802106,
+     "random": 0.30851893087083776,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.3311564563340764,
+       "random": 0.30851893087083776,
+       "skill": 0.03273773711802106,
+       "coverage": 1,
+       "cases": 123
+      }
+     ]
+    },
+    "40": {
+     "raw": 0.14122137404580154,
+     "skill": 0.0,
+     "random": 0.2226862339379383,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "iSarcasmEval-A-Ar",
+       "raw": 0.29519071310116085,
+       "random": 0.22250656045660705,
+       "skill": 0.0934852295181292,
+       "coverage": 1,
+       "cases": 1400
+      },
+      {
+       "track": "iSarcasmEval-A-En",
+       "raw": 0.14122137404580154,
+       "random": 0.2226862339379383,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 1400
+      },
+      {
+       "track": "iSarcasmEval-C-Ar",
+       "raw": 0.46,
+       "random": 0.5,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 200
+      },
+      {
+       "track": "iSarcasmEval-C-En",
+       "raw": 0.585,
+       "random": 0.5,
+       "skill": 0.16999999999999993,
+       "coverage": 1,
+       "cases": 200
+      }
+     ]
+    },
+    "41": {
+     "raw": 0.26832644473222256,
+     "skill": 0.0,
+     "random": 0.3333245556439576,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.26832644473222256,
+       "random": 0.3333245556439576,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 3006
+      }
+     ]
+    },
+    "36": {
+     "raw": 0.0791136271717419,
+     "skill": 0.03632316926965108,
+     "random": 0.04440332748236865,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0791136271717419,
+       "random": 0.04440332748236865,
+       "skill": 0.03632316926965108,
+       "coverage": 1,
+       "cases": 519
+      }
+     ]
+    },
+    "37": {
+     "raw": 0.16911488095625793,
+     "skill": 0.0,
+     "random": 0.20273782411694521,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.16911488095625793,
+       "random": 0.20273782411694521,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 5000
+      }
+     ]
+    },
+    "1": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.25923526048695894,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.25923526048695894,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 1694
+      }
+     ]
+    },
+    "2": {
+     "raw": 0.24640038565355368,
+     "skill": 0.16882631798275233,
+     "random": 0.09333075547162431,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.24640038565355368,
+       "random": 0.09333075547162431,
+       "skill": 0.16882631798275233,
+       "coverage": 1,
+       "cases": 5329
+      }
+     ]
+    },
+    "6": {
+     "raw": 0.5211987266315417,
+     "skill": 0.0,
+     "random": 0.5735085119176098,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "RouterBench-0shot",
+       "raw": 0.4483210073955627,
+       "random": 0.5244734977195501,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 5001
+      },
+      {
+       "track": "RouterBench-5shot",
+       "raw": 0.5940764458675205,
+       "random": 0.6225435261156694,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 4995
+      }
+     ]
+    },
+    "20": {
+     "raw": 0.4957720711118254,
+     "skill": 0.0,
+     "random": 0.5,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.4957720711118254,
+       "random": 0.5,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 811
+      }
+     ]
+    },
+    "21": {
+     "raw": 0.5125570776255708,
+     "skill": 0.02511415525114158,
+     "random": 0.5,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.5125570776255708,
+       "random": 0.5,
+       "skill": 0.02511415525114158,
+       "coverage": 1,
+       "cases": 2628
+      }
+     ]
+    },
+    "22": {
+     "raw": 0.047107984607984606,
+     "skill": 0.03966351573773449,
+     "random": 0.007751937984496124,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.047107984607984606,
+       "random": 0.007751937984496124,
+       "skill": 0.03966351573773449,
+       "coverage": 1,
+       "cases": 2000
+      }
+     ]
+    },
+    "23": {
+     "raw": 0.49741835111558813,
+     "skill": 0.0,
+     "random": 0.5,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.49741835111558813,
+       "random": 0.5,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 5000
+      }
+     ]
+    },
+    "50": {
+     "raw": 0.3192124105011933,
+     "skill": 0.011950121233113974,
+     "random": 0.31097852028639617,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.3192124105011933,
+       "random": 0.31097852028639617,
+       "skill": 0.011950121233113974,
+       "coverage": 1,
+       "cases": 1676
+      }
+     ]
+    }
+   },
+   "display": {
+    "3": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "4": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "5": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "9": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "10": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "12": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "26": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "27": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "28": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "29": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "32": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "33": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "34": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "38": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "39": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "42": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "48": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "40-B": {
+     "metric": "category macro-F1 (yes per field)",
+     "score": 0.06735653121129571,
+     "coverage": 1
+    }
+   },
+   "counts": {
+    "items": 481586,
+    "scored": 96054,
+    "missing": 385532,
+    "invalid": 0,
+    "unsupported": 0
+   }
+  },
+  "v0-official": {
+   "index": 10.157812828308971,
+   "balanced_skill": 0.19351660822163666,
+   "chance_index": 27.10560951246952,
+   "areas": {
+    "knowledge": 0.24861095664197422,
+    "language": 0.1272007075725082,
+    "retrieval": 0.03002418268041814,
+    "tools": 0.0,
+    "arts": 0.10205479452054796
+   },
+   "area_skill": {
+    "knowledge": 0.005566241369985927,
+    "language": 0.0,
+    "retrieval": 0.0,
+    "tools": 0.0,
+    "arts": 0.0041095890410959065
+   },
+   "benchmarks": {
+    "24": {
+     "raw": 0.27229979200269255,
+     "skill": 0.02973305600359007,
+     "random": 0.25,
+     "coverage": 0.899665075179933,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.27229979200269255,
+       "random": 0.25,
+       "skill": 0.02973305600359007,
+       "coverage": 0.899665075179933,
+       "cases": 14033
+      }
+     ]
+    },
+    "25": {
+     "raw": 0.21428571428571427,
+     "skill": 0.0,
+     "random": 0.25,
+     "coverage": 0.7908163265306123,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.21428571428571427,
+       "random": 0.25,
+       "skill": 0.0,
+       "coverage": 0.7908163265306123,
+       "cases": 196
+      }
+     ]
+    },
+    "30": {
+     "raw": 0.1652767247915087,
+     "skill": 0.0036643922163254925,
+     "random": 0.175,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "GSM8K-10choice",
+       "raw": 0.07505686125852919,
+       "random": 0.1,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 1319
+      },
+      {
+       "track": "GSM8K-4choice",
+       "raw": 0.25549658832448824,
+       "random": 0.25,
+       "skill": 0.007328784432650985,
+       "coverage": 1,
+       "cases": 1319
+      }
+     ]
+    },
+    "43": {
+     "raw": 0.36140350877192984,
+     "skill": 0.0,
+     "random": 0.36971874129768867,
+     "coverage": 0.8789473684210526,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.36140350877192984,
+       "random": 0.36971874129768867,
+       "skill": 0.0,
+       "coverage": 0.8789473684210526,
+       "cases": 570
+      }
+     ]
+    },
+    "44": {
+     "raw": 0.4784,
+     "skill": 0.0,
+     "random": 0.5,
+     "coverage": 0.9666,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.4784,
+       "random": 0.5,
+       "skill": 0.0,
+       "coverage": 0.9666,
+       "cases": 5000
+      }
+     ]
+    },
+    "31": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.0818556110623024,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.0818556110623024,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 5000
+      }
+     ]
+    },
+    "11": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.30851893087083776,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.30851893087083776,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 123
+      }
+     ]
+    },
+    "40": {
+     "raw": 0.14122137404580154,
+     "skill": 0.0,
+     "random": 0.2226862339379383,
+     "coverage": 1,
+     "tracks": [
+      {
+       "track": "iSarcasmEval-A-Ar",
+       "raw": 0.29519071310116085,
+       "random": 0.22250656045660705,
+       "skill": 0.0934852295181292,
+       "coverage": 1,
+       "cases": 1400
+      },
+      {
+       "track": "iSarcasmEval-A-En",
+       "raw": 0.14122137404580154,
+       "random": 0.2226862339379383,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 1400
+      },
+      {
+       "track": "iSarcasmEval-C-Ar",
+       "raw": 0.46,
+       "random": 0.5,
+       "skill": 0.0,
+       "coverage": 1,
+       "cases": 200
+      },
+      {
+       "track": "iSarcasmEval-C-En",
+       "raw": 0.455,
+       "random": 0.5,
+       "skill": 0.0,
+       "coverage": 0.77,
+       "cases": 200
+      }
+     ]
+    },
+    "41": {
+     "raw": 0.24038074867172307,
+     "skill": 0.0,
+     "random": 0.3333245556439576,
+     "coverage": 0.9038589487691284,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.24038074867172307,
+       "random": 0.3333245556439576,
+       "skill": 0.0,
+       "coverage": 0.9038589487691284,
+       "cases": 3006
+      }
+     ]
+    },
+    "36": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.04440332748236865,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.04440332748236865,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 519
+      }
+     ]
+    },
+    "37": {
+     "raw": 0.06004836536083628,
+     "skill": 0.0,
+     "random": 0.20273782411694521,
+     "coverage": 0.4588,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.06004836536083628,
+       "random": 0.20273782411694521,
+       "skill": 0.0,
+       "coverage": 0.4588,
+       "cases": 5000
+      }
+     ]
+    },
+    "1": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.25923526048695894,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.25923526048695894,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 1694
+      }
+     ]
+    },
+    "2": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.09333075547162431,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.09333075547162431,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 5329
+      }
+     ]
+    },
+    "6": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.5735085119176098,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "RouterBench-0shot",
+       "raw": 0.0,
+       "random": 0.5244734977195501,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 5001
+      },
+      {
+       "track": "RouterBench-5shot",
+       "raw": 0.0,
+       "random": 0.6225435261156694,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 4995
+      }
+     ]
+    },
+    "20": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.5,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.5,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 811
+      }
+     ]
+    },
+    "21": {
+     "raw": 0.5102739726027398,
+     "skill": 0.020547945205479534,
+     "random": 0.5,
+     "coverage": 0.9954337899543378,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.5102739726027398,
+       "random": 0.5,
+       "skill": 0.020547945205479534,
+       "coverage": 0.9954337899543378,
+       "cases": 2628
+      }
+     ]
+    },
+    "22": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.007751937984496124,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.007751937984496124,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 2000
+      }
+     ]
+    },
+    "23": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.5,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.5,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 5000
+      }
+     ]
+    },
+    "50": {
+     "raw": 0.0,
+     "skill": 0.0,
+     "random": 0.31097852028639617,
+     "coverage": 0,
+     "tracks": [
+      {
+       "track": "all",
+       "raw": 0.0,
+       "random": 0.31097852028639617,
+       "skill": 0.0,
+       "coverage": 0,
+       "cases": 1676
+      }
+     ]
+    }
+   },
+   "display": {
+    "3": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "4": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "5": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "9": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "10": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "12": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "26": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "27": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "28": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "29": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "32": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "33": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "34": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "38": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "39": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "42": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "48": {
+     "metric": null,
+     "score": null,
+     "coverage": 0
+    },
+    "40-B": {
+     "metric": "category macro-F1 (yes per field)",
+     "score": 0.06735653121129571,
+     "coverage": 1
+    }
+   },
+   "counts": {
+    "items": 481586,
+    "scored": 39933,
+    "missing": 20891,
+    "invalid": 0,
+    "unsupported": 420762
+   }
+  }
+ }
+}

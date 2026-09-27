@@ -1,0 +1,24 @@
+# Author: A. M. Madani (amyrmahdy) — https://amyrmahdy.github.io
+cff-version: 1.2.0
+message: "If you use Decima, please cite it as below."
+title: "Decima: A Small, Calibrated, Permutation-Invariant Decision Model via Late-Interaction Distillation"
+type: software
+authors:
+  - family-names: Madani
+    given-names: A. M.
+    alias: amyrmahdy
+    email: amyrmahdy1@gmail.com
+    website: "https://amyrmahdy.github.io"
+    affiliation: Independent
+repository-code: "https://github.com/amyrmahdy/decima"
+url: "https://huggingface.co/amyrmahdy/decima-small"
+license: Apache-2.0
+version: 1.0.0
+date-released: "2026-09-27"
+keywords:
+  - decision model
+  - calibration
+  - multilingual
+  - late interaction
+  - distillation
+  - onnx

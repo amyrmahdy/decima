@@ -1,0 +1,46 @@
+[project]
+name = "decima"
+version = "1.0.0"
+description = "Decima — a small, calibrated, multilingual decision model: situation + question + your options → probabilities. CPU-first."
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{ name = "A. M. Madani", email = "amyrmahdy1@gmail.com" }]
+keywords = ["decision model", "calibration", "multilingual", "zero-shot classification", "onnx"]
+urls = { Homepage = "https://github.com/amyrmahdy/decima", Model = "https://huggingface.co/amyrmahdy/decima-small", Demo = "https://huggingface.co/spaces/amyrmahdy/decima-playground", Issues = "https://github.com/amyrmahdy/decima/issues" }
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.4",
+    "sentence-transformers>=3.0",
+    "datasets>=2.20",
+    "numpy>=1.26",
+    "onnxruntime>=1.18",
+    "tabulate>=0.9",
+    "httpx>=0.27",
+    "onnx>=1.16",
+]
+
+# torch wheel source is chosen by machine: x86_64 (laptop, CI, deploy targets) gets the
+# CPU build; aarch64 (the GX10 training box) gets the CUDA 12.8 build. Plain `uv sync`
+# does the right thing on both.
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", marker = "platform_machine == 'x86_64'" },
+    { index = "pytorch-cuda", marker = "platform_machine == 'aarch64'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cuda"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["decima", "bench"]

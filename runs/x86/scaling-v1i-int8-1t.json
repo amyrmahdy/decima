@@ -1,0 +1,58 @@
+[
+  {
+    "precision": "int8",
+    "threads": 1,
+    "choices": 4,
+    "cached_p50_ms": 16.2,
+    "cached_p95_ms": 19.5,
+    "cold_option_encode_ms": 27.3
+  },
+  {
+    "precision": "int8",
+    "threads": 1,
+    "choices": 20,
+    "cached_p50_ms": 26.5,
+    "cached_p95_ms": 29.0,
+    "cold_option_encode_ms": 133.4
+  },
+  {
+    "precision": "int8",
+    "threads": 1,
+    "choices": 77,
+    "cached_p50_ms": 75.1,
+    "cached_p95_ms": 79.5,
+    "cold_option_encode_ms": 745.4
+  },
+  {
+    "precision": "int8",
+    "threads": 1,
+    "choices": 150,
+    "cached_p50_ms": 130.1,
+    "cached_p95_ms": 140.3,
+    "cold_option_encode_ms": 1404.7
+  },
+  {
+    "precision": "int8",
+    "threads": 1,
+    "choices": 300,
+    "cached_p50_ms": 285.8,
+    "cached_p95_ms": 293.2,
+    "cold_option_encode_ms": 3117.8
+  },
+  {
+    "precision": "int8",
+    "threads": 1,
+    "choices": 500,
+    "cached_p50_ms": 534.5,
+    "cached_p95_ms": 574.4,
+    "cold_option_encode_ms": 5915.7
+  },
+  {
+    "precision": "int8",
+    "threads": 1,
+    "choices": 1000,
+    "cached_p50_ms": 1058.5,
+    "cached_p95_ms": 1108.0,
+    "cold_option_encode_ms": 12430.8
+  }
+]

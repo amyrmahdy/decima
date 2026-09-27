@@ -1,0 +1,58 @@
+[
+  {
+    "precision": "fp32",
+    "threads": 1,
+    "choices": 4,
+    "cached_p50_ms": 20.2,
+    "cached_p95_ms": 22.5,
+    "cold_option_encode_ms": 25.3
+  },
+  {
+    "precision": "fp32",
+    "threads": 1,
+    "choices": 20,
+    "cached_p50_ms": 43.5,
+    "cached_p95_ms": 46.5,
+    "cold_option_encode_ms": 118.3
+  },
+  {
+    "precision": "fp32",
+    "threads": 1,
+    "choices": 77,
+    "cached_p50_ms": 159.2,
+    "cached_p95_ms": 166.9,
+    "cold_option_encode_ms": 636.4
+  },
+  {
+    "precision": "fp32",
+    "threads": 1,
+    "choices": 150,
+    "cached_p50_ms": 312.7,
+    "cached_p95_ms": 341.5,
+    "cold_option_encode_ms": 1248.0
+  },
+  {
+    "precision": "fp32",
+    "threads": 1,
+    "choices": 300,
+    "cached_p50_ms": 689.7,
+    "cached_p95_ms": 722.4,
+    "cold_option_encode_ms": 2963.2
+  },
+  {
+    "precision": "fp32",
+    "threads": 1,
+    "choices": 500,
+    "cached_p50_ms": 1366.7,
+    "cached_p95_ms": 1493.4,
+    "cold_option_encode_ms": 6050.2
+  },
+  {
+    "precision": "fp32",
+    "threads": 1,
+    "choices": 1000,
+    "cached_p50_ms": 2819.7,
+    "cached_p95_ms": 2996.2,
+    "cold_option_encode_ms": 12275.8
+  }
+]

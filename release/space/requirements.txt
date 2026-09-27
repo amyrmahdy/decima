@@ -1,0 +1,9 @@
+# Decima Playground (Hugging Face Space, CPU). Tested with Python 3.11.
+# No PyTorch: the model runs on ONNX Runtime; transformers is only used for the tokenizer.
+gradio==6.28.0
+onnxruntime==1.30.0
+numpy==2.4.6
+transformers==5.17.0
+tokenizers==0.23.2
+huggingface_hub==1.33.0
+plotly==7.1.0

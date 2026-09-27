@@ -1,0 +1,13 @@
+.venv/
+data/
+__pycache__/
+*.pyc
+runs/*
+!runs/*.json
+.env
+checkpoints/
+export/
+!runs/audit/
+!runs/x86/
+runs/x86/preds/
+runs/x86/logs/

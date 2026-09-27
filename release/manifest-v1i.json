@@ -1,0 +1,76 @@
+{
+  "model": "Decima-small",
+  "run": "v1i",
+  "frozen": "2026-09-26",
+  "note": "2026-09-26 21:41: export/v1i-int8/tokenizer is now a copy (was an absolute symlink \u2014 not portable, see docs/BENCH-x86.md); model graphs unchanged",
+  "files": {
+    "checkpoints/v1i/best/decima.json": {
+      "sha256": "f988d73cdd674fd57b980525454e952737eb713f82395aec3eb4ed9dde2f1780",
+      "bytes": 329
+    },
+    "checkpoints/v1i/best/encoder/config.json": {
+      "sha256": "86b060dde794ff01a1a69ae82c9be1e59eff692f3011ec10d4d9f89e65337568",
+      "bytes": 756
+    },
+    "checkpoints/v1i/best/encoder/model.safetensors": {
+      "sha256": "1ef400bd35d7057d00d048322e2991226f4fef330bd84a6684ab88dd23164c5a",
+      "bytes": 470637416
+    },
+    "checkpoints/v1i/best/encoder/tokenizer.json": {
+      "sha256": "255f5e32cb320b4dc2b31e0f203832fecafe87ca4cc87c3c41eb8ccae73f441a",
+      "bytes": 17082987
+    },
+    "checkpoints/v1i/best/encoder/tokenizer_config.json": {
+      "sha256": "b1aa8a3f4cecb46b952811c1c55c983348b88abc9c854743fa2fa47264a3a4ad",
+      "bytes": 596
+    },
+    "checkpoints/v1i/best/head.pt": {
+      "sha256": "0c01042598569f0f7bb6301115d963101f27f5ce00a4c235ef27ac2adac9ef2d",
+      "bytes": 18956317
+    },
+    "export/v1i/decima.json": {
+      "sha256": "9756e767c83e601c29927631fa2f3f3b88bc9ebf1838bfa6e9fd291335e3d8f6",
+      "bytes": 22464
+    },
+    "export/v1i/encoder.onnx": {
+      "sha256": "2ba02215172b5de9db22765c2e62545a9cb496bad62a2ebc331f1b868aafd2e6",
+      "bytes": 470240376
+    },
+    "export/v1i/scorer.onnx": {
+      "sha256": "a96e231c89256cad41c619dca438b061e7ba0fcc59b80c0fb4902ad0dc23ee2c",
+      "bytes": 18982167
+    },
+    "export/v1i/tokenizer/tokenizer.json": {
+      "sha256": "255f5e32cb320b4dc2b31e0f203832fecafe87ca4cc87c3c41eb8ccae73f441a",
+      "bytes": 17082987
+    },
+    "export/v1i/tokenizer/tokenizer_config.json": {
+      "sha256": "b1aa8a3f4cecb46b952811c1c55c983348b88abc9c854743fa2fa47264a3a4ad",
+      "bytes": 596
+    },
+    "export/v1i-int8/decima.json": {
+      "sha256": "9756e767c83e601c29927631fa2f3f3b88bc9ebf1838bfa6e9fd291335e3d8f6",
+      "bytes": 22464
+    },
+    "export/v1i-int8/encoder.onnx": {
+      "sha256": "c9ce123e0b5efea0ec382ce7bbe51b8b352023a7bfc0697652ffa108d707c53b",
+      "bytes": 122164246
+    },
+    "export/v1i-int8/quantize.txt": {
+      "sha256": "7b1d9c12c7c1ef8e2eaa34e0586343695e9543c342e5eb1ac4286cf8cfd10926",
+      "bytes": 416
+    },
+    "export/v1i-int8/scorer.onnx": {
+      "sha256": "39965112de05701eaf28496a039aeeb05263f405d3d929eea050cd745db62ebf",
+      "bytes": 4915472
+    },
+    "export/v1i-int8/tokenizer/tokenizer.json": {
+      "sha256": "255f5e32cb320b4dc2b31e0f203832fecafe87ca4cc87c3c41eb8ccae73f441a",
+      "bytes": 17082987
+    },
+    "export/v1i-int8/tokenizer/tokenizer_config.json": {
+      "sha256": "b1aa8a3f4cecb46b952811c1c55c983348b88abc9c854743fa2fa47264a3a4ad",
+      "bytes": 596
+    }
+  }
+}
