@@ -1,0 +1,30 @@
+v1i laya: 26100 preds, max |Δp| vs development run = 0.00e+00
+v1i decima: 29000 preds, max |Δp| vs development run = 0.00e+00
+v1i jevtyped: 4644 preds, max |Δp| vs development run = 0.00e+00
+v1i btzsc: 42448 preds, max |Δp| vs development run = 0.00e+00
+  2000/22050 (166s)
+  4000/22050 (353s)
+  6150/22050 (507s)
+  8250/22050 (539s)
+  10050/22050 (566s)
+  12050/22050 (589s)
+  14050/22050 (612s)
+  16050/22050 (639s)
+  18050/22050 (710s)
+  20050/22050 (780s)
+  22050/22050 (959s)
+22050 preds from export/v1i in 959s → runs/final/preds/onnx-fp32--v1i.jsonl
+  2000/22050 (108s)
+  4000/22050 (239s)
+  6150/22050 (376s)
+  8250/22050 (395s)
+  10050/22050 (411s)
+  12050/22050 (455s)
+  14050/22050 (469s)
+  16050/22050 (487s)
+  18050/22050 (519s)
+  20050/22050 (550s)
+  22050/22050 (626s)
+22050 preds from export/v1i-int8 in 627s → runs/final/preds/onnx-int8--v1i.jsonl
+v1i int8 vs fp32 (ONNX, 22050 real eval items): top-1 agreement 0.9941 · accuracy fp32 0.7767 int8 0.7771
+v1i kev: 4800 preds, max |Δp| vs development run = 0.00e+00
