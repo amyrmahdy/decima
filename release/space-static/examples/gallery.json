@@ -1,0 +1,643 @@
+{
+ "model": "Decima-small v1i int8 ONNX",
+ "note": "outputs recorded by _build/build_gallery.py; one CPU thread",
+ "gallery": [
+  {
+   "id": "route-fa",
+   "tag": "Routing · Persian",
+   "title": "Login from another country",
+   "state": "یک نفر از کشور دیگری وارد حسابم شده است.",
+   "question": "Which team should handle this request?",
+   "choices": [
+    "billing",
+    "technical support",
+    "sales",
+    "account security"
+   ],
+   "choices_file": null,
+   "kind": "choose",
+   "lang": "fa",
+   "expected": "account security",
+   "recorded": {
+    "top": "account security",
+    "confidence": 0.9563,
+    "top3": [
+     [
+      "account security",
+      0.9563
+     ],
+     [
+      "technical support",
+      0.0296
+     ],
+     [
+      "billing",
+      0.0112
+     ]
+    ]
+   }
+  },
+  {
+   "id": "route-ar",
+   "tag": "Routing · Arabic",
+   "title": "App crashes on settings",
+   "state": "التطبيق يُغلق فجأة كلما فتحت صفحة الإعدادات.",
+   "question": "Which team should handle this request?",
+   "choices": [
+    "billing",
+    "technical support",
+    "sales",
+    "account security"
+   ],
+   "choices_file": null,
+   "kind": "choose",
+   "lang": "ar",
+   "expected": "technical support",
+   "recorded": {
+    "top": "technical support",
+    "confidence": 0.9947,
+    "top3": [
+     [
+      "technical support",
+      0.9947
+     ],
+     [
+      "billing",
+      0.0019
+     ],
+     [
+      "account security",
+      0.0017
+     ]
+    ]
+   }
+  },
+  {
+   "id": "route-fa-informal",
+   "tag": "Routing · Persian, informal",
+   "title": "“…and it wasn’t me!”",
+   "state": "یه نفر از یه کشور دیگه وارد حسابم شده، کار من نبوده!",
+   "question": "Which team should handle this request?",
+   "choices": [
+    "billing",
+    "technical support",
+    "sales",
+    "account security"
+   ],
+   "choices_file": null,
+   "kind": "choose",
+   "lang": "fa",
+   "expected": "account security",
+   "recorded": {
+    "top": "account security",
+    "confidence": 0.9784,
+    "top3": [
+     [
+      "account security",
+      0.9784
+     ],
+     [
+      "technical support",
+      0.0145
+     ],
+     [
+      "billing",
+      0.0052
+     ]
+    ]
+   }
+  },
+  {
+   "id": "route-zh",
+   "tag": "Routing · Chinese",
+   "title": "Discount for 200 seats",
+   "state": "如果我们公司买200个席位，有折扣吗？",
+   "question": "Which team should handle this request?",
+   "choices": [
+    "billing",
+    "technical support",
+    "sales",
+    "account security"
+   ],
+   "choices_file": null,
+   "kind": "choose",
+   "lang": "zh",
+   "expected": "sales",
+   "recorded": {
+    "top": "sales",
+    "confidence": 0.9913,
+    "top3": [
+     [
+      "sales",
+      0.9913
+     ],
+     [
+      "billing",
+      0.0069
+     ],
+     [
+      "technical support",
+      0.001
+     ]
+    ]
+   }
+  },
+  {
+   "id": "route-ru",
+   "tag": "Routing · Russian",
+   "title": "Login from another country",
+   "state": "Кто-то вошёл в мой аккаунт из другой страны.",
+   "question": "Which team should handle this request?",
+   "choices": [
+    "billing",
+    "technical support",
+    "sales",
+    "account security"
+   ],
+   "choices_file": null,
+   "kind": "choose",
+   "lang": "ru",
+   "expected": "account security",
+   "recorded": {
+    "top": "account security",
+    "confidence": 0.921,
+    "top3": [
+     [
+      "account security",
+      0.921
+     ],
+     [
+      "technical support",
+      0.062
+     ],
+     [
+      "billing",
+      0.0088
+     ]
+    ]
+   }
+  },
+  {
+   "id": "route-es",
+   "tag": "Routing · Spanish",
+   "title": "App crashes on settings",
+   "state": "La aplicación se cierra sola cada vez que abro la configuración.",
+   "question": "Which team should handle this request?",
+   "choices": [
+    "billing",
+    "technical support",
+    "sales",
+    "account security"
+   ],
+   "choices_file": null,
+   "kind": "choose",
+   "lang": "es",
+   "expected": "technical support",
+   "recorded": {
+    "top": "technical support",
+    "confidence": 0.9928,
+    "top3": [
+     [
+      "technical support",
+      0.9928
+     ],
+     [
+      "account security",
+      0.0029
+     ],
+     [
+      "billing",
+      0.0024
+     ]
+    ]
+   }
+  },
+  {
+   "id": "route-de",
+   "tag": "Routing · German",
+   "title": "Discount for 200 seats",
+   "state": "Gibt es Rabatt, wenn wir 200 Lizenzen für unsere Firma kaufen?",
+   "question": "Which team should handle this request?",
+   "choices": [
+    "billing",
+    "technical support",
+    "sales",
+    "account security"
+   ],
+   "choices_file": null,
+   "kind": "choose",
+   "lang": "de",
+   "expected": "sales",
+   "recorded": {
+    "top": "sales",
+    "confidence": 0.9734,
+    "top3": [
+     [
+      "sales",
+      0.9734
+     ],
+     [
+      "billing",
+      0.0115
+     ],
+     [
+      "technical support",
+      0.0088
+     ]
+    ]
+   }
+  },
+  {
+   "id": "clinc-reminder",
+   "tag": "150 intents",
+   "title": "Move a dentist reminder",
+   "state": "can you move my dentist reminder to friday at 3",
+   "question": "What is the user's intent?",
+   "choices": null,
+   "choices_file": "clinc150_intents.txt",
+   "kind": "choose",
+   "lang": "en",
+   "expected": "reminder update",
+   "recorded": {
+    "top": "reminder update",
+    "confidence": 0.9585,
+    "top3": [
+     [
+      "reminder update",
+      0.9585
+     ],
+     [
+      "calendar update",
+      0.0125
+     ],
+     [
+      "reminder",
+      0.0029
+     ]
+    ]
+   }
+  },
+  {
+   "id": "clinc-card",
+   "tag": "150 intents",
+   "title": "Card declined at the store",
+   "state": "my card got declined at the grocery store",
+   "question": "What is the user's intent?",
+   "choices": null,
+   "choices_file": "clinc150_intents.txt",
+   "kind": "choose",
+   "lang": "en",
+   "expected": "card declined",
+   "recorded": {
+    "top": "card declined",
+    "confidence": 0.9922,
+    "top3": [
+     [
+      "card declined",
+      0.9922
+     ],
+     [
+      "shopping list update",
+      0.0009
+     ],
+     [
+      "shopping list",
+      0.0004
+     ]
+    ]
+   }
+  },
+  {
+   "id": "massive-fa",
+   "tag": "60 intents · Persian in, English out",
+   "title": "Taxi to the airport",
+   "state": "یک تاکسی برای فرودگاه بگیر",
+   "question": "What does the user want the assistant to do?",
+   "choices": null,
+   "choices_file": "massive60_intents.txt",
+   "kind": "choose",
+   "lang": "fa",
+   "expected": "transport taxi",
+   "recorded": {
+    "top": "transport taxi",
+    "confidence": 0.9812,
+    "top3": [
+     [
+      "transport taxi",
+      0.9812
+     ],
+     [
+      "transport ticket",
+      0.0097
+     ],
+     [
+      "transport query",
+      0.0011
+     ]
+    ]
+   }
+  },
+  {
+   "id": "urgency",
+   "tag": "Ordered levels · score",
+   "title": "Checkout is down",
+   "state": "Our checkout page is down and customers can't pay. We're losing sales every minute.",
+   "question": "How urgent is this ticket?",
+   "choices": [
+    "low",
+    "medium",
+    "high",
+    "critical"
+   ],
+   "choices_file": null,
+   "kind": "score",
+   "lang": "en",
+   "expected": "critical",
+   "recorded": {
+    "top": "critical",
+    "confidence": 0.6805,
+    "top3": [
+     [
+      "critical",
+      0.6805
+     ],
+     [
+      "high",
+      0.2923
+     ],
+     [
+      "medium",
+      0.0244
+     ]
+    ]
+   }
+  },
+  {
+   "id": "urgency-low",
+   "tag": "Ordered levels · score",
+   "title": "A typo on the pricing page",
+   "state": "Small typo on your pricing page: 'monthy' instead of 'monthly'.",
+   "question": "How urgent is this ticket?",
+   "choices": [
+    "low",
+    "medium",
+    "high",
+    "critical"
+   ],
+   "choices_file": null,
+   "kind": "score",
+   "lang": "en",
+   "expected": "low",
+   "recorded": {
+    "top": "low",
+    "confidence": 0.7437,
+    "top3": [
+     [
+      "low",
+      0.7437
+     ],
+     [
+      "medium",
+      0.2243
+     ],
+     [
+      "high",
+      0.0272
+     ]
+    ]
+   }
+  },
+  {
+   "id": "rank",
+   "tag": "Independent relevance · rank",
+   "title": "Which help articles apply?",
+   "state": "Someone logged into my account from another country and I can't get back in.",
+   "question": "Which of these help articles are relevant to the customer's problem?",
+   "choices": [
+    "How to reset your password",
+    "Updating your billing address",
+    "Enabling two-factor authentication",
+    "Exporting reports to CSV",
+    "What to do if you see an unfamiliar login"
+   ],
+   "choices_file": null,
+   "kind": "rank",
+   "lang": "en",
+   "expected": "What to do if you see an unfamiliar login",
+   "recorded": {
+    "top": "What to do if you see an unfamiliar login",
+    "confidence": 0.9361,
+    "top3": [
+     [
+      "What to do if you see an unfamiliar login",
+      0.9361
+     ],
+     [
+      "How to reset your password",
+      0.7943
+     ],
+     [
+      "Enabling two-factor authentication",
+      0.4237
+     ]
+    ]
+   }
+  },
+  {
+   "id": "verify",
+   "tag": "Yes / no · verify",
+   "title": "Does the customer want a refund?",
+   "state": "The blender stopped working after a week. I want my money back.",
+   "question": "Does the customer ask for a refund?",
+   "choices": [
+    "yes",
+    "no"
+   ],
+   "choices_file": null,
+   "kind": "verify",
+   "lang": "en",
+   "expected": "yes",
+   "recorded": {
+    "top": "yes",
+    "confidence": 0.9543,
+    "top3": [
+     [
+      "yes",
+      0.9543
+     ],
+     [
+      "no",
+      0.0457
+     ]
+    ]
+   }
+  },
+  {
+   "id": "verify-angry",
+   "tag": "Yes / no · verify",
+   "title": "Is the customer angry?",
+   "state": "This is the THIRD time I'm writing. Nobody answers. Unacceptable.",
+   "question": "Is the customer angry?",
+   "choices": [
+    "yes",
+    "no"
+   ],
+   "choices_file": null,
+   "kind": "verify",
+   "lang": "en",
+   "expected": "yes",
+   "recorded": {
+    "top": "yes",
+    "confidence": 0.9236,
+    "top3": [
+     [
+      "yes",
+      0.9236
+     ],
+     [
+      "no",
+      0.0764
+     ]
+    ]
+   }
+  },
+  {
+   "id": "news",
+   "tag": "News topic",
+   "title": "Ceasefire talks resume",
+   "state": "Ceasefire talks resume in Geneva as both delegations arrive for a second round.",
+   "question": "What is the topic of this news article?",
+   "choices": [
+    "World",
+    "Sports",
+    "Business",
+    "Sci/Tech"
+   ],
+   "choices_file": null,
+   "kind": "choose",
+   "lang": "en",
+   "expected": "World",
+   "recorded": {
+    "top": "World",
+    "confidence": 0.9767,
+    "top3": [
+     [
+      "World",
+      0.9767
+     ],
+     [
+      "Business",
+      0.0102
+     ],
+     [
+      "Sports",
+      0.0082
+     ]
+    ]
+   }
+  },
+  {
+   "id": "news-biz",
+   "tag": "News topic",
+   "title": "Central bank holds rates",
+   "state": "Central bank holds interest rates steady as inflation cools for a third month.",
+   "question": "What is the topic of this news article?",
+   "choices": [
+    "World",
+    "Sports",
+    "Business",
+    "Sci/Tech"
+   ],
+   "choices_file": null,
+   "kind": "choose",
+   "lang": "en",
+   "expected": "Business",
+   "recorded": {
+    "top": "Business",
+    "confidence": 0.9344,
+    "top3": [
+     [
+      "Business",
+      0.9344
+     ],
+     [
+      "World",
+      0.0459
+     ],
+     [
+      "Sci/Tech",
+      0.0123
+     ]
+    ]
+   }
+  }
+ ],
+ "shuffle": [
+  {
+   "id": "tickets-6",
+   "title": "Support ticket · 6 teams",
+   "state": "The API returns a 500 error whenever I upload a file larger than 10 MB.",
+   "question": "Which team should handle this request?",
+   "choices": [
+    "billing",
+    "technical support",
+    "sales",
+    "account security",
+    "shipping and delivery",
+    "legal and compliance"
+   ],
+   "kind": "choose",
+   "lang": "en",
+   "expected": "technical support",
+   "recorded": {
+    "top": "technical support",
+    "confidence": 0.9834
+   }
+  },
+  {
+   "id": "persian-8",
+   "title": "Persian command · 8 intents",
+   "state": "چراغ‌های آشپزخانه را خاموش کن",
+   "question": "What does the user want the assistant to do?",
+   "choices": [
+    "iot hue lightoff",
+    "iot hue lighton",
+    "iot wemo off",
+    "alarm set",
+    "weather query",
+    "play music",
+    "audio volume down",
+    "transport taxi"
+   ],
+   "kind": "choose",
+   "lang": "fa",
+   "expected": "iot hue lightoff",
+   "recorded": {
+    "top": "iot hue lightoff",
+    "confidence": 0.9693
+   }
+  },
+  {
+   "id": "card-7",
+   "title": "Banking question · 7 intents",
+   "state": "how long will it take for my new card to arrive",
+   "question": "What is the user's intent?",
+   "choices": [
+    "replacement card duration",
+    "new card",
+    "card declined",
+    "order status",
+    "report lost card",
+    "damaged card",
+    "pin change"
+   ],
+   "kind": "choose",
+   "lang": "en",
+   "expected": "replacement card duration",
+   "recorded": {
+    "top": "replacement card duration",
+    "confidence": 0.9778
+   }
+  }
+ ]
+}

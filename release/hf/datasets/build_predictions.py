@@ -155,6 +155,8 @@ def main() -> None:
     replaced = []
     if use_final:
         for f in glob.glob(str(final / "preds" / "*.jsonl")):
+            if Path(f).name.startswith("onnx-"):      # int8-check files mix three item sets; x86 files cover int8/fp32
+                continue
             replaced.append(Path(f).name)
             sources[Path(f).name] = Path(f)
     x86 = {Path(f).name: Path(f) for f in glob.glob(str(runs / "x86" / "preds" / "*.jsonl"))}

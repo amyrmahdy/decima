@@ -1,0 +1,102 @@
+[
+ {
+  "lang": "en",
+  "text": "My invoice shows the wrong VAT number, can you reissue it?",
+  "gold": "billing"
+ },
+ {
+  "lang": "en",
+  "text": "I got a password reset email I never asked for. Is someone trying to get in?",
+  "gold": "account security"
+ },
+ {
+  "lang": "en",
+  "text": "The dashboard has been loading forever since your update last night.",
+  "gold": "technical support"
+ },
+ {
+  "lang": "en",
+  "text": "We're a team of 40 and want to know what the enterprise plan includes.",
+  "gold": "sales"
+ },
+ {
+  "lang": "en",
+  "text": "Why was I charged $49 when my plan is $29?",
+  "gold": "billing"
+ },
+ {
+  "lang": "en",
+  "text": "The API returns a 500 error whenever I upload a file larger than 10 MB.",
+  "gold": "technical support"
+ },
+ {
+  "lang": "en",
+  "text": "Can I get a demo for my manager next week?",
+  "gold": "sales"
+ },
+ {
+  "lang": "en",
+  "text": "Please turn on two-factor authentication for my account, I think my email was hacked.",
+  "gold": "account security"
+ },
+ {
+  "lang": "en",
+  "text": "How do I update the credit card you charge every month?",
+  "gold": "billing"
+ },
+ {
+  "lang": "en",
+  "text": "Is there a nonprofit discount?",
+  "gold": "sales"
+ },
+ {
+  "lang": "es",
+  "text": "No puedo sincronizar mis archivos desde ayer, la app se queda cargando.",
+  "gold": "technical support"
+ },
+ {
+  "lang": "de",
+  "text": "Ich möchte meine Rechnung als PDF bekommen, nicht per Post.",
+  "gold": "billing"
+ },
+ {
+  "lang": "fr",
+  "text": "Quelqu'un a changé l'adresse e-mail de mon compte sans mon accord.",
+  "gold": "account security"
+ },
+ {
+  "lang": "ru",
+  "text": "Сколько будет стоить годовая подписка для 15 сотрудников?",
+  "gold": "sales"
+ },
+ {
+  "lang": "fa",
+  "text": "رمز عبورم را عوض نکرده‌ام ولی دیگر نمی‌توانم وارد حسابم شوم.",
+  "gold": "account security"
+ },
+ {
+  "lang": "ar",
+  "text": "الإشعارات لا تصل إلى هاتفي منذ التحديث الأخير.",
+  "gold": "technical support"
+ },
+ {
+  "lang": "zh",
+  "text": "我想把按月付费改成按年付费。",
+  "gold": "billing"
+ },
+ {
+  "lang": "tr",
+  "text": "Şirketimiz için özel bir fiyat teklifi alabilir miyiz?",
+  "gold": "sales"
+ },
+ {
+  "lang": "en",
+  "text": "I cancelled last month but you charged me again.",
+  "gold": "billing"
+ },
+ {
+  "lang": "en",
+  "text": "After I changed my phone, the authenticator codes stopped working and I'm locked out.",
+  "gold": "account security"
+ }
+]

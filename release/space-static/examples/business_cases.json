@@ -1,0 +1,1179 @@
+{
+ "attribution": "Business cases: synthetic, generated and labelled by Gemma-4-26B-A4B for the Decima project; released under CC BY 4.0. Email addresses rewritten to reserved example domains.",
+ "license": "CC-BY-4.0",
+ "teacher": "Gemma-4-26B-A4B (26B, mixture of experts)",
+ "model": "Decima-small v1i int8 ONNX",
+ "held_out_rule": "rows of jevgen-rande-fast-local.jsonl whose id, group and state are absent from the training snapshot (lines 1–6,047); none of these cases was trained on",
+ "pool_note": "pool = every held-out question, scored once before selection (only free-mail addresses rewritten at that point); the shown cases were re-scored on the exact published text",
+ "pool": {
+  "questions": 4239,
+  "agree": 2334,
+  "cases": 1122,
+  "by_kind": {
+   "choose": {
+    "agree": 904,
+    "n": 1850
+   },
+   "verify": {
+    "agree": 881,
+    "n": 1301
+   },
+   "score": {
+    "agree": 549,
+    "n": 1088
+   }
+  }
+ },
+ "shown": {
+  "cases": 10,
+  "questions": 40,
+  "agree": 36
+ },
+ "cases": [
+  {
+   "group": "jev-0-1807",
+   "domain": "support_triage",
+   "scenario": "account lockout after SSO migration",
+   "format": "email thread with quoted replies",
+   "state_lang": "ru",
+   "choice_lang": "ru",
+   "state": "From: Artyom Volkov <a.volkov@globex-solutions.example>\nTo: Support <support@cloudflow-systems.example>\nDate: 2024-01-21 09:14:22 +0300\nSubject: RE: [URGENT] Проблема с доступом к панели управления после миграции\n\nЗдравствуйте!\n\nУ нас критическая ситуация. С сегодняшнего утра (21.01.24) после планового перехода на Okta SSO у половины нашей команды (примерно 14 человек из 30) пропал доступ к CloudFlow Dashboard. \n\nПри попытке входа через корпоративный портал мы получаем ошибку:\n`Error Code: CF-AUTH-9922`\n`Message: Identity Provider mismatch. Expected SAML assertion from 'cloudflow-sso-prod', received 'legacy-auth-v2'.`\n\nЯ проверил настройки в нашем Azure AD, там всё должно быть настроено по вашему новому гайду (v.2.4.1). Но проблема сохраняется. При этом некоторые сотрудники (например, наш стажер Максим) всё еще могут заходить через старые учетные данные, хотя мы вроде как отключили локальный вход.\n\nПожалуйста, разберитесь максимально быстро. Мы не можем запускать отчетность для клиентов.\n\n---\nArtyom Volkov\nIT Infrastructure Lead | Globex Solutions\n--------------------------------------------------\n\nFrom: Support <support@cloudflow-systems.example>\nTo: Artyom Volkov <a.volkov@globex-solutions.example>\nDate: 2024-01-21 10:05:11 +0300\nSubject: RE: [URGENT] Проблема с доступом к панели управления после миграции\n\nУважаемый Артем,\n\nМеня зовут Елена, я ваш менеджер поддержки. Мне очень жаль, что вы столкнулись с этими трудностями.\n\nДля начала работы мне необходимо уточнить:\n1. Пришлите, пожалуйста, скриншот ошибки.\n2. Проверьте, не заблокированы ли учетные записи в вашей системе SSO.\n\nЯ передала ваш запрос в технический отдел.\n\nС уважением,\nElena Petrova\nCloudFlow Systems Support Team\n\n---\n[Internal Ticket Log: #CF-88291]\nTimestamp: 2024-01-21 10:12:05\nUser: Elena Petrova\nAction: Ticket escalated to Tier 2\nNote: Client reports SAML assertion mismatch. Possible misconfiguration in the SSO handshake during the migration window. Note that some users (ID: MAX-992) are still using legacy credentials, suggesting the legacy endpoint is still partially active for certain subnets or user groups.\nStatus: Open\nPriority: High\nMetadata:\n  org_id: globex_772\n  migration_version: 2.4.1\n  error_string: \"Identity Provider mismatch\"",
+   "source_lines": [
+    6679,
+    6680,
+    6681,
+    6682
+   ],
+   "agree": 4,
+   "n": 4,
+   "window_end_char": 1764,
+   "questions": [
+    {
+     "id": "4c5108cf642b5383",
+     "kind": "verify",
+     "question": "Все пользователи компании Globex Solutions полностью утратили возможность входа через локальные учетные данные?",
+     "choices": [
+      "Да",
+      "Нет"
+     ],
+     "teacher": [
+      0.3,
+      0.7
+     ],
+     "decima": [
+      0.2921,
+      0.7079
+     ],
+     "agree": true
+    },
+    {
+     "id": "182a8c5c490565db",
+     "kind": "score",
+     "question": "Оцените уровень критичности данного инцидента для бизнеса клиента:",
+     "choices": [
+      "Низкий",
+      "Средний",
+      "Высокий"
+     ],
+     "teacher": [
+      0.05,
+      0.15,
+      0.8
+     ],
+     "decima": [
+      0.0435,
+      0.21318,
+      0.74332
+     ],
+     "agree": true
+    },
+    {
+     "id": "71cba6049e91ea4e",
+     "kind": "verify",
+     "question": "Проблема связана с несоответствием поставщика идентификации (Identity Provider)?",
+     "choices": [
+      "Да",
+      "Нет"
+     ],
+     "teacher": [
+      0.85,
+      0.15
+     ],
+     "decima": [
+      0.89081,
+      0.10919
+     ],
+     "agree": true
+    },
+    {
+     "id": "de0d7c5862f96b4e",
+     "kind": "choose",
+     "question": "К какой категории относится данный инцидент?",
+     "choices": [
+      "Смена пароля",
+      "Ошибка конфигурации SSO",
+      "Физический доступ",
+      "Проблема с биллингом",
+      "Удаление аккаунта",
+      "Ошибка UI",
+      "Обновление ПО",
+      "Проблема с API"
+     ],
+     "teacher": [
+      0.02128,
+      0.90426,
+      0.01064,
+      0.01064,
+      0.01064,
+      0.01064,
+      0.02128,
+      0.01064
+     ],
+     "decima": [
+      0.01263,
+      0.41264,
+      0.22095,
+      0.20311,
+      0.01997,
+      0.06885,
+      0.0084,
+      0.05344
+     ],
+     "agree": true
+    }
+   ]
+  },
+  {
+   "group": "jev-0-2292",
+   "domain": "ecommerce",
+   "scenario": "bulk B2B order change",
+   "format": "seller-support ticket with order history",
+   "state_lang": "en",
+   "choice_lang": "en",
+   "state": "SUPPORT TICKET #B2B-99281-X\nStatus: OPEN (Escalated)\nPriority: High\nCreated: 2024-11-21 09:14:22 UTC\nAgent: Marcus Thorne (Level 2 Support)\nCustomer: Aris Global Logistics (Account ID: AG-772-B)\nContact: Elena Vance (Procurement Lead)\n\n[INTERNAL LOG - ORDER_HISTORY_SERVICE]\n2024-11-19 14:02:11 [INFO] Order ID: ORD-44901-Z placed by AG-772-B. Total: $42,500.00. SKU count: 14.\n2024-11-20 11:30:45 [INFO] Order ID: ORD-44901-Z status changed to 'Processing'.\n2024-11-21 08:45:12 [WARN] Manual override detected on ORD-44901-Z. User: evance_aris.\n2024-11-21 08:46:01 [ERROR] Validation failed for SKU: WGT-99-B (Weight mismatch). Attempted update: +500kg. System rejected delta.\n\n---\nMESSAGE THREAD:\n\nElena Vance (09:05:12):\nHi Support, we need to adjust the shipment volume for ORD-44901-Z immediately. The previous quote for the industrial fasteners (SKU: WGT-99-B) was based on a palletized estimate, but our warehouse floor space just changed. We actually need to increase the quantity of the WGT-99-B units from 400 to 900. This is a critical component for our assembly line starting Friday. \n\nPlease note, we are aware the total order value will increase. However, the system is throwing a 'Validation failed' error when I try to push the update through the B2B portal. Can you manually push this change or bypass the weight check? We cannot wait for a full re-quote if it delays the dispatch.\n\nMarcus Thorne (09:14:22):\nElena, I've received your request. Looking at the logs, it appears the automated weight validation is blocking the SKU update because the new quantity (900 units) pushes the total pallet weight beyond the standard shipping profile set for this order type. \n\nI am checking with the fulfillment team at the Oakhaven Depot to see if they can accommodate the extra weight on the current carrier booking. I've also attached a copy of our 'Bulk Order Amendment Policy (v4.2)' which states: \"Any quantity increase exceeding 20% of the original line item volume requires a secondary freight audit before manual approval.\" Since your increase is 125%, the system is behaving as designed.\n\nPlease hold off on any further manual attempts in the portal to avoid locking the order. I will update this ticket once the freight audit is complete.\n\n[System Note: Ticket flagged for 'Manual Freight Audit' workflow.]",
+   "source_lines": [
+    8465,
+    8466,
+    8467,
+    8468
+   ],
+   "agree": 4,
+   "n": 4,
+   "window_end_char": 1586,
+   "questions": [
+    {
+     "id": "dd818cca89806d2b",
+     "kind": "verify",
+     "question": "Does the requested increase for SKU WGT-99-B exceed the 20% threshold specified in the Bulk Order Amendment Policy?",
+     "choices": [
+      "yes, it exceeds the threshold",
+      "no, it does not exceed the threshold"
+     ],
+     "teacher": [
+      0.99,
+      0.01
+     ],
+     "decima": [
+      0.72353,
+      0.27647
+     ],
+     "agree": true
+    },
+    {
+     "id": "1cf82cb2b94438ee",
+     "kind": "score",
+     "question": "Rate the operational urgency of this request based on the customer's assembly requirements.",
+     "choices": [
+      "Low",
+      "Medium",
+      "High",
+      "Critical",
+      "Extreme"
+     ],
+     "teacher": [
+      0.05,
+      0.14999,
+      0.39996,
+      0.39996,
+      0.0001
+     ],
+     "decima": [
+      0.0175,
+      0.13722,
+      0.51462,
+      0.28557,
+      0.0451
+     ],
+     "agree": true
+    },
+    {
+     "id": "6de63d8187c00259",
+     "kind": "choose",
+     "question": "What is the primary reason the system prevented the update?",
+     "choices": [
+      "Payment failure",
+      "Insufficient stock",
+      "Weight validation error",
+      "User permission error",
+      "Invalid SKU format",
+      "Shipping address mismatch",
+      "Carrier unavailability",
+      "Policy violation lockout"
+     ],
+     "teacher": [
+      0.02,
+      0.02,
+      0.85,
+      0.05,
+      0.02,
+      0.01,
+      0.01,
+      0.02
+     ],
+     "decima": [
+      0.0206,
+      0.11761,
+      0.59304,
+      0.03239,
+      0.02481,
+      0.08238,
+      0.01508,
+      0.1141
+     ],
+     "agree": true
+    },
+    {
+     "id": "be425e6d3baa47d7",
+     "kind": "score",
+     "question": "How certain is the support agent about the specific cause of the error?",
+     "choices": [
+      "Low certainty",
+      "Medium certainty",
+      "High certainty"
+     ],
+     "teacher": [
+      0.1,
+      0.3,
+      0.6
+     ],
+     "decima": [
+      0.26372,
+      0.36204,
+      0.37423
+     ],
+     "agree": true
+    }
+   ]
+  },
+  {
+   "group": "jev-0-1973",
+   "domain": "real_estate",
+   "scenario": "maintenance request with safety implications",
+   "format": "tenant portal message thread",
+   "state_lang": "fa",
+   "choice_lang": "en",
+   "state": "[Portal Message Thread: #REQ-2025-8892]\n[Property Management System: Aras Management Services (AMS) - Version 4.2.1]\n[Unit: Apt 402, Blue Sky Towers, Tehran]\n[Tenant ID: 99283-T]\n\n2025-09-28 08:15:12 - [System] New maintenance request submitted by: Arash Mansouri.\n2025-09-28 08:15:45 - [System] Request Category: Electrical/Plumbing (Hybrid).\n\nArash Mansouri:\nسلام، من ساکن واحد 402 هستم. می‌خواستم گزارش بدم که از دیشب یه صدای جلز ولز خیلی عجیبی از سمت پریز برق کنار سینک آشپزخانه میاد. فکر کنم با هر بار باز شدن شیر آب، اون صدا شدیدتر میشه.\n\n2025-09-28 08:17:10 - [System] Attachment uploaded: `IMG_20250928_0812.jpg` (Size: 2.4MB)\n2025-09-28 08:17:30 - [System] Attachment uploaded: `VIDEO_0815.mp4` (Size: 15.6MB)\n\nArash Mansouri:\nبسیار مهم: همین الان وقتی داشتم ظرف می‌شستم، یه دود خیلی کم از اون قسمت پریز بلند شد. من فورا برق کل واحد رو قطع کردم. الان وضعیت خیلی خطرناک به نظر می‌رسه چون رطوبت زیر سینک هم زیاده و نزدیک به سیم‌کشی هست. لطفا سریع‌تر یه تعمیرکار بفرستید، نگران آتش‌سوزی هستم.\n\n2025-09-28 09:05:22 - [Admin: Leyla Rezayi]\nآقای منصوری، پیام شما رو دریافت کردیم. طبق پروتکل ایمنی AMS-POL-09 (بند 3: فوریت‌های الکتریکی در محیط‌های مرطوب)، این درخواست مستقیما به حالت \"Emergency Priority\" ارتقا یافت.\n\nلطفا تا رسیدن تکنسین، از لمس هیچ‌کدام از کلیدهای برق یا محوطه مرطوب خودداری کنید. ما با شرکت \"Techno-Fix Maintenance\" هماهنگ می‌کنیم. هزینه اعزام در صورت تشخیص نقص در تجهیزات اصلی ساختمان، بر عهده مدیریت خواهد بود.\n\n2025-09-28 09:10:05 - [System] Task assigned to: Technician ID #442 (Techno-Fix).\n2025-09-28 09:10:05 - [System] ETA: 45-60 minutes.\n\n---\n[Internal Log - Metadata]\nRequest_Hash: 0x8821FF\nUser_Agent: Mobile/iOS/17.4\nError_Code: None\nLocation_Lat_Long: 35.7228, 51.3822\nCurrent_Status: DISPATCHED_URGENT",
+   "source_lines": [
+    7292,
+    7293,
+    7294
+   ],
+   "agree": 3,
+   "n": 3,
+   "window_end_char": 1583,
+   "questions": [
+    {
+     "id": "e390fb27d81ac99c",
+     "kind": "score",
+     "question": "سطح خطر موجود در این درخواست را بر اساس توصیفات مستاجر ارزیابی کنید:",
+     "choices": [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+     ],
+     "teacher": [
+      0.05,
+      0.15,
+      0.3,
+      0.5
+     ],
+     "decima": [
+      0.01809,
+      0.08389,
+      0.31289,
+      0.58513
+     ],
+     "agree": true
+    },
+    {
+     "id": "863df633d76043df",
+     "kind": "verify",
+     "question": "آیا مستاجر در حال حاضر برق کل واحد را وصل نگه داشته است؟",
+     "choices": [
+      "Yes, the power is on",
+      "No, the power has been cut"
+     ],
+     "teacher": [
+      0.05,
+      0.95
+     ],
+     "decima": [
+      0.11869,
+      0.88131
+     ],
+     "agree": true
+    },
+    {
+     "id": "754126c2c56dd2fe",
+     "kind": "verify",
+     "question": "آیا هزینه اعزام تعمیرکار قطعا بر عهده مدیریت ساختمان خواهد بود؟",
+     "choices": [
+      "Yes, it is guaranteed",
+      "No, it depends on the findings"
+     ],
+     "teacher": [
+      0.1,
+      0.9
+     ],
+     "decima": [
+      0.19681,
+      0.80319
+     ],
+     "agree": true
+    }
+   ]
+  },
+  {
+   "group": "jev-0-2015",
+   "domain": "fraud",
+   "scenario": "card-not-present order with mismatched addresses",
+   "format": "transaction record with risk signals and device fingerprint",
+   "state_lang": "ar",
+   "choice_lang": "ar",
+   "state": "[TRANSACTION_RECORD_V4.2.1]\nTimestamp: 2026-04-11T14:22:09.442Z\nMerchant: Arkan-Tech Solutions (ID: AT-99284)\nTerminal_ID: POS-WEB-004\nOperator: [Automated Gateway]\n\n--- TRANSACTION DETAILS ---\nTransaction_ID: TXN-88391022-Z\nCustomer_Name: سليمان بن راشد المنصور\nCard_Type: Visa Platinum\nCard_Last4: 8821\nAmount: 12,450.00 SAR\nCurrency: SAR\nStatus: PENDING_REVIEW\nAuth_Code: NULL\n\n--- SHIPPING & BILLING ---\nBilling_Address:\n Street: 442 شارع التخصصي\n District: العليا\n City: الرياض\n Postal_Code: 12211\n Country: SA\n\nShipping_Address:\n Recipient: \"S. Al-Mansour\"\n Street: 12 Block B, Al-Rawdah\n District: منطقة السكن المزدحم\n City: جدة\n Postal_Code: 23433\n Country: SA\n\n--- RISK ENGINE SIGNALS ---\n[SIGNAL_LOG]\n[14:22:09] RISK_SCORE_CALC: Initial score 42/100.\n[14:22:09] MATCH_ENGINE: [WARNING] Billing ZIP (12211) vs Shipping ZIP (23433) mismatch.\n[14:22:09] VELOCITY_CHECK: User 's.almansour88' has 0 previous transactions in last 30 days.\n[14:22:09] GEOLOCATION_CHECK: IP (178.64.12.88) resolves to Jeddah, SA.\n[14:22:09] DEVICE_FINGERPRINT: \n {\n \"os\": \"Android 14\",\n \"browser\": \"Chrome Mobile\",\n \"is_emulator\": false,\n \"proxy_detected\": true,\n \"vpn_provider\": \"Nord-Proxy-Node-7\",\n \"screen_res\": \"1080x2400\"\n }\n[14:22:10] FRAUD_PATTERN_MATCH: Pattern 'CNP_ADDR_MISMATCH_PROXY' detected (Confidence: 0.72).\n[14:22:10] POLICY_REF: \"Rule-302: Transactions exceeding 10,000 SAR with proxy usage and address discrepancies must undergo manual verification.\"\n\n--- SYSTEM NOTES ---\nNote: Transaction flagged by automated rules due to high value and technical anomalies. IP location matches shipping city but contradicts the typical billing profile of this user segment. No previous device association found for this card.\n>>>",
+   "source_lines": [
+    7451,
+    7452,
+    7453,
+    7454
+   ],
+   "agree": 4,
+   "n": 4,
+   "window_end_char": 1333,
+   "questions": [
+    {
+     "id": "05b808d12fc54a8f",
+     "kind": "score",
+     "question": "ما هو مستوى خطر الاحتيال لهذا الطلب بناء على المعطيات التقنية؟",
+     "choices": [
+      "منخفض جدا",
+      "متوسط",
+      "مرتفع",
+      "مرتفع جدا"
+     ],
+     "teacher": [
+      0.05,
+      0.35,
+      0.45,
+      0.15
+     ],
+     "decima": [
+      0.04028,
+      0.16213,
+      0.41543,
+      0.38216
+     ],
+     "agree": true
+    },
+    {
+     "id": "54ebe9e1d671092a",
+     "kind": "choose",
+     "question": "ما هو الإجراء الأنسب لاتخاذ قرار فوري بشأن هذه المعاملة؟",
+     "choices": [
+      "قبول المعاملة فورا",
+      "رفض المعاملة تلقائيا",
+      "تجميد الطلب للمراجعة اليدوية",
+      "طلب التحقق الثنائي من العميل"
+     ],
+     "teacher": [
+      0.02,
+      0.08,
+      0.85,
+      0.05
+     ],
+     "decima": [
+      0.07168,
+      0.17687,
+      0.49094,
+      0.26051
+     ],
+     "agree": true
+    },
+    {
+     "id": "94726f24b929cd8e",
+     "kind": "verify",
+     "question": "هل تم اكتشاف استخدام لخدمة بروكسي أو VPN أثناء عملية الدفع؟",
+     "choices": [
+      "نعم، تم اكتشاف ذلك",
+      "لا، لم يتم اكتشاف ذلك"
+     ],
+     "teacher": [
+      0.98,
+      0.02
+     ],
+     "decima": [
+      0.85919,
+      0.14081
+     ],
+     "agree": true
+    },
+    {
+     "id": "6dc38826e3b3bd23",
+     "kind": "choose",
+     "question": "ما هو السبب الرئيسي وراء رفع حالة المعاملة للمراجعة؟",
+     "choices": [
+      "مبلغ المعاملة منخفض",
+      "عدم تطابق العنوان الجغرافي والرمز البريدي",
+      "خطأ في بيانات بطاقة الائتمان",
+      "فشل في عملية الاتصال بالبنك",
+      "تكرار المحاولات من نفس الجهاز"
+     ],
+     "teacher": [
+      0.01,
+      0.92,
+      0.02,
+      0.02,
+      0.03
+     ],
+     "decima": [
+      0.02061,
+      0.75007,
+      0.02372,
+      0.10045,
+      0.10515
+     ],
+     "agree": true
+    }
+   ]
+  },
+  {
+   "group": "jev-0-1883",
+   "domain": "compliance_privacy",
+   "scenario": "deletion request conflicting with retention",
+   "format": "policy excerpt plus an internal request email",
+   "state_lang": "en",
+   "choice_lang": "en",
+   "state": "Data Retention & Disposal Policy (v4.2.1) - Internal Reference Only\nEffective Date: 2021-01-15 | Last Reviewed: 2022-03-10\nOwner: Compliance Dept (Compliance-Global)\n\nSection 4.3: Financial Transaction Records\nAll transactional metadata, including client identifiers, amount fields, and timestamped settlement data, shall be retained for a mandatory period of seven (7) years from the date of the transaction to satisfy local tax and anti-money laundering (AML) regulatory requirements.\n\nSection 5.1: Right to Erasure (GDPR/CCPA Compliance)\nUpon receipt of a verified 'Request for Deletion' (RfD), the Data Privacy Office (DPO) shall facilitate the removal of all personally identifiable information (PII) from active production databases. However, Section 5.1.b states: \"The obligation to delete shall not supersede statutory retention requirements for financial, tax, or legal hold data. In cases of conflict, data must be moved to a restricted-access 'Cold Archive' and shielded from general processing until the statutory period expires.\"\n\n--------------------------------------------------------------------------------\nFrom: Marcus Thorne <m.thorne@veridion-fintech.example>\nTo: Elena Rossi <e.rossi@veridion-fintech.example>\nSent: Wednesday, June 7, 2022 10:14 AM\nSubject: URGENT: Deletion Request - Client ID #AX-99281 (J. Aris)\n\nHi Elena,\n\nWe just received a formal deletion request from J. Aris (Client ID: #AX-99281). The client is demanding immediate removal of all profile data, including transaction history, citing their right to be forgotten.\n\nI’ve looked at the account in the `prod-ledger-db-04` instance. They have a series of high-value transfers from late 2021, specifically the $14,500.00 settlement on 2021-11-12. If we wipe the record now to satisfy the GDPR request, we’re going to be in a massive hole during the Q3 audit regarding AML compliance.\n\nCan we just purge the whole ID? I'm seeing a lot of pressure from the customer success side to close this ticket today.\n\nBest,\nMarcus\n\n---\n[System Log: Ticket-Tracker-v2]\n2022-06-07 10:15:02 [INFO] Ticket #88219 created by m.thorne\n2022-06-07 10:15:05 [DEBUG] Database connection to 'prod-ledger-db-04' established.\n2022-06-07 10:15:05 [WARN] User m.thorne attempted to access 'audit-logs-restricted' without elevated permissions.\n2022-06-07 10:16:12 [INFO] Ticket status changed to 'Pending Review'.",
+   "source_lines": [
+    6953,
+    6954,
+    6955
+   ],
+   "agree": 3,
+   "n": 3,
+   "window_end_char": 1909,
+   "questions": [
+    {
+     "id": "2e3453e408ca4f26",
+     "kind": "choose",
+     "question": "What is the primary reason for the conflict regarding the deletion of Client ID #AX-99281?",
+     "choices": [
+      "Marketing preference",
+      "Tax/AML statutory retention",
+      "Technical database error",
+      "Expired user consent",
+      "Incomplete client identification",
+      "Internal data migration",
+      "Security breach protocol",
+      "System hardware failure"
+     ],
+     "teacher": [
+      0.05,
+      0.85,
+      0.05,
+      0.02,
+      0.01,
+      0.01,
+      0.005,
+      0.005
+     ],
+     "decima": [
+      0.00632,
+      0.85873,
+      0.00414,
+      0.00935,
+      0.04539,
+      0.06514,
+      0.00919,
+      0.00173
+     ],
+     "agree": true
+    },
+    {
+     "id": "e253e49ada541360",
+     "kind": "verify",
+     "question": "Does the current policy allow for the immediate, total removal of transaction history for this specific client?",
+     "choices": [
+      "Yes, deletion must be absolute",
+      "No, statutory retention takes precedence"
+     ],
+     "teacher": [
+      0.02,
+      0.98
+     ],
+     "decima": [
+      0.16631,
+      0.83369
+     ],
+     "agree": true
+    },
+    {
+     "id": "18e87ff60c6834e9",
+     "kind": "score",
+     "question": "Assess the regulatory risk associated with following Marcus's suggestion to 'just purge the whole ID'.",
+     "choices": [
+      "Low Risk",
+      "Moderate Risk",
+      "High Risk"
+     ],
+     "teacher": [
+      0.01,
+      0.09,
+      0.9
+     ],
+     "decima": [
+      0.13624,
+      0.30904,
+      0.55471
+     ],
+     "agree": true
+    }
+   ]
+  },
+  {
+   "group": "jev-0-2073",
+   "domain": "code_review",
+   "scenario": "database query change without an index",
+   "format": "pull-request description plus a unified diff and CI summary",
+   "state_lang": "en",
+   "choice_lang": "en",
+   "state": "Pull Request: #8821 - Update order filtering logic for Merchant Dashboard\nAuthor: Elena Vance (evance@flux-logistics.example)\nDate: 2023-04-28 14:22 UTC\nStatus: Open\nReviewers: [ ]\n\nDescription:\nAs part of the Q2 performance tuning sprint, we are updating the `OrderRepository` to support filtering by `vendor_status` and `region_code` simultaneously in the dashboard view. This will allow our logistics partners to see pending shipments more granularly. \n\nI've updated the SQL builder to include these two fields in the WHERE clause. Note that I haven't added any new indexes yet because the DBA team (Marcus & Sarah) mentioned they are currently performing a migration on the `orders_master` cluster and requested no DDL changes until the maintenance window on Friday. We'll monitor the query latency in the staging environment.\n\nDiff:\n--- a/src/db/repositories/OrderRepository.java\n+++ b/src/db/repositories/OrderRepository.java\n@@ -142,7 +142,7 @@\n     public List<Order> findActiveOrders(String vendorStatus, String region) {\n         String sql = \"SELECT id, order_date, total_amount, status, region_code \" +\n                      \"FROM orders_master \" +\n-                      \"WHERE status = 'ACTIVE' \";\n+                      \"WHERE status = 'ACTIVE' AND vendor_status = ? AND region_code = ?\";\n         return jdbcTemplate.query(sql, new Object[]{vendorStatus, region}, mapper);\n     }\n\nCI Summary:\n[2023-04-28 14:25:01] Running Unit Tests...\n[2023-04-28 14:25:12] PASSED: 42 tests executed.\n[2023-04-28 14:25:15] Running Integration Tests (Staging DB)...\n[2023-04-28 14:26:44] PASSED: 12 tests executed.\n[2023-04-28 14:26:45] Linting: OK.\n[2023-04-28 14:26:46] Build: SUCCESS.\n\nReviewer Notes:\n- (Placeholder)\n- (Placeholder)",
+   "source_lines": [
+    7666,
+    7667,
+    7668,
+    7669
+   ],
+   "agree": 4,
+   "n": 4,
+   "window_end_char": 1649,
+   "questions": [
+    {
+     "id": "a2ba5a0e23e54f05",
+     "kind": "verify",
+     "question": "Does the proposed change include any Data Definition Language (DDL) statements such as CREATE INDEX or ALTER TABLE?",
+     "choices": [
+      "yes",
+      "no"
+     ],
+     "teacher": [
+      0.02,
+      0.98
+     ],
+     "decima": [
+      0.19302,
+      0.80698
+     ],
+     "agree": true
+    },
+    {
+     "id": "54e25668cc253c36",
+     "kind": "choose",
+     "question": "What is the primary reason provided for the absence of database indexing for the new query parameters?",
+     "choices": [
+      "The staging environment lacks the necessary permissions.",
+      "A scheduled maintenance/migration is currently being performed by the DBA team.",
+      "The developer believes the existing status index is sufficient.",
+      "The CI pipeline failed to validate the index requirements."
+     ],
+     "teacher": [
+      0.05,
+      0.92,
+      0.02,
+      0.01
+     ],
+     "decima": [
+      0.04345,
+      0.50788,
+      0.28807,
+      0.1606
+     ],
+     "agree": true
+    },
+    {
+     "id": "6ac95e22050247d0",
+     "kind": "choose",
+     "question": "What is the most likely risk profile for this specific code change?",
+     "choices": [
+      "Immediate application crash due to syntax errors.",
+      "Performance degradation due to full table scans on large datasets.",
+      "Data corruption caused by incorrect WHERE clause logic."
+     ],
+     "teacher": [
+      0.05,
+      0.55,
+      0.4
+     ],
+     "decima": [
+      0.08634,
+      0.56103,
+      0.35263
+     ],
+     "agree": true
+    },
+    {
+     "id": "233ec11ecfe195e1",
+     "kind": "score",
+     "question": "How would you rate the operational risk of merging this PR in its current state?",
+     "choices": [
+      "Negligible",
+      "Low",
+      "Moderate",
+      "High",
+      "Critical",
+      "Catastrophic",
+      "Extreme"
+     ],
+     "teacher": [
+      0.05,
+      0.15,
+      0.65,
+      0.1,
+      0.03,
+      0.01,
+      0.01
+     ],
+     "decima": [
+      0.02494,
+      0.15312,
+      0.42222,
+      0.30629,
+      0.07744,
+      0.01378,
+      0.00221
+     ],
+     "agree": true
+    }
+   ]
+  },
+  {
+   "group": "jev-0-1701",
+   "domain": "ecommerce",
+   "scenario": "return outside the window with a defect claim",
+   "format": "seller-support ticket with order history",
+   "state_lang": "ar",
+   "choice_lang": "ar",
+   "state": "[TICKET-ID: 99283-X]\n[TIMESTAMP: 2022-08-03 14:22:10]\n[AGENT: سامر المنصور]\n[DEPARTMENT: دعم البائعين - قسم النزاعات]\n\n--- سجل الطلب (Order History Log) ---\nOrder_ID: ORD-7721-B\nCustomer_Name: ليلى بن يوسف\nDate_Placed: 2022-07-05 10:15:44\nStatus: Delivered\nDelivery_Date: 2022-07-08 16:30:00\nSKU: TECH-AUD-992 (سماعات لاسلكية Pro-Sound)\nUnit_Price: 450.00 SAR\nTotal_Paid: 450.00 SAR\n\n--- تفاصيل التذكرة (Ticket Details) ---\nالموضوع: طلب استرجاع مع ادعاء وجود عيب مصنعي\nالحالة: قيد المراجعة\n\nنص رسالة العميل:\n\"مرحبا، لقد استلمت السماعات منذ فترة، ولكنها بدأت تصدر ضجيجا في الجهة اليسرى اليوم فقط. أريد استرجاع المبلغ بالكامل. المنتج لم يعد يعمل كما هو متوقع.\"\n\nملاحظات الوكيل (Internal Note):\nالعميلة تطلب الاسترجاع بتاريخ 2022-08-03. بالنظر إلى تاريخ الاستلام (2022-07-08)، فقد تجاوزت فترة الاسترجاع المعتادة (14 يوما) بمقدار 21 يوما تقريبا. \n\nسياسة الاسترجاع (Policy Reference v4.2):\n- \"يمكن للمشتري طلب استرجاع المنتج خلال 14 يوما من تاريخ الاستلام في حالة تغيير الرأي.\"\n- \"في حالة وجود عيب مصنعي (Defective Item)، يتم قبول الطلب خلال 30 يوما من تاريخ الاستلام، بشرط تقديم إثبات تقني أو فيديو يوضح العطل.\"\n\nسجل العمليات (Audit Trail):\n[2022-08-03 14:22:10] - تم فتح التذكرة بواسطة العميل.\n[2022-08-03 14:45:00] - تم تصنيف الطلب ك 'Defect Claim'.\n[2022-08-03 15:10:22] - فحص تاريخ التسليم عبر نظام الشحن (Log: SHIP-99-A): تم التسليم بنجاح في 08-JUL-2022.\n\nملاحظة إضافية من النظام:\nWarning: Order falls outside the 'Standard Return Window'. Escalation to Quality Control may be required if 'Defect' is verified.\n\nتوقيع:\nسامر المنصور\nSenior Support Specialist | Al-Nour E-commerce Solutions\n--------------------------------------------------",
+   "source_lines": [
+    6292,
+    6293,
+    6294,
+    6295
+   ],
+   "agree": 4,
+   "n": 4,
+   "window_end_char": 1560,
+   "questions": [
+    {
+     "id": "ba9aa58892f3fdd9",
+     "kind": "score",
+     "question": "ما هو مستوى خطورة هذا النزاع على استقرار تقييم البائع؟",
+     "choices": [
+      "منخفض جدا",
+      "منخفض",
+      "متوسط",
+      "مرتفع",
+      "مرتفع جدا"
+     ],
+     "teacher": [
+      0.1,
+      0.35,
+      0.45,
+      0.05,
+      0.05
+     ],
+     "decima": [
+      0.04125,
+      0.23503,
+      0.45669,
+      0.21505,
+      0.05198
+     ],
+     "agree": true
+    },
+    {
+     "id": "1bca2921c3f68d93",
+     "kind": "verify",
+     "question": "هل تجاوزت العميلة فترة الاسترجاع المخصصة لتغيير الرأي (14 يوما)؟",
+     "choices": [
+      "نعم، تجاوزت الفترة",
+      "لا، لم تتجاوزها"
+     ],
+     "teacher": [
+      0.95,
+      0.05
+     ],
+     "decima": [
+      0.79378,
+      0.20622
+     ],
+     "agree": true
+    },
+    {
+     "id": "345708dc85aa3464",
+     "kind": "verify",
+     "question": "هل قدمت العميلة أي إثبات تقني (فيديو أو مستند) ضمن نص الرسالة المذكور؟",
+     "choices": [
+      "نعم، قدمت إثباتا",
+      "لا، لم تقدم إثباتا"
+     ],
+     "teacher": [
+      0.05,
+      0.95
+     ],
+     "decima": [
+      0.28962,
+      0.71038
+     ],
+     "agree": true
+    },
+    {
+     "id": "ac05ca89f9cdbc0d",
+     "kind": "score",
+     "question": "ما مدى ثقة النظام في أن هذا المنتج يندرج تحت فئة 'العيب المصنعي' بناء على المعطيات الحالية فقط؟",
+     "choices": [
+      "منعدمة",
+      "ضعيفة",
+      "متوسطة",
+      "قوية",
+      "مؤكدة"
+     ],
+     "teacher": [
+      0.04762,
+      0.38095,
+      0.42857,
+      0.09524,
+      0.04762
+     ],
+     "decima": [
+      0.05111,
+      0.21914,
+      0.41912,
+      0.23526,
+      0.07538
+     ],
+     "agree": true
+    }
+   ]
+  },
+  {
+   "group": "jev-0-1910",
+   "domain": "ecommerce",
+   "scenario": "wrong item shipped",
+   "format": "returns-portal submission",
+   "state_lang": "en",
+   "choice_lang": "en",
+   "state": "VELOCITY RETAIL SOLUTIONS | RETURNS MANAGEMENT PORTAL v4.2.1-stable\nSession ID: 88291-XJ-9920 | User: m.holloway@customer.example | Timestamp: 2022-08-06T14:22:09Z\n--------------------------------------------------------------------------------\n\n[FORM SUBMISSION: RETURN_REQUEST_ERR_04]\n\nCustomer Details:\nName: Marcus Holloway\nAccount Reference: VR-992811-M\nTier: Silver\n\nOrder History Reference:\nOrder ID: #ORD-77210-B\nOriginal Order Date: 2022-08-02\nFulfillment Center: DC-NORTH-04 (Lehigh Valley)\nTotal Order Value: $142.50 USD\nStatus: Delivered (Signature: J. Doe)\n\nItem(s) in Order:\n1. [SKU: BT-990] - AeroStream Wireless Earbuds - Black - $120.00\n2. [SKU: CS-112] - Silicone Protective Case - Clear - $22.50\n\nReturn Selection:\nSelected Item: [SKU: BT-990] - AeroStream Wireless Earbuds - Black\nReturn Reason: Wrong Item Received (Mis-pick)\nDescription of Issue: \n\"I opened the box today and instead of the AeroStream earbuds I ordered, I found a pack of heavy-duty industrial zip ties (SKU: ZT-55-IND). The packaging for the earbuds was actually stuck to the bottom of the box, but it was empty. The shipping label matches my order, but the contents are completely different. Please send the correct item ASAP. I need these for a flight on the 10th.\"\n\nAttachments:\n- photo_of_label.jpg (Verified: 2022-08-06T14:23:11Z)\n- photo_of_contents.jpg (Verified: 2022-08-06T14:23:45Z)\n\nSystem Internal Logs:\n[14:22:09] INFO: Form validation success.\n[14:22:09] WARN: SKU mismatch detected in user-provided description vs selection field.\n[14:22:09] DEBUG: Selected SKU: BT-990. User text mentions SKU: ZT-55-IND.\n[14:22:10] INFO: Triggering automated triage. Routing to: Logistics_Dispute_Queue.\n[14:22:10] TRACE: Warehouse audit log check for DC-NORTH-04... \n[14:22:10] TRACE: No immediate inventory discrepancy reported for BT-990 at DC-NORTH-04 in last 60 mins.\n\nPolicy Note: \n\"Per Policy v9.2: If the customer claims 'Wrong Item Received', the fulfillment center must be contacted for a cycle count of the reported SKU within 24 hours of the return request submission.\"\n\n--------------------------------------------------------------------------------\nEND OF SUBMISSION",
+   "source_lines": [
+    7047,
+    7048,
+    7049,
+    7050,
+    7051
+   ],
+   "agree": 4,
+   "n": 5,
+   "window_end_char": 1605,
+   "questions": [
+    {
+     "id": "a9c99030ebea62c6",
+     "kind": "score",
+     "question": "Assess the urgency for resolving this specific customer's issue based on their stated deadline.",
+     "choices": [
+      "Very Low",
+      "Low",
+      "Medium",
+      "High",
+      "Very High",
+      "Critical"
+     ],
+     "teacher": [
+      0.05,
+      0.1,
+      0.15,
+      0.4,
+      0.25,
+      0.05
+     ],
+     "decima": [
+      0.00709,
+      0.05532,
+      0.33773,
+      0.46704,
+      0.11588,
+      0.01694
+     ],
+     "agree": true
+    },
+    {
+     "id": "5c3349336cfabe79",
+     "kind": "verify",
+     "question": "Was the item the customer actually received a piece of electronics?",
+     "choices": [
+      "Yes, it was electronics",
+      "No, it was not electronics"
+     ],
+     "teacher": [
+      0.02,
+      0.98
+     ],
+     "decima": [
+      0.2257,
+      0.7743
+     ],
+     "agree": true
+    },
+    {
+     "id": "1008dc002a2314eb",
+     "kind": "choose",
+     "question": "Identify the primary root cause category for this return request.",
+     "choices": [
+      "Damaged in Transit",
+      "Defective Product",
+      "Incorrect Item Shipped",
+      "Customer Ordered Wrong Item"
+     ],
+     "teacher": [
+      0.05,
+      0.05,
+      0.85,
+      0.05
+     ],
+     "decima": [
+      0.18424,
+      0.23787,
+      0.29903,
+      0.27886
+     ],
+     "agree": true
+    },
+    {
+     "id": "ccb0990eafb77cb6",
+     "kind": "verify",
+     "question": "Did the customer mention a specific date for their upcoming travel?",
+     "choices": [
+      "Yes, they mentioned a date",
+      "No, they did not mention a date"
+     ],
+     "teacher": [
+      0.95,
+      0.05
+     ],
+     "decima": [
+      0.29441,
+      0.70559
+     ],
+     "agree": false
+    },
+    {
+     "id": "c9fa0585f0498bb2",
+     "kind": "score",
+     "question": "What is the level of confidence in the system's ability to resolve this through standard automated workflows without manual intervention?",
+     "choices": [
+      "Very Low",
+      "Low",
+      "Medium",
+      "High",
+      "Very High"
+     ],
+     "teacher": [
+      0.05,
+      0.19998,
+      0.54995,
+      0.19998,
+      0.0001
+     ],
+     "decima": [
+      0.0606,
+      0.25347,
+      0.44779,
+      0.18718,
+      0.05097
+     ],
+     "agree": true
+    }
+   ]
+  },
+  {
+   "group": "jev-0-2538",
+   "domain": "product_feedback",
+   "scenario": "app-store reviews after a release",
+   "format": "bug tracker issue with comments",
+   "state_lang": "en",
+   "choice_lang": "en",
+   "state": "ISSUE-4492: CRASH ON STARTUP (iOS 17.4)\nStatus: Open\nReporter: Elena Vance (evance@lumina-apps.example)\nAssignee: Marcus Thorne\nPriority: High\nCreated: 2024-02-12 09:14:22 UTC\n\n[Description]\nUsers are reporting immediate crashes on the splash screen following the v4.2.1 release. This appears to be isolated to the latest iOS builds. Several App Store reviews mention a \"black screen loop\" before the app force-closes. \n\n[Comment] 2024-02-12 10:05:44 UTC - Marcus Thorne\nInitial triage: I've pulled the crash logs from Sentry. We are seeing a massive spike in `SIGABRT` errors. \nError string: `*** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[LuminaCoreSession setConfiguration:]: unrecognized selector sent to instance 0x6000034a8c20'`\nThis looks like a method signature mismatch. It might be related to the refactor of the `LuminaCore` module we pushed last Tuesday.\n\n[Comment] 2024-02-12 11:30:12 UTC - Sarah Jenkins (QA)\nChecking the App Store feedback loop... \nUser \"TechGeek99\" says: \"Update 4.2.1 broke everything. App won't even open. 1 star.\"\nUser \"AppLover_42\" says: \"Worked fine on 4.2.0, but now it just hangs on the logo. Any fix?\"\nNote: I ran this on an iPhone 13 (iOS 17.4) and it crashed in 3 seconds. However, I couldn't replicate it on my iPhone 11 (iOS 16.7). \n\n[Comment] 2024-02-12 13:45:00 UTC - Marcus Thorne\n@Sarah, the logs suggest the `LuminaCoreSession` object is being instantiated via the old factory method, but the new binary expects the configuration to be passed during the `init` call. This is a classic API contract break.\nWait, looking at the build manifest... we are using `LuminaCore v2.1.0-beta`. Did the CI/CD pipeline pull the wrong tag?\nCheck `deploy-logs-09.log`:\n`[INFO] Deploying LuminaMobile-iOS v4.2.1...`\n`[INFO] Dependency Check: LuminaCore... Found v2.1.0-beta (unstable)`\n`[WARN] WARNING: Using beta-tagged dependency in production build.`\n`[INFO] Build successful. Hash: 88af221`\n\n[Comment] 2024-02-12 14:20:10 UTC - Elena Vance\nIf it's the beta dependency, we need to roll back the build immediately. The App Store rating is already dipping. Current rating: 4.2 (down from 4.7).",
+   "source_lines": [
+    9371,
+    9372,
+    9373,
+    9374,
+    9375
+   ],
+   "agree": 3,
+   "n": 5,
+   "window_end_char": 1686,
+   "questions": [
+    {
+     "id": "41ad92c8767e26d9",
+     "kind": "score",
+     "question": "How would you rate the urgency of this issue based on the current situation?",
+     "choices": [
+      "negligible",
+      "low",
+      "moderate",
+      "high",
+      "critical"
+     ],
+     "teacher": [
+      0.05,
+      0.05,
+      0.1,
+      0.3,
+      0.5
+     ],
+     "decima": [
+      0.01266,
+      0.05361,
+      0.22319,
+      0.46036,
+      0.25018
+     ],
+     "agree": false
+    },
+    {
+     "id": "d62b2373e12be830",
+     "kind": "choose",
+     "question": "What is the primary classification for this reported problem?",
+     "choices": [
+      "Feature Request",
+      "UI/UX Improvement",
+      "Regression",
+      "Dependency Mismatch",
+      "Documentation Error",
+      "Performance Bottleneck"
+     ],
+     "teacher": [
+      0.02,
+      0.03,
+      0.45,
+      0.4,
+      0.05,
+      0.05
+     ],
+     "decima": [
+      0.05486,
+      0.0635,
+      0.41714,
+      0.14992,
+      0.08544,
+      0.22914
+     ],
+     "agree": true
+    },
+    {
+     "id": "60d94cf5a79ebc8a",
+     "kind": "choose",
+     "question": "What is the intended next step for the engineering team?",
+     "choices": [
+      "Ignore the warning",
+      "Roll back to previous stable version",
+      "Update documentation",
+      "Patch the UI code",
+      "Increase testing on iOS 16",
+      "Refactor the factory method",
+      "Wait for user reports"
+     ],
+     "teacher": [
+      0.02,
+      0.75,
+      0.03,
+      0.02,
+      0.03,
+      0.1,
+      0.05
+     ],
+     "decima": [
+      0.089,
+      0.25564,
+      0.0916,
+      0.02829,
+      0.2018,
+      0.25807,
+      0.07561
+     ],
+     "agree": false
+    },
+    {
+     "id": "2286e365336a2e21",
+     "kind": "score",
+     "question": "Assess the technical severity of the crash reported in the logs.",
+     "choices": [
+      "minimal",
+      "minor",
+      "moderate",
+      "major",
+      "catastrophic",
+      "extreme",
+      "unmeasurable"
+     ],
+     "teacher": [
+      0.0001,
+      0.0001,
+      0.04999,
+      0.14997,
+      0.39992,
+      0.34993,
+      0.04999
+     ],
+     "decima": [
+      0.00424,
+      0.02056,
+      0.10899,
+      0.33928,
+      0.38225,
+      0.11723,
+      0.02745
+     ],
+     "agree": true
+    },
+    {
+     "id": "1994f33ab2aba3cc",
+     "kind": "verify",
+     "question": "Does the issue appear to be reproducible on all iOS versions?",
+     "choices": [
+      "yes, it is universal",
+      "no, it is version-specific"
+     ],
+     "teacher": [
+      0.15,
+      0.85
+     ],
+     "decima": [
+      0.14563,
+      0.85437
+     ],
+     "agree": true
+    }
+   ]
+  },
+  {
+   "group": "jev-0-1742",
+   "domain": "legal_contract",
+   "scenario": "data-processing addendum gaps",
+   "format": "legal intake request with the relevant clause pasted",
+   "state_lang": "en",
+   "choice_lang": "en",
+   "state": "LEGAL INTAKE PORTAL - V4.2.1\nRequest ID: REQ-99284-X\nTimestamp: 2025-07-20T14:22:01Z\nRequester: Elena Vance (Legal Operations, NexaFlow Systems)\nPriority: High\nMatter Ref: #2025-DP-009 (Client: Meridian Logistics Group)\n\n---\n[INTERNAL NOTES - DO NOT DISCLOSE TO CLIENT]\nThe client (Meridian) is pushing back on our standard DPA template. They are claiming our current sub-processor notification period is insufficient for their compliance audit requirements. They want a 60-day window instead of the 30 days we currently provide in Section 8.2. Please review the attached clause and the specific request from their DPO, Marcus Thorne.\n\n---\n[ATTACHED DOCUMENT: MERIDIAN_LOGISTICS_DPA_REDLINE_V2.docx]\n\nClause 12.4: Data Breach Notification\nIn the event of a confirmed Personal Data Breach, Processor shall notify Controller without undue delay, and in any event within 72 hours of becoming aware of such breach. Processor shall provide a written report describing the nature of the breach, the categories of data affected, and the remediation steps taken.\n\nClause 14.1: Sub-processor Engagement\nProcessor may engage sub-processors to assist in the performance of its obligations under this Agreement. Processor shall maintain an up-to-date list of sub-processors on its website. Processor shall notify Controller of any intended changes concerning the addition or replacement of sub-processors at least thirty (30) days prior to such change taking effect. Controller shall have the right to object to such changes on reasonable grounds related to data protection.\n\n[REPLY FROM CLIENT DPO - MARCUS THORNE]\n\"Regarding the DPA version 2.0 draft, we find the notification window in Clause 14.1 to be a significant gap in our risk management framework. Under our current internal governance protocols for 2025, any change in the processing chain requires a minimum of sixty (60) calendar days for our security team to conduct a secondary impact assessment. Please amend Clause 14.1 to reflect a 60-day notice period. Additionally, we noticed that your standard template does not explicitly mention the 'right to audit' in the context of sub-processor security, though we recognize this may be covered under the general audit provisions in Section 9.\"\n\n[SYSTEM METADATA]\nSource: Web_Form_Entry\nUser_Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\nProcessing_Node: US-EAST-1-LGL-04\nSession_ID: 882-f2-991-a\nStatus: PENDING_LEGAL_REVIEW",
+   "source_lines": [
+    6441,
+    6442,
+    6443,
+    6444
+   ],
+   "agree": 3,
+   "n": 4,
+   "window_end_char": 1970,
+   "questions": [
+    {
+     "id": "5e5860c07ff346d6",
+     "kind": "verify",
+     "question": "Does the client request an extension to the notification period for adding or replacing sub-processors?",
+     "choices": [
+      "yes, the client wants a longer window",
+      "no, the client is satisfied with the current period"
+     ],
+     "teacher": [
+      0.98,
+      0.02
+     ],
+     "decima": [
+      0.78102,
+      0.21898
+     ],
+     "agree": true
+    },
+    {
+     "id": "7e7e336edc8c4cc7",
+     "kind": "choose",
+     "question": "What is the specific duration requested by the client for sub-processor notifications?",
+     "choices": [
+      "30 days",
+      "60 days",
+      "72 hours"
+     ],
+     "teacher": [
+      0.05,
+      0.94,
+      0.01
+     ],
+     "decima": [
+      0.35567,
+      0.45568,
+      0.18865
+     ],
+     "agree": true
+    },
+    {
+     "id": "ecf95cb2b1747720",
+     "kind": "choose",
+     "question": "What is the primary subject of Marcus Thorne's feedback?",
+     "choices": [
+      "Data breach response times",
+      "Sub-processor notification windows",
+      "General audit rights"
+     ],
+     "teacher": [
+      0.15,
+      0.8,
+      0.05
+     ],
+     "decima": [
+      0.30351,
+      0.62838,
+      0.06811
+     ],
+     "agree": true
+    },
+    {
+     "id": "abe8ec0a5ce183f2",
+     "kind": "verify",
+     "question": "Does the current text of Clause 12.4 specify a 60-hour window for breach notification?",
+     "choices": [
+      "yes, it specifies 60 hours",
+      "no, it does not specify 60 hours"
+     ],
+     "teacher": [
+      0.0001,
+      0.9999
+     ],
+     "decima": [
+      0.50926,
+      0.49074
+     ],
+     "agree": false
+    }
+   ]
+  }
+ ]
+}
