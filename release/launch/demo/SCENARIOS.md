@@ -112,7 +112,7 @@ own, so its position cannot enter the computation.
 **Goal.** Show what calibrated probabilities are *for*: automate the confident cases, send the rest to
 a human.
 
-**Input.** 20 realistic tickets, 8 languages (EN ×12, ES, DE, FR, RU, FA, AR, ZH, TR), expected team written
+**Input.** 20 realistic tickets, 9 languages (EN ×12, ES, DE, FR, RU, FA, AR, ZH, TR), expected team written
 down before the run; §1 question and options; threshold 0.8.
 
 | decision | ticket (abridged) | top | conf | right? |
