@@ -98,7 +98,7 @@ class DecimaOnnx:
         if not p.exists():
             from huggingface_hub import snapshot_download
 
-            root = Path(snapshot_download(str(name_or_path), allow_patterns=[f"onnx/{precision}/*", f"onnx/{precision}/tokenizer/*"]))
+            root = Path(snapshot_download(str(name_or_path), allow_patterns=["config.json", f"onnx/{precision}/*", f"onnx/{precision}/tokenizer/*"]))
             p = root / "onnx" / precision
         return cls(p, threads=threads)
 

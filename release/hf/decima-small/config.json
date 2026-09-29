@@ -1,0 +1,14 @@
+{
+  "model_type": "decima",
+  "architectures": [
+    "Decima"
+  ],
+  "base_model": "intfloat/multilingual-e5-small",
+  "num_parameters": 122388869,
+  "exports": {
+    "int8": "onnx/int8",
+    "fp32": "onnx/fp32",
+    "pytorch": "pytorch"
+  },
+  "usage": "from decima import Decima; Decima.from_pretrained('amyrmahdy/decima-small')"
+}

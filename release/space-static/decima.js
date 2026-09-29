@@ -119,8 +119,13 @@ export class Decima {
     if (!baseUrl.endsWith("/")) baseUrl += "/";
     const names = ["encoder.onnx", "scorer.onnx", "decima.json", "tokenizer/tokenizer.json", "tokenizer/tokenizer_config.json"];
     const t0 = performance.now();
-    const bufs = await fetchFiles(names.map((n) => ({ url: baseUrl + n, size: SIZES[n] })), onProgress);
+    let fromCache = true;
+    const progress = (p) => { fromCache = p.cached; onProgress?.(p); };
+    const bufs = await fetchFiles(names.map((n) => ({ url: baseUrl + n, size: SIZES[n] })), progress);
     const tDownload = performance.now() - t0;
+    // The Hub counts a model download when the repo's config.json is requested; do that once per real download.
+    const repoRoot = baseUrl.match(/^(.*\/resolve\/[^/]+\/)/)?.[1];
+    if (!fromCache && repoRoot) fetch(repoRoot + "config.json", { method: "HEAD", mode: "cors" }).catch(() => {});
     const dec = new TextDecoder();
     const json = (b) => JSON.parse(dec.decode(b));
     const opts = { executionProviders: ["wasm"], graphOptimizationLevel: "all" };
