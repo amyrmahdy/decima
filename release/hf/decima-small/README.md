@@ -3,13 +3,16 @@ license: apache-2.0
 language: [en, fa, ar, ru, de, fr, es, pt, tr, hi, ta, zh, ja, ko, sw, ur, vi, th, el, bg]
 library_name: onnx
 pipeline_tag: zero-shot-classification
-tags: [decision-model, calibration, multilingual, onnx, int8, cpu]
+tags: [decision-model, system-one, jev, jev-alternative, typed-decisions, calibration, multilingual, onnx, int8, cpu, in-browser]
 base_model: intfloat/multilingual-e5-small
 ---
 
-# Decima-small
+# Decima-small — an open, CPU-sized Jev-style decision model
 
 **Give it a situation, a question and your options. Get back probabilities that are well calibrated as shipped.**
+Like TypeSafe's Jev, Decima is a *System One* model: it returns typed decisions (choose one, yes/no, an ordered
+score, rank) with probabilities instead of generating text. Unlike Jev, it is open (Apache-2.0), has 122M
+parameters, and runs on one CPU core or entirely in your browser.
 A 122M-parameter decision model that runs in ~20 ms on one laptop CPU core (4 options), works across
 languages (evaluated in 20), and does not change its answer when you reorder the options.
 

@@ -7,10 +7,10 @@ sdk: static
 app_file: index.html
 pinned: true
 license: apache-2.0
-short_description: A 122M decision model running in your browser
+short_description: Open Jev-style decision model, in your browser
 models:
   - amyrmahdy/decima-small
-tags: [decision-model, calibration, multilingual, onnx, onnxruntime-web, webassembly, in-browser, zero-shot-classification]
+tags: [decision-model, system-one, jev, jev-alternative, calibration, multilingual, onnx, onnxruntime-web, webassembly, in-browser, zero-shot-classification]
 ---
 
 # Decima Playground

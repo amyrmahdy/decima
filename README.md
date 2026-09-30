@@ -1,6 +1,8 @@
-# Decima
+# Decima — an open, CPU-sized Jev-style decision model
 
 **A small decision model: situation + question + your options → calibrated probabilities.**
+Like TypeSafe's Jev, Decima is a *System One* model: typed decisions with probabilities instead of generated
+text. Unlike Jev, it is open (Apache-2.0), 122M parameters, and runs on one CPU core or in your browser.
 
 Built by **A. M. Madani** ([@amyrmahdy](https://github.com/amyrmahdy) · [amyrmahdy.github.io](https://amyrmahdy.github.io)).
 
