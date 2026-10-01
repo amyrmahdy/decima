@@ -5,7 +5,7 @@ title: "Decima: A Small, Calibrated, Permutation-Invariant Decision Model via La
 type: software
 authors:
   - family-names: Madani
-    given-names: A. M.
+    given-names: Amir Mahdi
     alias: amyrmahdy
     email: amyrmahdy1@gmail.com
     website: "https://amyrmahdy.github.io"
@@ -13,8 +13,8 @@ authors:
 repository-code: "https://github.com/amyrmahdy/decima"
 url: "https://huggingface.co/amyrmahdy/decima-small"
 license: Apache-2.0
-version: 1.0.0
-date-released: "2026-09-27"
+version: 1.1.0
+date-released: "2026-10-01"
 keywords:
   - decision model
   - calibration

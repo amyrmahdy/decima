@@ -57,7 +57,7 @@ const softplus = (x) => Math.max(x, 0) + Math.log1p(Math.exp(-Math.abs(x))); // 
 
 // ───────────────────────── model download with cache ─────────────────────────
 
-const CACHE_NAME = "decima-small-model-v1";
+const CACHE_NAME = "decima-small-model-v1.1";   // bump on every model release: cached files are keyed by URL
 
 async function openCache() {
   try { return typeof caches !== "undefined" ? await caches.open(CACHE_NAME) : null; } catch { return null; }

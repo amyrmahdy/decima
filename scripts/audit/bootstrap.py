@@ -46,7 +46,7 @@ def main() -> None:
             print(f"{suite:16s} {n:18s} {point:.3f} [{bs[25]:.3f}, {bs[974]:.3f}]  Δ vs {systems[0]} [{diff[25]:+.3f}, {diff[974]:+.3f}]")
         out[suite] = {"cases": len(C), "items": sum(map(len, C)), "systems": res}
     Path("runs/audit").mkdir(parents=True, exist_ok=True)
-    Path("runs/audit/bootstrap.json").write_text(json.dumps(out, indent=2))
+    Path(f"runs/audit/bootstrap{'' if systems[0] == 'v1i' else '-' + systems[0]}.json").write_text(json.dumps(out, indent=2))
 
 
 if __name__ == "__main__":

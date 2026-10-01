@@ -35,9 +35,9 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = Path(__file__).resolve().parent
 RUNS = ROOT / "runs"
 
-DECIMA = "v1i"
+DECIMA = os.environ.get("DECIMA", "v1i")      # DECIMA=v1k → Decima-small 1.1
 NAMES = {
-    "v1i": "Decima-small",
+    DECIMA: "Decima-small",
     "kev-0.5b": "Kev-0.5B",
     "kev-0.8b": "Kev-0.8B",
     "laya": "Laya",
@@ -45,7 +45,7 @@ NAMES = {
 }
 # Total parameters as run, docs/EVAL.md §6 (safetensors headers / param_counts()).
 PARAMS = {
-    "v1i": 122_388_869,
+    DECIMA: 122_388_869,
     "kev-0.5b": 494_492_032,
     "kev-0.8b": 752_917_824,
     "laya": 421_293_830,
@@ -72,7 +72,7 @@ FONT = ["Inter", "Ubuntu", "Liberation Sans", "DejaVu Sans"]
 
 # ----------------------------------------------------------------------------- data
 def load_results() -> dict:
-    return {s: json.load(open(RUNS / f"v1i-{s}.json"))["results"] for s in ("kev", "laya", "decima", "jevtyped")}
+    return {s: json.load(open(RUNS / f"{DECIMA}-{s}.json"))["results"] for s in ("kev", "laya", "decima", "jevtyped")}
 
 
 def ok(v) -> bool:
@@ -339,7 +339,7 @@ def fig_flips(res, theme):
 def pairwise_ece(res):
     """The headline ECE comes from runs/audit/calibration.json (scripts/audit/calibration.py), the single
     definition every document quotes; `res` is only used to check the file is not stale."""
-    audit = json.load(open(RUNS / "audit" / "calibration.json"))["headline_as_shipped"]
+    audit = json.load(open(RUNS / "audit" / ("calibration.json" if DECIMA == "v1i" else f"calibration-{DECIMA}.json")))["headline_as_shipped"]
     out = {c: (v["decima"], v[c], v["suites"]) for c, v in audit.items()}
     for c, v in audit.items():  # staleness check against the results files
         for suite in v["suite_ids"]:
@@ -414,11 +414,11 @@ def reliability(system, bins=10):
 
 def fig_reliability(theme):
     t = setup(theme)
-    need = [RUNS / "preds" / f"laya--{s}.jsonl" for s in ("v1i", "laya", "laya-multilingual")] + [RUNS / "items" / "laya.jsonl"]
+    need = [RUNS / "preds" / f"laya--{s}.jsonl" for s in (DECIMA, "laya", "laya-multilingual")] + [RUNS / "items" / "laya.jsonl"]
     if not all(p.exists() for p in need):
         return None, None
     MIN_N = 20
-    d_bins, d_ece, n, d_top, d_topacc, d_cnt = reliability("v1i")
+    d_bins, d_ece, n, d_top, d_topacc, d_cnt = reliability(DECIMA)
     l_bins, l_ece, _, l_top, l_topacc, _ = reliability("laya")
     m_bins, m_ece, _, m_top, m_topacc, _ = reliability("laya-multilingual")
     dev = max(abs(c - a) for c, a, k in d_bins if k >= MIN_N)

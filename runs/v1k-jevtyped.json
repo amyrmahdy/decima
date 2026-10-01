@@ -1,0 +1,205 @@
+{
+  "items": "runs/items/jevtyped.jsonl",
+  "preds": {
+    "v0": "runs/preds/jevtyped--v0.jsonl",
+    "v1k": "runs/preds/jevtyped--v1k.jsonl",
+    "kev-0.5b": "runs/preds/jevtyped--kev-0.5b.jsonl",
+    "kev-0.8b": "runs/preds/jevtyped--kev-0.8b.jsonl",
+    "laya": "runs/preds/jevtyped--laya.jsonl",
+    "laya-multilingual": "runs/preds/jevtyped--laya-multilingual.jsonl"
+  },
+  "results": {
+    "v0": {
+      "jevbench/public": {
+        "n": 231,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.5064935064935064,
+        "macro_f1": 0.4918602457818144,
+        "brier": 0.5859233128305903,
+        "nll": 1.0150413568927281,
+        "ece": 0.1385358717272014,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": 0.0
+      },
+      "typed/test": {
+        "n": 2000,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.3905,
+        "macro_f1": 0.24057722913156168,
+        "brier": 0.719718072126844,
+        "nll": 1.3047331661809944,
+        "ece": 0.17741465113620705,
+        "ece_cal": 0.06544409377562706,
+        "T": 2.6896908679121667,
+        "flip": 0.0
+      }
+    },
+    "v1k": {
+      "jevbench/public": {
+        "n": 231,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.5714285714285714,
+        "macro_f1": 0.5339597584695625,
+        "brier": 0.518104465995137,
+        "nll": 0.8793262251524541,
+        "ece": 0.13537939015352068,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": 0.0
+      },
+      "typed/test": {
+        "n": 2000,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.4275,
+        "macro_f1": 0.2646654103200638,
+        "brier": 0.6765853446197352,
+        "nll": 1.2144885217341663,
+        "ece": 0.11933522068838816,
+        "ece_cal": 0.03259876975510478,
+        "T": 1.7750280721114635,
+        "flip": 0.0
+      }
+    },
+    "kev-0.5b": {
+      "jevbench/public": {
+        "n": 231,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.5064935064935064,
+        "macro_f1": 0.46271331726925724,
+        "brier": 0.6359899632457068,
+        "nll": 1.1874508602495566,
+        "ece": 0.2158265598423373,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": 0.07981220657276995
+      },
+      "typed/test": {
+        "n": 2000,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.4215,
+        "macro_f1": 0.26494502889609894,
+        "brier": 0.6871596058731708,
+        "nll": 1.2537520307174919,
+        "ece": 0.13300882159772545,
+        "ece_cal": 0.03124530598273707,
+        "T": 2.201021790892088,
+        "flip": 0.17666666666666667
+      }
+    },
+    "kev-0.8b": {
+      "jevbench/public": {
+        "n": 231,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.645021645021645,
+        "macro_f1": 0.5970961137627805,
+        "brier": 0.5328479181593341,
+        "nll": 1.1093577508744192,
+        "ece": 0.21179678334406155,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": 0.07042253521126761
+      },
+      "typed/test": {
+        "n": 2000,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.45,
+        "macro_f1": 0.35367706389081793,
+        "brier": 0.7051786593183299,
+        "nll": 1.2692572600404526,
+        "ece": 0.20429982597554752,
+        "ece_cal": 0.0644488545602318,
+        "T": 2.9743409398130582,
+        "flip": 0.08333333333333333
+      }
+    },
+    "laya": {
+      "jevbench/public": {
+        "n": 231,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.5670995670995671,
+        "macro_f1": 0.5044052896994073,
+        "brier": 0.5322748585853257,
+        "nll": 0.9302002655798897,
+        "ece": 0.1221785844100408,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": 0.13145539906103287
+      },
+      "typed/test": {
+        "n": 2000,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.3485,
+        "macro_f1": 0.239007260401829,
+        "brier": 0.7743508172938759,
+        "nll": 1.3601520916731296,
+        "ece": 0.22182231532378555,
+        "ece_cal": 0.05256693914938351,
+        "T": 3.9186156090480178,
+        "flip": 0.10666666666666667
+      }
+    },
+    "laya-multilingual": {
+      "jevbench/public": {
+        "n": 231,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.5108225108225108,
+        "macro_f1": 0.4984023238925199,
+        "brier": 0.7160759537595708,
+        "nll": 1.586770583887351,
+        "ece": 0.25652646713846544,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": 0.12206572769953052
+      },
+      "typed/test": {
+        "n": 2000,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "choose",
+        "lang": "en",
+        "acc": 0.342,
+        "macro_f1": 0.2519578835567126,
+        "brier": 0.9060630325363889,
+        "nll": 1.8825238244541522,
+        "ece": 0.3158701523008407,
+        "ece_cal": 0.03324980193833415,
+        "T": 99.999999999867,
+        "flip": 0.11083333333333334
+      }
+    }
+  }
+}

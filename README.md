@@ -5,6 +5,11 @@ Like TypeSafe's Jev, Decima is a *System One* model: typed decisions with probab
 text. Unlike Jev, it is open (Apache-2.0), 122M parameters, and runs on one CPU core or in your browser.
 
 Built by **A. M. Madani** ([@amyrmahdy](https://github.com/amyrmahdy) · [amyrmahdy.github.io](https://amyrmahdy.github.io)).
+The name: **DECI**sion **MA**king — and Decima is also the Roman Fate who decides.
+
+**1.1 (2026-10-01):** trained further on Jev-format decisions → 0.616 on the community
+[classifier-benchmark](https://github.com/jabr/classifier-benchmark) (1.0: 0.571; Laya 0.583; Von 0.720), and a
+TypeSafe-compatible System One API (`python -m decima.serve`; the official `typesafe-sdk` works unchanged).
 
 Decima does not write text. It decides: routing, triage, intent, classification, verification,
 ranking — any bounded choice your software needs to make, with a confidence it can threshold.
@@ -13,7 +18,7 @@ ranking — any bounded choice your software needs to make, with a confidence it
 - **Options in plain text**, given at call time; evaluated in 20 languages (weakest: Swahili, Hindi)
 - **Order-proof** — shuffling the options never changes the answer (0 %; the four other open decision models we compared: 10–27 %)
 - **Well calibrated as shipped** — lowest calibration error as shipped in every pairwise comparison we ran
-  (ECE 0.056–0.063 vs 0.117–0.370)
+  (ECE 0.058–0.064 vs 0.117–0.370)
 
 [Model on Hugging Face](https://huggingface.co/amyrmahdy/decima-small) · [Technical report](docs/TECHNICAL-REPORT.md) · [Evaluation & claims audit](docs/EVAL.md) · [x86 benchmark](docs/BENCH-x86.md) · [Playground](https://huggingface.co/spaces/amyrmahdy/decima-playground) · [Predictions dataset](https://huggingface.co/datasets/amyrmahdy/decima-bench-predictions) · [Synthetic training data](https://huggingface.co/datasets/amyrmahdy/decima-synthetic-decisions)
 
@@ -22,7 +27,7 @@ ranking — any bounded choice your software needs to make, with a confidence it
 ## Install
 
 ```bash
-pip install "git+https://github.com/amyrmahdy/decima"      # from source (tag v1.0.0)
+pip install "git+https://github.com/amyrmahdy/decima"      # from source (tag v1.1.0)
 ```
 
 The runtime (`decima.Decima`) imports no PyTorch and needs no GPU — ONNX Runtime, numpy and a
@@ -42,10 +47,10 @@ q = Question("Which team should handle this request?",
              ["billing", "technical support", "sales", "account security"])
 
 decima.decide("Someone logged into my account from another country.", q)
-# → {'billing': 0.004, 'technical support': 0.033, 'sales': 0.001, 'account security': 0.962}
+# → {'billing': 0.004, 'technical support': 0.031, 'sales': 0.001, 'account security': 0.964}
 
 decima.decide("یک نفر از کشور دیگری وارد حسابم شده است.", q)   # the same message in Persian
-# → {'billing': 0.011, 'technical support': 0.03, 'sales': 0.003, 'account security': 0.956}
+# → {'billing': 0.012, 'technical support': 0.024, 'sales': 0.002, 'account security': 0.962}
 ```
 
 Four question kinds: `choose` (one of N) · `score` (ordered levels) · `verify` (yes/no) · `rank`
@@ -53,13 +58,37 @@ Four question kinds: `choose` (one of N) · `score` (ordered levels) · `verify`
 `Question(..., lang="fa")` (or `"ar"`) turns on Persian/Arabic text normalisation; for the Persian
 example above the output is the same with or without it.
 
+### Jev / TypeSafe-compatible API
+
+Decima speaks TypeSafe's System One wire format (`choice`, `score`, `noul`), so code written for Jev runs on
+a local Decima:
+
+```bash
+python -m decima.serve                     # http://127.0.0.1:11436 · POST /v1/systemone, GET /v1/models
+export TYPESAFE_BASE_URL=http://127.0.0.1:11436 TYPESAFE_API_KEY=local TYPESAFE_DEFAULT_MODEL=decima-small
+```
+
+```python
+from typesafe_sdk import TypeSafeClient, Choice, Noul, Score
+client = TypeSafeClient(api_key="local", base_url="http://127.0.0.1:11436")
+r = client.system_one("Someone logged into my account from another country and changed my password.", {
+    "team": Choice(instructions="Which team should handle this?",
+                   criteria={"billing": "charges and refunds", "tech": "bugs and errors", "security": "account takeover"}),
+    "urgent": Noul(instructions="The customer needs help within the hour."),
+    "anger": Score(instructions="How upset is the customer?", criteria=["calm", "annoyed", "furious"]),
+}, model="decima-small")
+```
+
+Or in-process, without a server: `from decima.systemone import system_one`.
+
 ## How it compares
 
 | | Decima-small | Kev-0.5B | Kev-0.8B | Laya | Laya-multilingual |
 |---|---:|---:|---:|---:|---:|
 | Parameters | **122M** | 494M | 753M | 421M | 322M |
-| Laya's MASSIVE + XNLI protocol, re-run by us (29 suites, 19 languages; in-distribution for Decima¹) | **0.764** | 0.527 | — | 0.445 | 0.607 |
-| Kev's published protocol, re-run by us (8 suites) | 0.768 | 0.779 | **0.794** | 0.681 | 0.580 |
+| Laya's MASSIVE + XNLI protocol, re-run by us (29 suites, 19 languages; in-distribution for Decima¹) | **0.761** | 0.527 | — | 0.445 | 0.607 |
+| Kev's published protocol, re-run by us (8 suites) | 0.762 | 0.779 | **0.794** | 0.681 | 0.580 |
+| jabr/classifier-benchmark v2, 49 tasks (zero-shot by data) | 0.616 | — | — | 0.583 | — |
 | Answer changes when options are shuffled² | **0 %** | 22 % | 10 % | 27 % | 21 % |
 
 ¹ Decima trained on the MASSIVE train split (all 51 locales; test rows differ) and on the XNLI/MNLI train

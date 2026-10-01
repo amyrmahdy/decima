@@ -1,0 +1,183 @@
+{
+ "note": "Invented reports for a demo. Written before Decima v1.1 existed and kept fixed; every decision shown is computed live.",
+ "questions": {
+  "service": {
+   "kind": "choose",
+   "text": "Which service should respond to this report?",
+   "criteria": {
+    "fire": "Fire, smoke, gas leak, explosion or people trapped",
+    "police": "Crime, violence, theft, threats or suspicious activity",
+    "medical": "Someone is ill, injured or unconscious and needs an ambulance",
+    "traffic": "Road collision without injuries, blocked road or broken traffic lights",
+    "utilities": "Power outage, water main break or fallen power lines",
+    "city_services": "Non-urgent city issues: potholes, noise, trash, streetlights, stray animals"
+   }
+  },
+  "severity": {
+   "kind": "score",
+   "text": "How severe is this situation?",
+   "levels": [
+    "Low: no danger, can wait a few days",
+    "Moderate: needs attention today",
+    "High: needs a response within the hour",
+    "Critical: immediate danger to life"
+   ]
+  },
+  "danger": {
+   "kind": "verify",
+   "text": "A person may be hurt or in immediate danger."
+  }
+ },
+ "reports": [
+  {
+   "lang": "en",
+   "text": "Smoke is pouring out of the third floor window of my building and I can hear kids crying inside.",
+   "district": "Old Town"
+  },
+  {
+   "lang": "fa",
+   "text": "دو تا ماشین توی چهارراه به هم زدن، خداروشکر کسی زخمی نشده ولی راه بسته شده.",
+   "district": "Market"
+  },
+  {
+   "lang": "en",
+   "text": "There's a pothole on Elm Street big enough to swallow a tyre. Been there two weeks.",
+   "district": "Northside"
+  },
+  {
+   "lang": "es",
+   "text": "Mi padre se desmayó en la cocina y no responde, respira muy despacio.",
+   "district": "Riverside"
+  },
+  {
+   "lang": "ar",
+   "text": "انقطعت الكهرباء عن الحي بأكمله منذ ساعتين.",
+   "district": "Eastgate"
+  },
+  {
+   "lang": "en",
+   "text": "Someone just smashed a car window outside the pharmacy and ran off with a bag.",
+   "district": "Market"
+  },
+  {
+   "lang": "de",
+   "text": "Aus einem Hydranten schießt seit einer Stunde Wasser auf die Straße, der Keller nebenan läuft voll.",
+   "district": "Harbor"
+  },
+  {
+   "lang": "en",
+   "text": "The neighbours' party has been blasting music since midnight. It's 3am.",
+   "district": "University"
+  },
+  {
+   "lang": "fr",
+   "text": "Un homme menace les passants avec un couteau devant la gare.",
+   "district": "Central Station"
+  },
+  {
+   "lang": "en",
+   "text": "Strong smell of gas in the stairwell, nobody knows where it's coming from.",
+   "district": "Old Town"
+  },
+  {
+   "lang": "ru",
+   "text": "На перекрёстке не работает светофор, машины едут как попало.",
+   "district": "Northside"
+  },
+  {
+   "lang": "en",
+   "text": "A cyclist was hit by a van, he's conscious but his leg is bleeding a lot.",
+   "district": "Riverside"
+  },
+  {
+   "lang": "fa",
+   "text": "یک درخت روی سیم برق افتاده و جرقه می‌زند، بچه‌ها دارند نزدیکش بازی می‌کنند.",
+   "district": "Parkview"
+  },
+  {
+   "lang": "en",
+   "text": "Overflowing trash bins behind the school again, attracting rats.",
+   "district": "University"
+  },
+  {
+   "lang": "zh",
+   "text": "我看到有人在停车场里撬车门，已经试了好几辆车了。",
+   "district": "Harbor"
+  },
+  {
+   "lang": "en",
+   "text": "My grandmother fell in the bathroom and can't get up, she says her hip hurts badly.",
+   "district": "Eastgate"
+  },
+  {
+   "lang": "tr",
+   "text": "Köprünün altında bir kamyon devrildi, yol tamamen kapandı ama sürücü iyi görünüyor.",
+   "district": "Harbor"
+  },
+  {
+   "lang": "en",
+   "text": "Streetlight on the corner of 5th and Pine has been flickering for a week.",
+   "district": "Parkview"
+  },
+  {
+   "lang": "ar",
+   "text": "رجل يحاول القفز من فوق الجسر، الناس يحاولون التحدث معه.",
+   "district": "Riverside"
+  },
+  {
+   "lang": "en",
+   "text": "Small kitchen fire in the restaurant next door, the staff put it out with an extinguisher. Everyone's fine.",
+   "district": "Market"
+  },
+  {
+   "lang": "es",
+   "text": "Hay un perro suelto y agresivo en el parque infantil, ya ha mordido una mochila.",
+   "district": "Parkview"
+  },
+  {
+   "lang": "en",
+   "text": "Water coming out brown from every tap in our street since this morning.",
+   "district": "Northside"
+  },
+  {
+   "lang": "de",
+   "text": "Ein Mann liegt bewusstlos an der Bushaltestelle, er reagiert nicht.",
+   "district": "Central Station"
+  },
+  {
+   "lang": "en",
+   "text": "Someone keeps calling my phone threatening to come to my house tonight.",
+   "district": "Eastgate"
+  },
+  {
+   "lang": "fa",
+   "text": "کیف پولم رو توی مترو زدن، حدود یک ساعت پیش.",
+   "district": "Central Station"
+  },
+  {
+   "lang": "en",
+   "text": "Car on fire in the underground parking, alarms are going off.",
+   "district": "Harbor"
+  },
+  {
+   "lang": "fr",
+   "text": "Les feux de circulation sont en panne sur le boulevard, embouteillage énorme mais pas d'accident.",
+   "district": "Old Town"
+  },
+  {
+   "lang": "en",
+   "text": "Graffiti sprayed all over the community centre wall overnight.",
+   "district": "University"
+  },
+  {
+   "lang": "ru",
+   "text": "Ребёнок подавился и не может дышать, помогите!",
+   "district": "Parkview"
+  },
+  {
+   "lang": "en",
+   "text": "A power line is down across the road after the storm, it's still sparking.",
+   "district": "Northside"
+  }
+ ]
+}

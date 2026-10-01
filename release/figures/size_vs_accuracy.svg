@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-09-26T22:45:05.577135</dc:date>
+    <dc:date>2026-10-01T09:05:20.688744</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -726,7 +726,7 @@ z
      <g id="line2d_6">
       <path d="M 68.4 239.23305 
 L 547.2 239.23305 
-" clip-path="url(#p8f0db6583b)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
+" clip-path="url(#p8aa832d8c6)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
      </g>
      <g id="line2d_7"/>
      <g id="text_7">
@@ -798,7 +798,7 @@ z
      <g id="line2d_8">
       <path d="M 68.4 211.121663 
 L 547.2 211.121663 
-" clip-path="url(#p8f0db6583b)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
+" clip-path="url(#p8aa832d8c6)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
      </g>
      <g id="line2d_9"/>
      <g id="text_8">
@@ -814,7 +814,7 @@ L 547.2 211.121663
      <g id="line2d_10">
       <path d="M 68.4 183.010275 
 L 547.2 183.010275 
-" clip-path="url(#p8f0db6583b)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
+" clip-path="url(#p8aa832d8c6)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
      </g>
      <g id="line2d_11"/>
      <g id="text_9">
@@ -857,7 +857,7 @@ z
      <g id="line2d_12">
       <path d="M 68.4 154.898888 
 L 547.2 154.898888 
-" clip-path="url(#p8f0db6583b)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
+" clip-path="url(#p8aa832d8c6)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
      </g>
      <g id="line2d_13"/>
      <g id="text_10">
@@ -912,7 +912,7 @@ z
      <g id="line2d_14">
       <path d="M 68.4 126.7875 
 L 547.2 126.7875 
-" clip-path="url(#p8f0db6583b)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
+" clip-path="url(#p8aa832d8c6)" style="fill: none; stroke: #e1e0d9; stroke-width: 0.8; stroke-linecap: round"/>
      </g>
      <g id="line2d_15"/>
      <g id="text_11">
@@ -1077,8 +1077,8 @@ L 547.2 239.23305
 " style="fill: none; stroke: #c3c2b7; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_13">
-    <!-- Decima-small  76.4% -->
-    <g style="fill: #0b0b0b" transform="translate(129.928892 135.96313) scale(0.11 -0.11)">
+    <!-- Decima-small  76.1% -->
+    <g style="fill: #0b0b0b" transform="translate(129.928892 136.334718) scale(0.11 -0.11)">
      <defs>
       <path id="Ubuntu-Regular-220" d="M 1728 -45 
 Q 1459 -45 1142 -19 
@@ -1175,13 +1175,13 @@ z
      <use xlink:href="#Ubuntu-Regular-5ec" transform="translate(657.46875 0)"/>
      <use xlink:href="#Ubuntu-Regular-5eb" transform="translate(713.875 0)"/>
      <use xlink:href="#Ubuntu-Regular-64b" transform="translate(770.28125 0)"/>
-     <use xlink:href="#Ubuntu-Regular-5e9" transform="translate(794.875 0)"/>
+     <use xlink:href="#Ubuntu-Regular-5e6" transform="translate(794.875 0)"/>
      <use xlink:href="#Ubuntu-Regular-1fb" transform="translate(851.28125 0)"/>
     </g>
    </g>
    <g id="line2d_16">
     <defs>
-     <path id="m6b4b1b8354" d="M 0 4.5 
+     <path id="m97362e5e1a" d="M 0 4.5 
 C 1.193414 4.5 2.338109 4.025852 3.181981 3.181981 
 C 4.025852 2.338109 4.5 1.193414 4.5 0 
 C 4.5 -1.193414 4.025852 -2.338109 3.181981 -3.181981 
@@ -1193,8 +1193,8 @@ C -2.338109 4.025852 -1.193414 4.5 0 4.5
 z
 " style="stroke: #fcfcfb; stroke-width: 2"/>
     </defs>
-    <g clip-path="url(#p8f0db6583b)">
-     <use xlink:href="#m6b4b1b8354" x="403.954466" y="165.157928" style="fill: #a8a69f; stroke: #fcfcfb; stroke-width: 2"/>
+    <g clip-path="url(#p8aa832d8c6)">
+     <use xlink:href="#m97362e5e1a" x="403.954466" y="165.157928" style="fill: #a8a69f; stroke: #fcfcfb; stroke-width: 2"/>
     </g>
    </g>
    <g id="text_14">
@@ -1267,8 +1267,8 @@ z
     </g>
    </g>
    <g id="line2d_17">
-    <g clip-path="url(#p8f0db6583b)">
-     <use xlink:href="#m6b4b1b8354" x="371.368243" y="176.693291" style="fill: #a8a69f; stroke: #fcfcfb; stroke-width: 2"/>
+    <g clip-path="url(#p8aa832d8c6)">
+     <use xlink:href="#m97362e5e1a" x="371.368243" y="176.693291" style="fill: #a8a69f; stroke: #fcfcfb; stroke-width: 2"/>
     </g>
    </g>
    <g id="text_15">
@@ -1299,8 +1299,8 @@ z
     </g>
    </g>
    <g id="line2d_18">
-    <g clip-path="url(#p8f0db6583b)">
-     <use xlink:href="#m6b4b1b8354" x="316.638691" y="153.945685" style="fill: #a8a69f; stroke: #fcfcfb; stroke-width: 2"/>
+    <g clip-path="url(#p8aa832d8c6)">
+     <use xlink:href="#m97362e5e1a" x="316.638691" y="153.945685" style="fill: #a8a69f; stroke: #fcfcfb; stroke-width: 2"/>
     </g>
    </g>
    <g id="text_16">
@@ -1355,7 +1355,7 @@ z
    </g>
    <g id="line2d_19">
     <defs>
-     <path id="m9d7d97a93b" d="M 0 6 
+     <path id="m7fa08c5f27" d="M 0 6 
 C 1.591219 6 3.117479 5.367802 4.242641 4.242641 
 C 5.367802 3.117479 6 1.591219 6 0 
 C 6 -1.591219 5.367802 -3.117479 4.242641 -4.242641 
@@ -1367,13 +1367,13 @@ C -3.117479 5.367802 -1.591219 6 0 6
 z
 " style="stroke: #fcfcfb; stroke-width: 2"/>
     </defs>
-    <g clip-path="url(#p8f0db6583b)">
-     <use xlink:href="#m9d7d97a93b" x="119.928892" y="131.87663" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
+    <g clip-path="url(#p8aa832d8c6)">
+     <use xlink:href="#m7fa08c5f27" x="119.928892" y="132.248218" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
     </g>
    </g>
   </g>
   <g id="text_17">
-   <!-- On Laya's MASSIVE + XNLI protocol, Decima-small scores 76.4 % at 122M -->
+   <!-- On Laya's MASSIVE + XNLI protocol, Decima-small scores 76.1 % at 122M -->
    <g style="fill: #0b0b0b" transform="translate(21.6 35.401358) scale(0.145 -0.145)">
     <defs>
      <path id="Ubuntu-Regular-1b2" d="M 2496 -96 
@@ -1648,7 +1648,7 @@ z
     <use xlink:href="#Ubuntu-Regular-5ec" transform="translate(2605.78125 0)"/>
     <use xlink:href="#Ubuntu-Regular-5eb" transform="translate(2662.1875 0)"/>
     <use xlink:href="#Ubuntu-Regular-64b" transform="translate(2718.59375 0)"/>
-    <use xlink:href="#Ubuntu-Regular-5e9" transform="translate(2743.1875 0)"/>
+    <use xlink:href="#Ubuntu-Regular-5e6" transform="translate(2743.1875 0)"/>
     <use xlink:href="#Ubuntu-Regular-648" transform="translate(2799.59375 0)"/>
     <use xlink:href="#Ubuntu-Regular-1fb" transform="translate(2822.890625 0)"/>
     <use xlink:href="#Ubuntu-Regular-648" transform="translate(2909.484375 0)"/>
@@ -2381,7 +2381,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p8f0db6583b">
+  <clipPath id="p8aa832d8c6">
    <rect x="68.4" y="126.7875" width="478.8" height="112.44555"/>
   </clipPath>
  </defs>

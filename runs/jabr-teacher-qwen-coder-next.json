@@ -1,0 +1,24 @@
+{
+ "model": "rande-strong-local",
+ "thinking": false,
+ "results": {
+  "v1": {
+   "macro_acc": 0.9069444444444444,
+   "micro_acc": 0.9102564102564102,
+   "by_type": {
+    "choice": 1,
+    "noul": 0.9,
+    "score": 0.8518518518518519
+   }
+  },
+  "v2": {
+   "macro_acc": 0.8736670881613069,
+   "micro_acc": 0.874133949191686,
+   "by_type": {
+    "choice": 0.9332422857500257,
+    "noul": 0.8746436457801267,
+    "score": 0.7637505437146586
+   }
+  }
+ }
+}

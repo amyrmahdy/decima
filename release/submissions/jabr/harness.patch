@@ -1,0 +1,52 @@
+diff --git a/bench/backends/__init__.py b/bench/backends/__init__.py
+index 6a8f80f..f61348b 100644
+--- a/bench/backends/__init__.py
++++ b/bench/backends/__init__.py
+@@ -24,12 +24,16 @@ def create_backend(name: str, **kwargs) -> Backend:
+     from .gliner25_decide import Gliner25DecideBackend
+ 
+     return Gliner25DecideBackend(**kwargs)
++  if name == "decima":
++    from .decima import DecimaBackend
++
++    return DecimaBackend(**kwargs)
+   if name == "laya":
+     from .laya import LayaBackend
+ 
+     return LayaBackend(**kwargs)
+   raise ValueError(
+-    f"Unknown backend '{name}'. Available: von, jev, jeff, gliner2, gliner25-decide, laya"
++    f"Unknown backend '{name}'. Available: von, jev, jeff, gliner2, gliner25-decide, laya, decima"
+   )
+ 
+ 
+diff --git a/bench/run.py b/bench/run.py
+index 6f66a76..3b6a533 100644
+--- a/bench/run.py
++++ b/bench/run.py
+@@ -226,7 +226,7 @@ def evaluate_backend(
+ 
+ def main() -> None:
+   parser = argparse.ArgumentParser(description="Run classification benchmarks.")
+-  parser.add_argument("--backend", default="von", help="Comma-separated: von, jev, jeff, gliner2, gliner25-decide, laya")
++  parser.add_argument("--backend", default="von", help="Comma-separated: von, jev, jeff, gliner2, gliner25-decide, laya, decima")
+   parser.add_argument("--suite", default=None, help="Core suite(s) to run: v1, v2, comma-separated, or 'all' (default when --sample is not given)")
+   parser.add_argument("--sample", default=None, help="Generated sample suite(s) to run: name (e.g. cfpb-bbee), comma-separated, or 'all' (every discovered sample)")
+   parser.add_argument("--tasks", default="", help="Comma-separated task ids within the selected suites (default: all)")
+@@ -238,6 +238,7 @@ def main() -> None:
+   parser.add_argument("--jeff-path", default=None, help="Path to a local GLiFormer checkpoint dir (jeff weights)")
+   parser.add_argument("--von-path", default=None, help="Path to a local von checkpoint dir (Option-Marker weights)")
+   parser.add_argument("--laya-path", default=None, help="Path to laya weights (or HF repo id)")
++  parser.add_argument("--decima-path", default=None, help="Decima ONNX export dir or HF repo id (default amyrmahdy/decima-small)")
+   parser.add_argument("--out", default=None, help="Write JSON results to this path")
+   args = parser.parse_args()
+ 
+@@ -271,6 +272,8 @@ def main() -> None:
+       kwargs["model_path"] = args.von_path
+     if args.laya_path and backend_name == "laya":
+       kwargs["model_path"] = args.laya_path
++    if args.decima_path and backend_name == "decima":
++      kwargs["model_path"] = args.decima_path
+     all_results[backend_name] = evaluate_backend(backend_name, plan, kwargs)
+ 
+   if args.out:

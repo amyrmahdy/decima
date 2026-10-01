@@ -18,10 +18,11 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from pathlib import Path
 
 SETS = ("kev", "laya", "decima", "jevtyped", "btzsc")
-DECIMA = "v1i"
+DECIMA = os.environ.get("DECIMA", "v1i")      # the released model; DECIMA=v1k for Decima 1.1
 COMPETITORS = ("kev-0.5b", "kev-0.8b", "laya", "laya-multilingual")
 
 
@@ -44,7 +45,7 @@ def pairwise(res: dict, comp: str, metric: str) -> dict:
 
 
 def main() -> None:
-    res = {s: json.load(open(f"runs/v1i-{s}.json"))["results"] for s in SETS}
+    res = {s: json.load(open(f"runs/{DECIMA}-{s}.json"))["results"] for s in SETS}
     out = {"definition": __doc__.split("Definition")[1].split("Also reported")[0].strip(),
            "headline_as_shipped": {}, "refitted_per_suite_T": {}, "set_means_as_shipped": {}}
     for c in COMPETITORS:
@@ -57,7 +58,7 @@ def main() -> None:
             if vals:
                 out["set_means_as_shipped"][s][sysname] = sum(vals) / len(vals)
     Path("runs/audit").mkdir(parents=True, exist_ok=True)
-    Path("runs/audit/calibration.json").write_text(json.dumps(out, indent=2))
+    Path(f"runs/audit/calibration{'' if DECIMA == 'v1i' else '-' + DECIMA}.json").write_text(json.dumps(out, indent=2))
     print("pairwise ECE (15-bin, per-suite mean, FarsTail excluded)   as shipped            refitted per suite")
     for c in COMPETITORS:
         h, f = out["headline_as_shipped"][c], out["refitted_per_suite_T"][c]

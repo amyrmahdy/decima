@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decima · Live city dispatch</title>
+<meta name="description" content="Live demo: Decima-small, an open Jev-style decision model (122M), routes city reports in many languages, rates severity and flags danger — every decision computed in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dispatch.css">
+<script type="module" src="dispatch.js"></script>
+</head>
+<body>
+<div class="dp">
+
+<header class="dp-head">
+  <div class="dp-title">
+    <span class="dp-live"><i></i>LIVE</span>
+    <h1>City dispatch <span>· powered by Decima-small</span></h1>
+  </div>
+  <div class="dp-stats" aria-live="polite">
+    <div><b id="st-reports">0</b><span>reports</span></div>
+    <div><b id="st-decisions">0</b><span>decisions</span></div>
+    <div><b id="st-ms">–</b><span>ms / decision</span></div>
+    <div><b id="st-review">0</b><span>sent to a human</span></div>
+  </div>
+  <nav class="dp-links">
+    <a href="./">Playground</a>
+    <a href="https://huggingface.co/amyrmahdy/decima-small" target="_blank" rel="noopener">Model card</a>
+  </nav>
+</header>
+
+<main class="dp-main">
+  <section class="dp-map" aria-label="City map">
+    <svg id="map" viewBox="0 0 1000 640" role="img" aria-label="Map of an invented city with incident pins"></svg>
+    <div class="dp-legend">
+      <span><i class="sev0"></i>low</span><span><i class="sev1"></i>moderate</span><span><i class="sev2"></i>high</span><span><i class="sev3"></i>critical</span>
+      <span class="dp-legend-sep"></span>
+      <span><i class="danger"></i>person may be in danger</span>
+    </div>
+    <div class="dp-engine">
+      <b>Decima-small</b> · 122M · int8 · WebAssembly · <span id="engine-where">loading…</span>
+    </div>
+  </section>
+
+  <section class="dp-feed-wrap" aria-label="Incoming reports">
+    <div class="dp-feed-head">
+      <span>Incoming reports</span>
+      <span class="dp-qs">per report: <em>which service?</em> · <em>how severe?</em> · <em>anyone in danger?</em></span>
+    </div>
+    <ol class="dp-feed" id="feed"></ol>
+  </section>
+</main>
+
+<footer class="dp-foot">
+  <form class="dp-own" id="own">
+    <input id="own-text" type="text" dir="auto" autocomplete="off" placeholder="Type your own report, in any language…" aria-label="Your report">
+    <button type="submit">Send</button>
+  </form>
+  <div class="dp-controls">
+    <button id="play" type="button">Pause</button>
+    <label>Speed <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
+  </div>
+  <p class="dp-note">Invented reports, a demo only — not for real emergency dispatch. Every decision is computed live by the model in this tab; nothing leaves your device.</p>
+</footer>
+
+<div class="dp-loader" id="loader">
+  <div><b>Loading Decima-small</b> <span id="load-num"></span></div>
+  <div class="dp-bar"><div id="load-bar"></div></div>
+  <p>About 140 MB the first time, then cached on this device.</p>
+</div>
+
+<div class="dp-card-overlay" id="intro" hidden>
+  <div>
+    <h2>Every decision on this screen is made live<br>by a 122M model inside this browser tab.</h2>
+    <p>No GPU. No server. Reports in any language.</p>
+  </div>
+</div>
+<div class="dp-card-overlay" id="outro" hidden>
+  <div>
+    <h2>Decima-small</h2>
+    <p>Open, Jev-style decision model · 122M · Apache-2.0</p>
+    <p class="dp-url">huggingface.co/amyrmahdy/decima-small</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

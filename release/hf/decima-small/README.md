@@ -17,11 +17,20 @@ A 122M-parameter decision model that runs in ~20 ms on one laptop CPU core (4 op
 languages (evaluated in 20), and does not change its answer when you reorder the options.
 
 Built by **A. M. Madani** ([@amyrmahdy](https://github.com/amyrmahdy) · [amyrmahdy.github.io](https://amyrmahdy.github.io)).
+The name: **DECI**sion **MA**king — and Decima is also the Roman Fate who decides.
+
+> **New in 1.1 (2026-10-01).** Trained further on 45,729 teacher-labelled decisions in Jev's own question
+> format (choice with option descriptions, true/false statements, described levels). On the community
+> [classifier-benchmark](https://github.com/jabr/classifier-benchmark) (49 tasks) it rises from 0.571 to
+> **0.616** — ahead of Laya (421M, 0.583) at under a third of the size; Von (0.720) and GLiNER2 (0.684)
+> remain ahead. Decima now also speaks **TypeSafe's System One API**: `python -m decima.serve`, and the
+> official `typesafe-sdk` works against it unchanged. All numbers below are 1.1 unless marked 1.0;
+> 1.0 stays available at revision `v1.0`.
 
 ![Shuffle the options: Decima's answer never changes](figures/option_order_flips.png)
 
 - **Small and fast** — 122M parameters, int8 ONNX, **~20 ms** per decision on one x86 core (4 options, short input).
-- **Multilingual** — **0.852** on MASSIVE intent across 13 non-English languages under Laya's published
+- **Multilingual** — **0.857** on MASSIVE intent across 13 non-English languages under Laya's published
   protocol, re-run by us (Laya-multilingual: 0.451). Decima trained on the MASSIVE and XNLI/MNLI train
   splits; Laya reports it did not.
 - **Stable, and well calibrated as shipped** — **0 %** answer changes when options are shuffled (the four
@@ -31,18 +40,20 @@ Built by **A. M. Madani** ([@amyrmahdy](https://github.com/amyrmahdy) · [amyrma
 | accuracy¹ | Decima-small | Kev-0.5B | Kev-0.8B | Laya | Laya-multilingual |
 |---|---:|---:|---:|---:|---:|
 | Parameters (total) | **122M** | 494M | 753M | 421M | 322M |
-| Laya's MASSIVE + XNLI protocol, re-run by us, 29 suites / 19 languages (in-distribution for Decima²) | **0.764** | 0.527 | — | 0.445 | 0.607 |
-| Kev's published protocol, re-run by us, 8 suites | 0.768 | 0.779 | **0.794** | 0.681 | 0.580 |
-| Decima bench, 12 suites, EN/FA/AR/RU (in-distribution for Decima) | **0.785** | — | 0.661 | 0.439 | 0.554 |
+| Laya's MASSIVE + XNLI protocol, re-run by us, 29 suites / 19 languages (in-distribution for Decima²) | **0.761** | 0.527 | — | 0.445 | 0.607 |
+| Kev's published protocol, re-run by us, 8 suites | 0.762 | 0.779 | **0.794** | 0.681 | 0.580 |
+| Decima bench, 12 suites, EN/FA/AR/RU (in-distribution for Decima) | **0.786** | — | 0.661 | 0.439 | 0.554 |
+| jabr/classifier-benchmark v2, 49 tasks (zero-shot by data; macro accuracy)⁴ | 0.616 | — | — | 0.583 | — |
 | Answer changes when options are shuffled³ | **0.0 %** | 21.9 % | 10.3 % | 27.2 % | 21.4 % |
 
 Calibration error as shipped (15-bin ECE, mean over the suites both models ran, FarsTail excluded;
-lower is better): Decima **0.063** vs Kev-0.5B 0.117 (39 suites) · **0.056** vs Kev-0.8B 0.158 (21) ·
-**0.056** vs Laya 0.370 (50) · **0.056** vs Laya-multilingual 0.251 (50). Details under *Stability and calibration*.
+lower is better): Decima **0.064** vs Kev-0.5B 0.117 (39 suites) · **0.060** vs Kev-0.8B 0.158 (21) ·
+**0.058** vs Laya 0.370 (50) · **0.058** vs Laya-multilingual 0.251 (50). Details under *Stability and calibration*.
 
 ¹ All numbers are accuracy unless stated, measured by us on one harness with identical inputs for every model (competitor checkpoints run locally; their published numbers were reproduced to within 0.001 first — see [Evaluation](#evaluation)). Decima was trained on the *train* splits of several of these datasets; see *What is zero-shot and what is not* under Results before quoting any row. Protocols, data provenance and measured overlap: [docs/EVAL.md](https://github.com/amyrmahdy/decima/blob/main/docs/EVAL.md).
 ² Decima trained on the MASSIVE train split (all 51 locales; test rows differ) and on the XNLI/MNLI train splits; Laya reports it did not train on MASSIVE or XNLI.
 ³ Mean over the Kev, Laya and Decima-bench suites each model was run on.
+⁴ Decima int8 on CPU through the benchmark's own harness (we added a backend); Laya's number is the benchmark's published run.
 
 ## Quickstart
 
@@ -64,10 +75,10 @@ q = Question("Which team should handle this request?",
              ["billing", "technical support", "sales", "account security"])
 
 decima.decide("Someone logged into my account from another country.", q)
-# → {'billing': 0.004, 'technical support': 0.033, 'sales': 0.001, 'account security': 0.962}
+# → {'billing': 0.004, 'technical support': 0.031, 'sales': 0.001, 'account security': 0.964}
 
 decima.decide("یک نفر از کشور دیگری وارد حسابم شده است.", q)   # the same message in Persian
-# → {'billing': 0.011, 'technical support': 0.03, 'sales': 0.003, 'account security': 0.956}
+# → {'billing': 0.012, 'technical support': 0.024, 'sales': 0.002, 'account security': 0.962}
 ```
 
 `decide` returns a dict of probabilities. The lower-level `decide_logits` returns log-probabilities
@@ -81,10 +92,26 @@ Persian/Arabic text normalisation; the example above gives the same output with 
 - **Languages**: state, question and options can be in different languages (e.g. a Persian message
   scored against English options).
 
+**Jev / TypeSafe-compatible API.** Decima speaks TypeSafe's System One wire format (`choice`, `score`,
+`noul`), so code written for Jev runs on a local Decima:
+
+```bash
+python -m decima.serve                     # http://127.0.0.1:11436 · POST /v1/systemone
+export TYPESAFE_BASE_URL=http://127.0.0.1:11436 TYPESAFE_API_KEY=local TYPESAFE_DEFAULT_MODEL=decima-small
+```
+
+```python
+from decima.systemone import system_one   # or in-process, without a server
+system_one(decima, "My card was charged twice", {
+    "team": {"type": "choice", "instructions": "Which team?", "criteria": {"billing": "charges, refunds", "tech": "bugs"}},
+    "urgent": {"type": "noul", "instructions": "The customer needs an answer today."},
+})
+```
+
 **Good for** routing, triage, intent, topic and sentiment classification, verification and ranking — any
 bounded decision where software needs a choice *and* a confidence it can threshold.
 **Not recommended** for tool-call or shell-command safety: in our spot checks it called
-`rm -rf /var/lib/postgresql/data` non-destructive (0.693).
+`rm -rf /var/lib/postgresql/data` non-destructive (0.722).
 **Not for** writing text, open-ended answers, arithmetic, world-knowledge questions, or long multi-fact
 reasoning (see [Limitations](#limitations) and [Bias, risks and out-of-scope use](#bias-risks-and-out-of-scope-use)).
 
@@ -124,20 +151,46 @@ One temperature, fitted on a 5 % hold-out of the training mix, ships in the conf
 benchmarks can quietly cost generalisation (BTZSC clean-18 fell from 0.586 to 0.560 across our e5-small
 runs). From then on every candidate was selected on a score that includes a strictly zero-shot
 benchmark (weight 1/5), so a model that overfits our label spaces is penalised. The released model
-recovered to 0.570 — still below V0's 0.586.
+1.0 recovered to 0.570; 1.1, trained further on Jev-format data, is at 0.558 — both below V0's 0.586.
 
 **6 · Block-wise 8-bit that preserves the model.** Plain dynamic int8 agreed with fp32 on 88 % of real
 items (45 % on a synthetic 77-option stress probe): a few activation channels in the encoder are tens of
 times larger than the rest, so one scale per tensor loses precision everywhere else. Block-wise 8-bit in
 the encoder (blocks of 32 for weights and activations; the scorer keeps per-channel dynamic int8) confines
-each outlier to its own block — int8 now matches fp32 on 98.6–99.8 % of 45,850 real test items, every set
-score within 0.004, at 3.8× smaller size.
+each outlier to its own block — int8 now matches fp32 on 99.4 % of 22,050 real test items (1.1; accuracy
+0.776 fp32 vs 0.777 int8), at 3.8× smaller size.
 
 **7 · Comparisons we can defend.** Every competitor was run on our hardware from its own checkpoint, and
 their published numbers were **reproduced to within 0.001** (Laya 0.783 / 0.860 / 0.520 vs 0.521, Kev
 0.799) with their own evaluation protocols before we compared anything.
 
 ## Results
+
+<details open>
+<summary><b>System One tasks — jabr/classifier-benchmark (the benchmark the "Jev alternatives" comparisons cite)</b></summary>
+
+[jabr/classifier-benchmark](https://github.com/jabr/classifier-benchmark): synthetic tasks in TypeSafe's
+question format — `choice`, `noul` (judge a statement true/false), `score` (ordered levels). Macro accuracy
+over tasks. Decima: int8 ONNX on CPU through a backend we added to the harness (choice options rendered as
+"key: description", noul as a yes/no verify on the statement, score through the ordinal head); the other
+rows are the benchmark's own published runs.
+
+| | params | v2 (49 tasks, 866 cases) | v1 (8 tasks, 78 cases) |
+|---|---:|---:|---:|
+| Jev (hosted) | — | **0.966** | **0.972** |
+| Von 1.1 | 395M | 0.720 | 0.927 |
+| GLiNER2 | ~0.5B | 0.684 | 0.785 |
+| **Decima-small 1.1** | 122M | 0.616 | 0.755 |
+| Laya | 421M | 0.583 | 0.619 |
+| Decima-small 1.0 | 122M | 0.571 | 0.680 |
+
+By question type (v2): choice 0.702, noul 0.623, score 0.447 (1.0: 0.697, 0.532, 0.403). The cases were
+never trained on (the 1.1 data was decontaminated against them), and the benchmark was run once per
+released model. Its gold labels and tasks are synthetic, written by a committee of LLMs; our teacher
+(Gemma-4-26B-A4B) scores 0.942 on v2 with a plain prompt, so the remaining gap is the student's, not
+the labels'.
+
+</details>
 
 <details>
 <summary><b>Laya's published protocol (re-run by us) — MASSIVE and XNLI in 19 languages; in-distribution for Decima</b></summary>
@@ -152,10 +205,10 @@ described relations. Our re-run of Laya reproduced its published numbers to with
 
 | | Decima-small | Laya | Laya-multilingual | Kev-0.5B |
 |---|---:|---:|---:|---:|
-| MASSIVE intent, English | **0.913** | 0.783 | 0.657 | 0.753 |
-| MASSIVE intent, 13 other languages (mean) | **0.852** | 0.306 | 0.451 | 0.426 |
-| XNLI, English | 0.767 | **0.860** | 0.843 | 0.747 |
-| XNLI, 14 other languages (mean) | 0.671 | 0.520 | **0.731** | 0.589 |
+| MASSIVE intent, English | **0.930** | 0.783 | 0.657 | 0.753 |
+| MASSIVE intent, 13 other languages (mean) | **0.857** | 0.306 | 0.451 | 0.426 |
+| XNLI, English | 0.760 | **0.860** | 0.843 | 0.747 |
+| XNLI, 14 other languages (mean) | 0.660 | 0.520 | **0.731** | 0.589 |
 
 Decima was trained on MASSIVE's train split (all 51 locales) and on XNLI/MNLI train data; Laya reports
 it did not train on MASSIVE or XNLI. Test rows differ from training rows (exact overlap ≤ 11.7 % per
@@ -173,7 +226,7 @@ train splits of these sources (Decima: all but Yelp); Laya's README lists AG New
 
 | | banking77 | AG News | BoolQ | MNLI | SST-5 | Yelp | AG News y/n | Yelp y/n | mean |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Decima-small | **0.940** | 0.940 | 0.720 | 0.767 | 0.487 | 0.487 | **0.960** | 0.847 | 0.768 |
+| Decima-small | **0.913** | **0.947** | 0.713 | 0.740 | 0.513 | 0.473 | 0.953 | 0.847 | 0.762 |
 | Kev-0.5B | 0.860 | 0.940 | 0.753 | 0.747 | **0.533** | 0.553 | **0.960** | 0.887 | 0.779 |
 | Kev-0.8B | 0.813 | 0.900 | **0.807** | **0.800** | 0.507 | **0.640** | 0.953 | **0.933** | **0.794** |
 | Laya | 0.473 | 0.933 | 0.740 | 0.613 | 0.320 | 0.580 | 0.937 | 0.853 | 0.681 |
@@ -191,7 +244,7 @@ reports it did not train on MASSIVE or XNLI), so this bench is in-distribution f
 
 | | SST-5 | AG News | XNLI en | XNLI ar | XNLI ru | FarsTail fa | MASSIVE en | fa | ar | ru | banking77 (77) | CLINC150 (151) | mean |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Decima-small | 0.514 | 0.904 | 0.749 | 0.659 | 0.689 | 0.819 | **0.876** | **0.846** | **0.760** | **0.837** | **0.887** | **0.875** | **0.785** |
+| Decima-small | 0.507 | 0.908 | 0.750 | 0.656 | 0.684 | 0.811 | **0.879** | **0.848** | **0.769** | **0.843** | **0.893** | **0.881** | **0.786** |
 | Kev-0.8B | **0.539** | 0.880 | 0.797 | 0.656 | 0.677 | 0.780 | 0.609 | 0.567 | 0.425 | 0.565 | 0.819 | 0.621 | 0.661 |
 | Laya | 0.305 | **0.922** | **0.870** | 0.453 | 0.593 | 0.554 | 0.458 | 0.038 | 0.078 | 0.185 | 0.378 | 0.434 | 0.439 |
 | Laya-multilingual | 0.268 | **0.922** | 0.828 | **0.687** | **0.700** | **0.836** | 0.473 | 0.313 | 0.282 | 0.389 | 0.424 | 0.530 | 0.554 |
@@ -208,7 +261,8 @@ datasets that overlap our training data (Rotten Tomatoes ≈ SST-5 corpus, banki
 
 | | Parameters | clean 18 | all 22 |
 |---|---:|---:|---:|
-| **Decima-small** | 122M | 0.570 | 0.621* |
+| **Decima-small 1.1** | 122M | 0.558 | 0.611* |
+| Decima-small 1.0 | 122M | 0.570 | 0.621* |
 | Decima V0 (teacher data only) | 122M | 0.586 | 0.613 |
 | multilingual-e5-small, zero-shot (our base encoder, no training) | 118M | 0.528 | 0.546 |
 
@@ -227,7 +281,7 @@ ability (see the technical report).
 
 | | JevBench public (231) | typed-decisions test (2,000) |
 |---|---:|---:|
-| Decima-small | 0.571 [0.511–0.636] | 0.399 [0.371–0.423] |
+| Decima-small 1.1 | 0.571 [0.511–0.632] | 0.427 [0.399–0.455] |
 | Kev-0.8B | 0.645 [0.584–0.710] | 0.450 [0.421–0.478] |
 | Laya | 0.567 [0.502–0.632] | 0.348 [0.326–0.371] |
 | Kev-0.5B | 0.506 [0.442–0.571] | 0.421 [0.397–0.445] |
@@ -241,7 +295,7 @@ official leaderboard score (which also uses sealed items). On typed-decisions ev
 tested, Decima included, is below the majority-class baseline: long, multi-fact business cases remain
 hard at this size.
 
-**Jev Decision Index 0.1**: 12.8 under the official no-truncation rule — **below uniform chance
+**Jev Decision Index 0.1** (measured on 1.0): 12.8 under the official no-truncation rule — **below uniform chance
 (27.1)**. The index weights five areas equally (knowledge, language, retrieval, tools, arts). Decima's
 tools area is 0.000 and retrieval 0.033 because those requests exceed its 512-token state / 64-token
 option budget and count as wrong under the no-truncation rule (only 49.7 % of panel items fit the budget);
@@ -268,13 +322,13 @@ Board reference runs: Jev 59.5, Kev-0.5B 30.3, Laya 16.4.
 
   | vs | shared suites | Decima as shipped | theirs as shipped | refitted: shared suites | Decima refitted | theirs refitted |
   |---|---:|---:|---:|---:|---:|---:|
-  | Kev-0.5B | 39 | **0.063** | 0.117 | 38 | 0.057 | 0.075 |
-  | Kev-0.8B | 21 | **0.056** | 0.158 | 20 | 0.046 | 0.052 |
-  | Laya | 50 | **0.056** | 0.370 | 49 | 0.052 | 0.066 |
-  | Laya-multilingual | 50 | **0.056** | 0.251 | 49 | 0.052 | 0.074 |
+  | Kev-0.5B | 39 | **0.064** | 0.117 | 38 | 0.054 | 0.075 |
+  | Kev-0.8B | 21 | **0.060** | 0.158 | 20 | 0.043 | 0.052 |
+  | Laya | 50 | **0.058** | 0.370 | 49 | 0.049 | 0.066 |
+  | Laya-multilingual | 50 | **0.058** | 0.251 | 49 | 0.049 | 0.074 |
 
   After refitting a temperature per suite the systems are close; on typed-decisions Decima's refitted ECE
-  (0.075) is the worst of the six systems. Our claim is about probabilities as shipped. Laya's
+  (0.033) ties for best with Laya-multilingual, behind Kev-0.5B (0.031). Our claim is about probabilities as shipped. Laya's
   MASSIVE/XNLI suites are in-distribution for Decima (Decima trained on the MASSIVE and XNLI/MNLI train
   splits; Laya reports it did not).
 
@@ -283,7 +337,7 @@ Board reference runs: Jev 59.5, Kev-0.5B 30.3, Laya 16.4.
 <details>
 <summary><b>Speed — x86 CPU, int8 and fp32, 4 to 1,000 options</b></summary>
 
-One decision = one state scored against one option set, batch 1, option encodings cached. Measured on an
+Measured on 1.0; 1.1 has the same architecture and graph shapes, so the same costs apply. One decision = one state scored against one option set, batch 1, option encodings cached. Measured on an
 x86 laptop, **Intel Core Ultra 7 155H, one P-core, ONNX Runtime** (p50 / p95, ms). Details and
 reproduction: docs/BENCH-x86.md.
 
@@ -304,8 +358,9 @@ reproduction: docs/BENCH-x86.md.
   ![Latency vs number of options](figures/speed_vs_options.png)
 - **A new option set** costs a one-time encode (~12 ms per option). The cache holds up to 256 option sets
   and is cleared entirely when it overflows.
-- **int8 = fp32 in practice**: same top answer on 98.6–99.8 % of 45,850 real test items, every set-level
-  score within ±0.004. x86 fp32 reproduces our GPU scores exactly (100 % agreement on 22,050 items).
+- **int8 = fp32 in practice**: same top answer on 99.4 % of 22,050 real eval items for 1.1 (accuracy 0.776
+  fp32 vs 0.777 int8); for 1.0, 98.6–99.8 % per set over 45,850 items, every set-level score within ±0.004.
+  x86 fp32 reproduces our GPU scores exactly (1.0: 100 % agreement on 22,050 items).
 - Files: int8 ONNX 127 MB, fp32 ONNX 489 MB (+ 17 MB tokenizer). Peak process memory ≈ 1.0 GB (int8),
   mostly the Python stack.
 
@@ -335,6 +390,7 @@ for a batch of B states (p50, ms) and throughput (decisions/s):
 | BTZSC clean 18 | **zero-shot** | not run | not run |
 | JevBench public, typed-decisions | zero-shot by data, but the Jev-style synthetic data targeted this format and the public JevBench items were used for model selection (no typed train split used) | not stated | Laya's typed-decisions checkpoint is trained on it — not the one compared here |
 | Jev Decision Index | zero-shot | board reference | board reference |
+| jabr/classifier-benchmark | zero-shot by data (1.1's System One data decontaminated against it); run once per released model | not run | benchmark's own run |
 
 "In-distribution" = the model trained on that dataset's train split. Measured exact whole-state overlap
 between Decima's training states and test states (`scripts/audit/overlap.py` → `runs/audit/overlap.json`)
@@ -344,7 +400,7 @@ the SST-5 corpus — excluded from the clean-18 score). All of it comes from the
 which was not decontaminated. Removing the overlapping items moves Decima's accuracy by at most 0.014 on
 any suite (laya/massive-ru 0.893 → 0.879; competitors move by similar amounts).
 
-**Selection note**: Decima-small was chosen among ~15 training runs using these same evaluation sets
+**Selection note**: Decima-small 1.0 was chosen among ~15 training runs using these same evaluation sets; 1.1 is a single continuation of it
 (there is no separate held-out benchmark), so its scores carry some selection optimism.
 The full per-suite overlap table is in [docs/EVAL.md §2](https://github.com/amyrmahdy/decima/blob/main/docs/EVAL.md#2-status-of-each-benchmark-measured).
 
@@ -371,7 +427,13 @@ The full per-suite overlap table is in [docs/EVAL.md §2](https://github.com/amy
   Rotten Tomatoes (33 %, excluded from clean-18) and part of MASSIVE (≤ 11.7 % per language; ≤ 0.014
   effect on any suite). Overlap audit: `scripts/audit/overlap.py` → `runs/audit/overlap.json`, [docs/EVAL.md
   §2](https://github.com/amyrmahdy/decima/blob/main/docs/EVAL.md#2-status-of-each-benchmark-measured).
-- **Calibration**: one temperature (0.973) fitted on a 5 % hold-out of the training mix (teacher + gold
+- **Decima 1.1** continues 1.0 for 0.5 epoch on the same mix plus 45,729 teacher-labelled System One
+  decisions (Gemma-4-26B-A4B; 4,593 tasks over 62 business settings, EN/FA/AR/RU; `choice` with key →
+  description criteria, `noul` statements including policy thresholds and near-misses, `score` with
+  described levels), each rendered four ways (option and statement wordings vary), decontaminated
+  against every evaluation item and against jabr/classifier-benchmark (11 rows dropped); 5 % of the
+  tasks were held out as a dev set (choice 0.70 → 0.79, noul 0.59 → 0.75, score 0.47 → 0.63 vs 1.0).
+- **Calibration**: one temperature (0.936; 1.0: 0.973) fitted on a 5 % hold-out of the training mix (teacher + gold
   rows), shipped in the config.
 
 Full protocol, data provenance and overlap audit: [docs/EVAL.md](https://github.com/amyrmahdy/decima/blob/main/docs/EVAL.md).
@@ -381,24 +443,27 @@ Full protocol, data provenance and overlap audit: [docs/EVAL.md](https://github.
 - **Long, multi-fact business decisions** (JevBench, typed-decisions): Kev-0.8B is ahead; all small
   models are weak on typed-decisions.
 - **Knowledge-heavy questions** (MMLU-style facts, math, chess): not what a 122M decision model knows.
-- **Logic in English**: XNLI English 0.767 vs Laya 0.860.
+- **Logic in English**: XNLI English 0.760 vs Laya 0.860.
+- **Applying numeric rules**: still weak. Asked whether a refund is due under a 30-day rule, 1.1 says yes
+  for a 12-day-old purchase (0.748) but also, wrongly, for a 45-day-old one (0.713). This is the main target
+  of Decima 2.
 - **Fine-grained sentiment** (5 levels): ~0.49–0.51.
 - **Input length**: 512 tokens of state; longer inputs are truncated.
 - **Colloquial loanwords and punctuation** (Persian spot checks): «یکی از یه کشور دیگه وارد اکانتم شده!»
   ("someone from another country got into my account!", with the common loanword «اکانت») was routed to
-  technical support (0.519); the same sentence with «حسابم» went to account security (0.924). Adding one
-  optional comma moved a Persian sales question from 0.912 to 0.837. Test with text written the way your
+  technical support (0.525); the same sentence with «حسابم» went to account security (0.919). Adding one
+  optional comma moved a Persian sales question from 0.936 to 0.916. Test with text written the way your
   users write.
 - **"None of the above" options hurt**: on short option lists, adding "none of the above" pulled real
-  tickets into it (19/20 → 11/20 in our demo set). Prefer a confidence threshold (on 20 realistic
-  tickets, the 14 answers above 0.8 were all correct and the 6 below it, including the only error, would
+  tickets into it (18/20 → 11/20 in our demo set). Prefer a confidence threshold (on 20 realistic
+  tickets, the 16 answers above 0.8 were all correct and the 4 below it, including both errors, would
   have been escalated) — but a threshold is not an off-topic filter: 1 of 6 off-topic messages still
-  scored above 0.8. ("None of the above" rows were in the teacher data; the model still over-selects the
+  reached 0.80. ("None of the above" rows were in the teacher data; the model still over-selects the
   option when the list is short.)
 - It picks among the options you give it; it can still pick the wrong one. Use the probabilities:
   act automatically only above a threshold, and escalate the rest.
 - **Tool calls and shell commands**: not recommended — in our spot checks it called
-  `rm -rf /var/lib/postgresql/data` non-destructive (0.693).
+  `rm -rf /var/lib/postgresql/data` non-destructive (0.722).
 
 ## Bias, risks and out-of-scope use
 
@@ -410,7 +475,7 @@ Full protocol, data provenance and overlap audit: [docs/EVAL.md](https://github.
   student, including in the healthcare-intake and moderation domains of the training grid. The healthcare
   domain covers routing and urgency only, never diagnosis, but the model has no mechanism that enforces
   this.
-- **Languages.** Evaluated in 20 languages; the weakest are Swahili (MASSIVE 0.720) and Hindi (XNLI 0.600).
+- **Languages.** Evaluated in 20 languages; the weakest are Swahili (MASSIVE 0.730) and Hindi (XNLI 0.597).
   Performance in unevaluated languages is unknown, and a message can be routed correctly in one language
   and wrongly in another.
 - **Selection optimism and in-distribution headlines.** See *What is zero-shot and what is not*.
@@ -446,7 +511,7 @@ their terms. Full table: `release/LICENSING.md`.
 ```bibtex
 @misc{madani2026decima,
   title  = {Decima: A Small, Calibrated, Permutation-Invariant Decision Model via Late-Interaction Distillation},
-  author = {Madani, A. M.},
+  author = {Madani, Amir Mahdi},
   year   = {2026},
   howpublished = {\url{https://huggingface.co/amyrmahdy/decima-small}},
   note   = {Code: \url{https://github.com/amyrmahdy/decima}}

@@ -1,0 +1,103 @@
+{
+  "items": "runs/items-s1/s1dev.jsonl",
+  "preds": {
+    "v1i": "runs/preds/s1dev--v1i.jsonl",
+    "v1k": "runs/preds/s1dev--v1k.jsonl"
+  },
+  "results": {
+    "v1i": {
+      "s1dev/score": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "score",
+        "lang": "en",
+        "acc": 0.4670886075949367,
+        "macro_f1": 0.3928398373280263,
+        "brier": 0.6484834246851708,
+        "nll": 1.2997741414103887,
+        "ece": 0.0974770192609832,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/choice": {
+        "n": 835,
+        "coverage": 1.0,
+        "choices": 5,
+        "kind": "choose",
+        "lang": "fa",
+        "acc": 0.7017964071856287,
+        "macro_f1": 0.677015238095238,
+        "brier": 0.4129128984809874,
+        "nll": 0.8013886893376314,
+        "ece": 0.038802319251461916,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/noul": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 2,
+        "kind": "verify",
+        "lang": "en",
+        "acc": 0.5848101265822785,
+        "macro_f1": 0.6270205207504511,
+        "brier": 0.5232328720352452,
+        "nll": 0.7842562526466598,
+        "ece": 0.14530275250001762,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      }
+    },
+    "v1k": {
+      "s1dev/score": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "score",
+        "lang": "en",
+        "acc": 0.6316455696202532,
+        "macro_f1": 0.5755682054894654,
+        "brier": 0.48171915689390904,
+        "nll": 0.8963854122440797,
+        "ece": 0.026960143055023308,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/choice": {
+        "n": 835,
+        "coverage": 1.0,
+        "choices": 5,
+        "kind": "choose",
+        "lang": "fa",
+        "acc": 0.7868263473053893,
+        "macro_f1": 0.7638336507936508,
+        "brier": 0.29452100374505524,
+        "nll": 0.5701914892028837,
+        "ece": 0.04250049599051045,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/noul": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 2,
+        "kind": "verify",
+        "lang": "en",
+        "acc": 0.7531645569620253,
+        "macro_f1": 0.6776201357653528,
+        "brier": 0.32594563213173827,
+        "nll": 0.48383953213753594,
+        "ece": 0.03764338563039041,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      }
+    }
+  }
+}
