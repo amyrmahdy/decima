@@ -38,6 +38,7 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from safetensors.torch import load_file, save_file
 
 from .normalize import normalize
 from .types import Decision, Question
@@ -223,7 +224,7 @@ class DecimaModel(nn.Module):
         p = Path(path); p.mkdir(parents=True, exist_ok=True)
         self.encoder.save_pretrained(p / "encoder")
         head = {k: v for k, v in self.state_dict().items() if not k.startswith("encoder.")}
-        torch.save(head, p / "head.pt")
+        save_file({k: v.contiguous() for k, v in head.items()}, p / "head.safetensors")
         (p / "decima.json").write_text(json.dumps(asdict(self.cfg), indent=2))
 
     @classmethod
@@ -234,7 +235,9 @@ class DecimaModel(nn.Module):
         cfg = DecimaConfig(**{k: v for k, v in raw.items() if k in known})   # extra keys (e.g. "soup" provenance) are metadata
         cfg.backbone = str(p / "encoder")
         m = cls(cfg)
-        m.load_state_dict(torch.load(p / "head.pt", map_location="cpu"), strict=False)
+        head = load_file(p / "head.safetensors") if (p / "head.safetensors").exists() else \
+            torch.load(p / "head.pt", map_location="cpu")                  # checkpoints from before 1.1.1
+        m.load_state_dict(head, strict=False)
         return m.to(device).eval()
 
     def param_counts(self) -> dict[str, int]:
