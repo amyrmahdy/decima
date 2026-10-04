@@ -96,6 +96,12 @@ two stages, 1.27M examples in the second:
 - **Procedural decisions with exact labels**, including grid and side-scroller scenes, reworded by an LLM under a
   "keep every number" check.
 
+The synthetic parts are public:
+
+- [decima-system-one-tasks](https://huggingface.co/datasets/amyrmahdy/decima-system-one-tasks): 138k typed decisions in the Jev/TypeSafe schema, nine languages;
+- [decima-game-decisions](https://huggingface.co/datasets/amyrmahdy/decima-game-decisions): 330k grid, side-scroller and Snake decisions;
+- [decima-synthetic-decisions](https://huggingface.co/datasets/amyrmahdy/decima-synthetic-decisions): the first-generation decisions from decima-small.
+
 Every evaluation set was decontaminated against the training data. Licensing of the data:
 [release/LICENSING.md](https://github.com/amyrmahdy/decima/blob/main/release/LICENSING.md).
 

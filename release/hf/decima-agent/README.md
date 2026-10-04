@@ -98,6 +98,9 @@ Every agent label is either exact or agreed by two models:
 - About a third of the states are wrapped in a long agent context (recent turns, file list, a diff), so the decisive
   line has to be found in 0.5–2k tokens.
 
+The agent data is public: [amyrmahdy/decima-agent-decisions](https://huggingface.co/datasets/amyrmahdy/decima-agent-decisions)
+(about 400k rows, with the held-out test splits and the 130 hand-written cases).
+
 The hand-written evaluation set was written separately from all generators. The procedural test splits hold out key
 formats, file types, command families, tools and phrasings, and are reported separately in the agentbench files.
 
@@ -106,8 +109,10 @@ formats, file types, command families, tools and phrasings, and are reported sep
 - **Never the only line of defence.** Keep hard rules, your sandbox, permission settings and secret scanning in CI.
   Decima removes routine prompts; it does not replace those.
 - **Unseen formats and commands are weaker.**
-  - On the held-out procedural secret set, where half the credential formats never appear in training, accuracy is 0.73.
-    The secret gate's regex rules cover the common vendors.
+  - On the held-out procedural secret set, where half the credential formats never appear in training, accuracy is 0.75.
+  - In realistic files from project types never seen in training, written by an LLM, 25 of 145 real credentials score
+    below the ask threshold, so the model alone would let them through. The secret gate's regex rules cover the common
+    vendor formats; keep secret scanning in CI.
   - On the held-out command test, where half the goals come from catalogue entries never seen in training, accuracy
     is 0.65.
 - **"Is this read-only?" is the weakest single question** (0.63 on 8 hand-written cases).

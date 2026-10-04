@@ -20,6 +20,16 @@ The name: **DECI**sion **MA**king — and Decima is also the Roman Fate who deci
 - [**Claude Code hooks**](integrations/claude-code) run locally, put rules first and fail closed.
 - A [**Persian edition**](release/jabr-fa) of the jabr benchmark.
 
+**Open data:**
+
+| Dataset | Rows | What |
+|---|---:|---|
+| [decima-agent-decisions](https://huggingface.co/datasets/amyrmahdy/decima-agent-decisions) | 412k | secret gate, bash gate, read-only, tool and command choice, next step, model tier; held-out test splits and 130 hand-written cases |
+| [decima-system-one-tasks](https://huggingface.co/datasets/amyrmahdy/decima-system-one-tasks) | 138k | typed decisions (`noul`, `choice`, `score`) in the Jev/TypeSafe schema, 15k tasks, nine languages |
+| [decima-game-decisions](https://huggingface.co/datasets/amyrmahdy/decima-game-decisions) | 333k | grid, side-scroller and Snake decisions with exact labels |
+| [jabr-v2-persian](https://huggingface.co/datasets/amyrmahdy/jabr-v2-persian) | 845 | the jabr classifier benchmark v2 in Persian, reviewed case by case |
+| [decima-synthetic-decisions](https://huggingface.co/datasets/amyrmahdy/decima-synthetic-decisions) | 190k | decima-small's synthetic decisions |
+
 Decima does not write text. It decides: routing, triage, intent, classification, verification,
 ranking — any bounded choice your software needs to make, with a confidence it can threshold.
 

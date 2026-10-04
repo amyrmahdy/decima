@@ -91,6 +91,9 @@ def main() -> None:
     sets = {"gold": list(gold_items()) + list(jsonl_items("release/agent/agentbench-gold-dynamic.jsonl"))}
     if Path("data/agent/proc-test.jsonl").exists():
         sets["proc"] = list(jsonl_items("data/agent/proc-test.jsonl"))[: a.max_proc]
+    for name in ("readonly", "shell"):                     # round-2 procedural sets (shell: cd chains, rm -rf of data, local services)
+        if Path(f"data/agent/proc-{name}-test.jsonl").exists():
+            sets[name] = list(jsonl_items(f"data/agent/proc-{name}-test.jsonl"))[: a.max_proc]
     if Path("data/agent/tools-test.jsonl").exists():
         sets["tools"] = list(jsonl_items("data/agent/tools-test.jsonl"))[: a.max_proc]
     llm = sorted(Path("data/agent").glob("llm-*-test.jsonl"))
