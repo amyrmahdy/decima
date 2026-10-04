@@ -113,6 +113,7 @@ def main() -> None:
     ap.add_argument("--weight-decay", type=float, default=0.01)
     ap.add_argument("--choice-budget", type=int, default=384)
     ap.add_argument("--max-states", type=int, default=48)
+    ap.add_argument("--state-token-budget", type=int, default=0, help="cap a batch's padded state tokens (0 = off); needed for long states")
     ap.add_argument("--nll-weight", type=float, default=0.3)
     ap.add_argument("--holdout", type=float, default=0.05)
     ap.add_argument("--scorer-layers", type=int, default=2)
@@ -167,7 +168,7 @@ def main() -> None:
     body_params = [p for n, p in model.named_parameters() if n.startswith("encoder.")]
     opt = torch.optim.AdamW([{"params": body_params, "lr": args.lr}, {"params": head_params, "lr": args.head_lr}],
                             weight_decay=args.weight_decay, betas=(0.9, 0.98))
-    steps_per_epoch = len(make_batches(train_ex, args.choice_budget, args.max_states, 0))
+    steps_per_epoch = len(make_batches(train_ex, args.choice_budget, args.max_states, 0, args.state_token_budget or None, args.max_state_tokens))
     total = int(steps_per_epoch * args.epochs)
     warm = int(total * args.warmup)
     sched = torch.optim.lr_scheduler.LambdaLR(
@@ -180,7 +181,7 @@ def main() -> None:
         rec["t"] = datetime.now(timezone.utc).isoformat(timespec="seconds"); log.write(json.dumps(rec) + "\n"); log.flush()
     emit({"event": "start", "args": vars(args), "params": counts, "n_train": len(train_ex), "n_holdout": len(hold_ex), "steps": total})
 
-    hold_batches = make_batches(hold_ex, args.choice_budget, args.max_states, 0)[: args.eval_batches]
+    hold_batches = make_batches(hold_ex, args.choice_budget, args.max_states, 0, args.state_token_budget or None, args.max_state_tokens)[: args.eval_batches]
     step, t0, best = 0, time.time(), -1.0
     epoch, skip_to, spent = 0, 0, 0.0
     resume_p = out / "resume.pt"
@@ -208,7 +209,7 @@ def main() -> None:
     last_ckpt = time.time()
     model.train()
     while step < total:
-        for bi, b in enumerate(make_batches(train_ex, args.choice_budget, args.max_states, epoch + 1)):
+        for bi, b in enumerate(make_batches(train_ex, args.choice_budget, args.max_states, epoch + 1, args.state_token_budget or None, args.max_state_tokens)):
             if step >= total:
                 break
             if bi < skip_to:                          # already trained on before the resume

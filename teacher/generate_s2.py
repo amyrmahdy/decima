@@ -6,6 +6,8 @@ reasoning anchors, several questions per state, long states and more languages. 
         --out data/teacher/s2-rande-fast-local.jsonl > runs/logs/s2gen.log 2>&1 &
 
 Differences from generate_s1:
+  * spatial-agent (~10 %) and everyday-knowledge (~7 %) clusters: text sensor readings of scenes with actions as
+    options, and common-sense categorisation — general skills, nothing game-specific;
   * clusters weighted like deployment (ops/enterprise, security/DevOps/compliance, safety/moderation,
     linguistic/content, triage/services) plus a REASONING cluster (~28 %): statements and scales whose
     answer needs a rule applied to facts in the state — numeric thresholds, dates relative to a date
@@ -67,11 +69,21 @@ CLUSTERS: dict[str, tuple[float, list[str]]] = {
         "customer support tickets", "clinic front-desk routing (urgency only, never diagnosis)", "veterinary reception (urgency only)",
         "insurance claims intake", "city service requests", "utility outages", "travel disruptions", "banking customer messages",
         "telecom support", "property maintenance requests"]),
+    "spatial_agent": (0.10, [
+        "a robot in a warehouse choosing its next move from sensor readings", "a delivery drone avoiding obstacles",
+        "a character in a 2D side-scrolling game deciding to run, jump or wait", "a snake-like creature on a grid looking for food",
+        "a maze explorer choosing a direction", "a self-driving cart in a factory aisle", "a game character dodging enemies",
+        "relative positions on a map (north/south/east/west, left/right/up/down, closer/farther)"]),
+    "everyday_knowledge": (0.07, [
+        "which recycling bin an item belongs in", "which room of a house an object belongs to", "which tool fits a household job",
+        "which store sells an item", "which season or weather an outfit suits", "which food group an ingredient belongs to",
+        "which emergency service a situation needs", "which professional to call for a household problem"]),
     "reasoning": (0.28, ["policy and eligibility rules", "deadlines and date arithmetic", "amount and quota thresholds",
         "multi-condition approvals", "exceptions and overrides", "two-hop rules (policy text + case facts)", "unit and number comparisons",
         "counting items or events in the text", "ordering and comparison of values", "negation and scope"]),
 }
-EXTRA_DOMAINS = S1_DOMAINS   # the s1 everyday settings, mixed into the non-reasoning clusters
+EXTRA_DOMAINS = S1_DOMAINS   # the s1 everyday settings, mixed into the business clusters
+OWN_TOPICS_ONLY = ("reasoning", "spatial_agent", "everyday_knowledge")
 
 REASONING_RULE = (
     "This is a REASONING task. The answer must require applying an explicit rule to facts in the state: numeric thresholds, "
@@ -79,6 +91,19 @@ REASONING_RULE = (
     "numbers or units, counting, or two hops (a short policy excerpt inside the state + the facts). Put the rule in the "
     "question (statement, instructions or criteria) or as a policy excerpt inside each state. Include near-miss cases that "
     "fail by one condition, and correct cases that pass in a non-obvious way. Keep the arithmetic easy but exact."
+)
+
+SPATIAL_RULE = (
+    "This is a SPATIAL task. Each state is a short text sensor reading of a scene (where the goal is relative to the agent, "
+    "what is in each direction and how far, what is just ahead); the options are actions or directions. The right answer must "
+    "follow from combining facts (e.g. the goal is up AND up is free → move up; a hole is just ahead → jump). Vary the wording "
+    "of readings (numbers of cells/tiles/meters, compass or left/right/up/down), and include traps where the obvious direction "
+    "is blocked."
+)
+KNOWLEDGE_RULE = (
+    "This is an EVERYDAY KNOWLEDGE task: the answer depends on common-sense facts about the world (what things are made of, "
+    "what they are used for, where they belong). States are short item or situation descriptions, often just a few words, in "
+    "varied phrasings and brands; include tricky items (a greasy pizza box, a glass jar with a metal lid)."
 )
 
 TYPE_RULE = {
@@ -121,7 +146,7 @@ def _pick(rng: random.Random, w: dict):
 def cell(i: int, seed: int = 0, only_en: bool = False) -> S2Cell:
     rng = random.Random(f"s2:{seed}:{i}")
     cl = rng.choices(list(CLUSTERS), weights=[v[0] for v in CLUSTERS.values()])[0]
-    topics = CLUSTERS[cl][1] + ([] if cl == "reasoning" else EXTRA_DOMAINS)
+    topics = CLUSTERS[cl][1] + ([] if cl in OWN_TOPICS_ONLY else EXTRA_DOMAINS)
     sl = _pick(rng, LANG_W)
     if only_en:                      # a second teacher whose non-English output is unreliable writes English only
         sl = "en"
@@ -151,7 +176,7 @@ def s2_prompt(c: S2Cell) -> list[dict]:
     length = ("Each state is a LONG artefact of 250–900 words (a log excerpt, an email thread, a contract clause set, a ticket "
               "with history, a policy plus a request), with realistic noise and one decisive detail that is easy to miss."
               if c.long else "Vary the length from one short line to about 120 words.")
-    reasoning = REASONING_RULE if c.cluster == "reasoning" else (
+    reasoning = REASONING_RULE if c.cluster == "reasoning" else SPATIAL_RULE if c.cluster == "spatial_agent" else KNOWLEDGE_RULE if c.cluster == "everyday_knowledge" else (
         "Include hard cases: sarcasm, negation, mixed signals, irrelevant details, typos, look-alikes of another option.")
     labels = ", ".join(f'"{q_id}": {LABEL[q.type]}' for q_id, q in zip([f"<id of Q{k}>" for k in range(1, len(c.qs) + 1)], c.qs))
     body = f"""Design ONE decision setting with {len(c.qs)} question(s) and label {c.n_states} states for every question.

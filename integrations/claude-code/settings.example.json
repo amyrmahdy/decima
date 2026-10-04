@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Write|Edit|MultiEdit",
+        "hooks": [{ "type": "command", "command": "python3 /path/to/integrations/claude-code/secret_gate.py", "timeout": 10 }] },
+      { "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "python3 /path/to/integrations/claude-code/bash_gate.py", "timeout": 10 }] }
+    ]
+  }
+}

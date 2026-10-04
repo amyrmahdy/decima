@@ -97,7 +97,7 @@ def main() -> None:
     for src in a.src:
         for line in open(src):
             r = json.loads(line)
-            if r.get("source") != "s1gen":
+            if r.get("source") not in ("s1gen", "s2gen"):
                 continue
             st["raw"] += 1
             if any(c.hit([r["state"], r["instructions"]]) for c in contam):

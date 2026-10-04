@@ -7,9 +7,4 @@ runs/*
 .env
 checkpoints/
 export/
-!runs/audit/
-!runs/x86/
-runs/x86/preds/
-runs/x86/logs/
-!runs/final/
-runs/final/preds/
+release/space-static/_model

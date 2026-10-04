@@ -50,21 +50,30 @@ def split(examples: list[dict], frac: float = 0.05) -> tuple[list[dict], list[di
     return tr, ho
 
 
-def make_batches(examples: list[dict], choice_budget: int = 384, max_states: int = 48, seed: int = 0) -> list[list[dict]]:
-    """Greedy packing by choice count; order shuffled per call (pass epoch as seed)."""
+def make_batches(examples: list[dict], choice_budget: int = 384, max_states: int = 48, seed: int = 0,
+                 token_budget: int | None = None, max_state_tokens: int = 512) -> list[list[dict]]:
+    """Greedy packing by choice count; order shuffled per call (pass epoch as seed).
+
+    With `token_budget`, a batch also stops when its states would exceed that many (estimated) tokens, counted at the
+    longest state in the batch since the collator pads to it; states are then grouped by length within each chunk, so
+    long agent contexts batch with each other instead of padding short ones. Without it, the packing is unchanged."""
     rng = random.Random(seed)
     idx = list(range(len(examples)))
     rng.shuffle(idx)
+    est = (lambda i: min(max_state_tokens, 8 + len(examples[i]["state"]) // 3 + len(examples[i]["question"]) // 4)) if token_budget else None
     # sort within coarse chunks so batches are homogeneous in choice count (less padding), yet still random
     chunk = 2048
-    batches, cur, used = [], [], 0
+    batches, cur, used, longest = [], [], 0, 0
     for c0 in range(0, len(idx), chunk):
-        block = sorted(idx[c0 : c0 + chunk], key=lambda i: len(examples[i]["choices"]))
+        key = (lambda i: (est(i) // 128, len(examples[i]["choices"]))) if token_budget else (lambda i: len(examples[i]["choices"]))
+        block = sorted(idx[c0 : c0 + chunk], key=key)
         for i in block:
             n = len(examples[i]["choices"])
-            if cur and (used + n > choice_budget or len(cur) >= max_states):
-                batches.append(cur); cur, used = [], 0
-            cur.append(examples[i]); used += n
+            t = est(i) if token_budget else 0
+            if cur and (used + n > choice_budget or len(cur) >= max_states
+                        or (token_budget and max(longest, t) * (len(cur) + 1) > token_budget)):
+                batches.append(cur); cur, used, longest = [], 0, 0
+            cur.append(examples[i]); used += n; longest = max(longest, t)
     if cur:
         batches.append(cur)
     rng.shuffle(batches)

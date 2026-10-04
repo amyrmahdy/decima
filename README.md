@@ -1,20 +1,29 @@
-# Decima — an open, CPU-sized Jev-style decision model
+# Decima — open, CPU-sized Jev-style decision models
 
-**A small decision model: situation + question + your options → calibrated probabilities.**
+**Situation + question + your options → calibrated probabilities.**
 Like TypeSafe's Jev, Decima is a *System One* model: typed decisions with probabilities instead of generated
-text. Unlike Jev, it is open (Apache-2.0), 122M parameters, and runs on one CPU core or in your browser.
+text. Unlike Jev, it is open (Apache-2.0), runs on a CPU, and speaks the same `/v1/systemone` API.
 
 Built by **A. M. Madani** ([@amyrmahdy](https://github.com/amyrmahdy) · [amyrmahdy.github.io](https://amyrmahdy.github.io)).
 The name: **DECI**sion **MA**king — and Decima is also the Roman Fate who decides.
 
-**1.1 (2026-10-01):** trained further on Jev-format decisions → 0.616 on the community
-[classifier-benchmark](https://github.com/jabr/classifier-benchmark) (1.0: 0.571; Laya 0.583; Von 0.720), and a
-TypeSafe-compatible System One API (`python -m decima.serve`; the official `typesafe-sdk` works unchanged).
+| Model | Size | For | jabr v2 (49 tasks) |
+|---|---|---|---:|
+| [decima-agent](https://huggingface.co/amyrmahdy/decima-agent) | 321M | coding-agent hooks: secret gate, bash gate, tool and command choice, model routing | 0.675 |
+| [decima-base](https://huggingface.co/amyrmahdy/decima-base) | 321M | general decisions, multilingual | 0.673 |
+| [decima-small](https://huggingface.co/amyrmahdy/decima-small) | 122M | the smallest CPUs and the browser | 0.616 |
+
+**2.0 (2026-10-04):**
+- **decima-base** (mmBERT-base) is a new generation.
+- **decima-agent**, fine-tuned from it, is the decision layer for agent loops: 0.90 on 130 hand-written agent decisions
+  (decima-base without agent training: 0.58).
+- [**Claude Code hooks**](integrations/claude-code) run locally, put rules first and fail closed.
+- A [**Persian edition**](release/jabr-fa) of the jabr benchmark.
 
 Decima does not write text. It decides: routing, triage, intent, classification, verification,
 ranking — any bounded choice your software needs to make, with a confidence it can threshold.
 
-- **122M parameters**, ONNX int8, **~20 ms** per decision on one laptop CPU core (4 options, short input)
+- **decima-small: 122M parameters**, ONNX int8, **~20 ms** per decision on one laptop CPU core (4 options, short input)
 - **Options in plain text**, given at call time; evaluated in 20 languages (weakest: Swahili, Hindi)
 - **Order-proof** — shuffling the options never changes the answer (0 %; the four other open decision models we compared: 10–27 %)
 - **Well calibrated as shipped** — lowest calibration error as shipped in every pairwise comparison we ran
@@ -27,7 +36,7 @@ ranking — any bounded choice your software needs to make, with a confidence it
 ## Install
 
 ```bash
-pip install "git+https://github.com/amyrmahdy/decima"      # from source (tag v1.1.0)
+pip install "git+https://github.com/amyrmahdy/decima"      # from source (tag v2.0.0)
 ```
 
 The runtime (`decima.Decima`) imports no PyTorch and needs no GPU — ONNX Runtime, numpy and a

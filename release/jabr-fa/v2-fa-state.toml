@@ -1,0 +1,3796 @@
+# jabr/classifier-benchmark v2, Persian states with the original English questions.
+[[task]]
+id = "support_department_v2_fas"
+type = "choice"
+
+[task.question]
+instructions = "Which team should handle this support message?"
+
+[task.question.criteria]
+billing = "Refunds, payments, invoices, subscriptions, or unexpected charges"
+tech = "Bugs, errors, crashes, downtime, or integration failures"
+sales = "Pricing questions, quotes, upgrades, demos, or new purchases"
+account = "Login issues, password resets, profile changes, or data deletion requests"
+other = "Anything that does not match the other categories"
+
+[[task.cases]]
+state = "گوشی‌ام را گم کرده‌ام و نمی‌توانم کدهای 2FA را دریافت کنم، برای همین دسترسی‌ام به حساب کاربری‌ام قفل شده است."
+expected = "account"
+
+[[task.cases]]
+state = "آیا برای پرداخت سالانه در پلن Business تخفیفی وجود دارد؟"
+expected = "sales"
+
+[[task.cases]]
+state = "بعد از اینکه ماه گذشته اشتراکمان را لغو کردیم، از کارتمان مبلغ 49.99 دلار کسر شده است — لطفاً آن را برگردانید."
+expected = "billing"
+
+[[task.cases]]
+state = "از زمانی که events API را فعال کرده‌ایم، یکپارچه‌سازی Slack هر اعلان را دو بار ارسال می‌کند."
+expected = "tech"
+
+[[task.cases]]
+state = "ما در حال مقایسه‌ی شما با Acme برای 200 کاربر هستیم. می‌توانید لطفاً وایت‌پیپر امنیتی را برایمان بفرستید و یک تماس با یک مهندس راهکار هماهنگ کنید؟"
+expected = "sales"
+
+[[task.cases]]
+state = "لطفاً مالکیت workspace سازمانمان را به یکی از همکارانم که قرار است جای من را بگیرد منتقل کنید."
+expected = "account"
+
+[[task.cases]]
+state = "ما سال گذشته اعتبار API اضافه خریدیم که هیچ‌وقت استفاده نشد؛ آیا می‌شود آن را بازپرداخت کرد یا به حساب ما اعتبار داد؟"
+expected = "billing"
+
+[[task.cases]]
+state = "هشدارهای ورود از کشور دیگری می‌بینم و فکر می‌کنم حسابم ممکن است هک شده باشد. لطفاً به من کمک کنید آن را ایمن کنم."
+expected = "account"
+
+[[task.cases]]
+state = "این گزارش باگ نیست، فقط یک آرزوست: آیا امکانی هست که حالت تاریک (dark mode) در نقشه‌ی راه باشد؟"
+expected = "other"
+
+[[task.cases]]
+state = "اشتراک ما هفته‌ی آینده به‌صورت خودکار تمدید می‌شود و می‌خواهیم پیش از آن متوقف شود."
+expected = "billing"
+
+[[task.cases]]
+state = "از وقتی نشان وضعیت (status badge) سایتمان را با ویجت جدید شما عوض کردیم، دیگر به‌روزرسانی نمی‌شود."
+expected = "tech"
+
+[[task.cases]]
+state = "آیا برای ویزای کاری در استکهلم حمایت (اسپانسر) می‌کنید؟ از یکی از همکاران سابقم که آنجا بوده، تعریف‌های خوبی شنیده‌ام."
+expected = "other"
+
+[[task.cases]]
+state = "آیا برای 50 کاربر سفارش خرید (purchase order) می‌پذیرید؟ ما به شرایط پرداخت net-30 نیاز داریم."
+expected = "sales"
+
+[[task.cases]]
+state = "از زمان بازه‌ی نگهداری (maintenance window) تاکنون، هر درخواست به api.acme.com خطای 403 برمی‌گرداند، اما فقط برای سازمان ما."
+expected = "tech"
+
+[[task.cases]]
+state = "شناسه‌ی مالیات بر ارزش افزوده (VAT ID) ما در سه فاکتور آخر درج نشده است؛ بخش مالی ما به نسخه‌های اصلاح‌شده نیاز دارد."
+expected = "billing"
+
+[[task.cases]]
+state = "باید پیش از جلسه‌ی آشناسازی (onboarding) روز دوشنبه 30 کاربر دیگر اضافه کنیم — می‌توانید امروز قیمت‌های به‌روز را برایمان بفرستید؟"
+expected = "sales"
+
+[[task.cases]]
+state = "در فاکتور یک مورد با عنوان «platform fee» دیده می‌شود که قبلاً هرگز ندیده بودیم — این هزینه برای چیست؟"
+expected = "billing"
+
+[[task]]
+id = "email_intent_v2_fas"
+type = "choice"
+
+[task.question]
+instructions = "What is the main intent of this email?"
+
+[task.question.criteria]
+meeting_request = "They want to schedule a meeting or call"
+question = "They are asking a question that needs an answer"
+complaint = "They are complaining about a problem or expressing dissatisfaction"
+thanks = "They are expressing gratitude or appreciation"
+fyi = "They are just sharing information without asking for anything"
+
+[[task.cases]]
+state = "بابت بررسی دقیقتان ممنونم! می‌شود پنجشنبه 30 دقیقه وقت بگذاریم و بازخوردها را با هم مرور کنیم؟"
+expected = "meeting_request"
+
+[[task.cases]]
+state = "یک سؤال کوتاه: آیا طرح سازمانی (enterprise) شامل SSO می‌شود یا قیمت آن جدا محاسبه می‌شود؟"
+expected = "question"
+
+[[task.cases]]
+state = "باید صادقانه بگویم، انتظار داشتیم اطلاع‌رسانی بیشتری درباره‌ی عرضه‌ی نسخه انجام شود — ما خبر تغییر API را فقط از طریق یکی از مشتریان شنیدیم."
+expected = "complaint"
+
+[[task.cases]]
+state = "از اینکه درباره‌ی خروجی سفارشی با زمان‌بندی ما همکاری کردید سپاسگزاریم؛ تیم واقعاً قدردان این لطف بود."
+expected = "thanks"
+
+[[task.cases]]
+state = "نیازی به پاسخ نیست — فقط خواستم اطلاع بدهم که محیط staging روز شنبه از ساعت 02:00 تا 06:00 به دلیل تعمیر و نگهداری برنامه‌ریزی‌شده از دسترس خارج خواهد بود."
+expected = "fyi"
+
+[[task.cases]]
+state = "هیئت مدیره پایلوت را تأیید کرد، پس برای راه‌اندازی چراغ سبز داریم — دعوت‌نامه‌ی جلسه‌ی شروع پروژه باید همین حالا در تقویم شما باشد."
+expected = "fyi"
+
+[[task.cases]]
+state = "هر وقت فرصت کردید: قرارداد ما در مارس خودکار تمدید می‌شود یا در آوریل؟"
+expected = "question"
+
+[[task.cases]]
+state = "داشبورد از جمعه تا الان اعداد اشتباه نشان می‌دهد و تا حالا دو بار مجبور شده‌ام این مغایرت را برای مدیرعامل‌مان توضیح بدهم."
+expected = "complaint"
+
+[[task.cases]]
+state = "بیایید هفته‌ی آینده 45 دقیقه وقت پیدا کنیم تا اعداد Q3 را مرور کنیم — چند بازه‌ی زمانی برای دستیار شما می‌فرستم."
+expected = "meeting_request"
+
+[[task.cases]]
+state = "از رفع سریع تیکت 5501 ممنونم؛ بعد از آن استقرار (deploy) بدون مشکل انجام شد."
+expected = "thanks"
+
+[[task.cases]]
+state = "این سومین فاکتور این فصل است که شماره‌ی PO آن اشتباه تایپی دارد؛ حسابداری هر بار آن‌ها را رد می‌کند."
+expected = "complaint"
+
+[[task.cases]]
+state = "حالا که فرصتی پیش آمده — محدودیت نرخ درخواست API به ازای هر سازمان است یا به ازای هر کلید؟"
+expected = "question"
+
+[[task.cases]]
+state = "دمِ کسی که فیلترهای ذخیره‌شده را منتشر کرد گرم؛ همین حالا هفته‌ای یک ساعت در وقتم صرفه‌جویی شده."
+expected = "thanks"
+
+[[task.cases]]
+state = "بودجه‌ی هیئت مدیره تأیید شد — SOW امضاشده پیوست است و از طرف شما اقدامی لازم نیست."
+expected = "fyi"
+
+[[task.cases]]
+state = "می‌شود جلسه‌ی پنجشنبه‌مان را به جمعه منتقل کنیم؟ برایم تداخل پیش آمده."
+expected = "meeting_request"
+
+[[task]]
+id = "refund_eligible_v2_fas"
+type = "noul"
+
+[task.question]
+instructions = "The customer is entitled to a refund under the 30-day money-back guarantee for unused services"
+
+[[task.cases]]
+state = "ما روز دوشنبه طرح سالانه را خریدیم و هیچ‌وقت از صفحه اول ویزارد راه‌اندازی جلوتر نرفتیم. لطفاً وجه ما را بازپرداخت کنید."
+expected = true
+
+[[task.cases]]
+state = "دو سال است که از این پلتفرم استفاده می‌کنیم، اما حالا که یک رقیب عرضه شده است، می‌خواهیم پولمان را پس بگیریم."
+expected = false
+
+[[task.cases]]
+state = "29 روز از خرید ما می‌گذرد و هیچ‌کس از تیم تا به حال وارد سیستم نشده است؛ ما سراغ یک فروشنده دیگر رفته‌ایم."
+expected = true
+
+[[task.cases]]
+state = "ما 35 روز پیش طرح را خریدیم و حتی یک لایسنس کاربر (seat) را هم فعال نکردیم — آیا ضمانت 30 روزه هنوز شامل ما می‌شود؟"
+expected = false
+
+[[task.cases]]
+state = "28 روز از خرید ما می‌گذرد و کل تیم هر روز از آن استفاده می‌کند، اما چون در بازه 30 روزه هستیم، می‌خواهیم وجهمان بازپرداخت شود."
+expected = false
+
+[[task.cases]]
+state = "ما 10 روز پیش طرح API را خریدیم و هنگام ارزیابی حدود 90% از سهمیه درخواست‌ها را مصرف کردیم. آن را نگه نخواهیم داشت — این را هم بازپرداخت کنید."
+expected = false
+
+[[task.cases]]
+state = "امروز صبح اشتراک از کارت من کسر شد؛ ما هیچ‌وقت راه‌اندازی حساب را تمام نکردیم. لطفاً وجه را بازپرداخت کنید."
+expected = true
+
+[[task.cases]]
+state = "دو هفته پیش برای پروژه‌ای که کنار گذاشته شد، ده لایسنس کاربر (seat) اضافه خریدم؛ این لایسنس‌ها هیچ‌وقت به کسی اختصاص داده نشدند."
+expected = true
+
+[[task.cases]]
+state = "تیم ما سه ماه است که هر روز از این سرویس استفاده کرده، اما می‌خواهیم به یک رقیب مهاجرت کنیم، پس لطفاً باقی‌مانده طرح سالانه ما را بازپرداخت کنید."
+expected = false
+
+[[task.cases]]
+state = "روز سه‌شنبه برای یک مهاجرت ثبت‌نام کردم که دیگر انجام نمی‌شود. لطفاً بازپرداخت کامل."
+expected = true
+
+[[task.cases]]
+state = "امروز روز 31 است — در سفر بودم و کاملاً فراموش کردم. محصول هرگز نصب نشده بود."
+expected = false
+
+[[task.cases]]
+state = "روز جمعه هزینه طرح تیمی را پرداخت کردیم، بعد واحد تدارکات گفت به‌جای آن از فروشنده تأییدشده استفاده کنیم. هیچ فعالیتی روی حساب نبوده است."
+expected = true
+
+[[task.cases]]
+state = "یک سال است که از محصول استفاده می‌کنیم؛ قیمت تازه بالا رفته است — آیا می‌توانیم مابه‌التفاوت را پس بگیریم؟"
+expected = false
+
+[[task.cases]]
+state = "بعد از پایان دوره آزمایشی 30 روزه‌مان، یک روز از آن استفاده کردیم. لطفاً هزینه آن ماه را بازپرداخت کنید."
+expected = false
+
+[[task.cases]]
+state = "ما روز اول ماه خرید کردیم و هیچ‌وقت آن را باز نکردیم؛ شرکت از آن زمان منحل شده است."
+expected = true
+
+[[task.cases]]
+state = "هفته گذشته هزینه یک سال را پرداخت کردیم، بعد تأمین مالی‌مان قطع شد و در حال تعطیل شدن هستیم. هیچ‌کس از آن استفاده نکرده است."
+expected = true
+
+[[task.cases]]
+state = "سه هفته پیش یک لایسنس کاربر (seat) اضافه شد، اما پیمانکار هیچ‌وقت کارش را شروع نکرد؛ آیا هزینه‌ی آن لایسنس قابل بازپرداخت است؟"
+expected = true
+
+[[task]]
+id = "urgency_v2_fas"
+type = "noul"
+
+[task.question]
+instructions = "The message conveys urgency or time-sensitivity"
+
+[[task.cases]]
+state = "راه‌اندازی نهایی (go-live) دوشنبه ساعت 09:00 به وقت CET است و سندباکس پرداخت هنوز تراکنش‌های آزمایشی ما را رد می‌کند."
+expected = true
+
+[[task.cases]]
+state = "اگر این مشکل تا قبل از مهلت نهایی حواله بانکی ساعت 5 بعدازظهر به وقت EST امروز حل نشود، قفل نرخ روی فاکتور را از دست می‌دهیم."
+expected = true
+
+[[task.cases]]
+state = "ترجیحاً قبل از پایان سه‌ماهه، اما راستش عجله‌ای نیست — هر وقت فرصت داشتید."
+expected = false
+
+[[task.cases]]
+state = "این باگ همه‌ی کاربران ما را تحت تأثیر قرار می‌دهد، اما واقعاً هیچ مهلتی در کار نیست — فقط هر وقت توانستید درست رفعش کنید."
+expected = false
+
+[[task.cases]]
+state = "من امروز به پاسخ نیاز دارم، چون وکیل ما آن را برای پرونده‌ای که فردا باید ثبت شود لازم دارد."
+expected = true
+
+[[task.cases]]
+state = "راستی، از گزینه‌های جدید خروجی گرفتن (export) خیلی خوشم آمد — واقعاً کار قشنگی کرده‌اید."
+expected = false
+
+[[task.cases]]
+state = "فقط برای 20 دقیقه‌ی آینده آنتن موبایل دارم و تیم سایت آماده‌باش ایستاده است؛ همین الان تصمیم نهایی (go/no-go) را لازم دارم."
+expected = true
+
+[[task.cases]]
+state = "کسی می‌تواند محاسبه‌ی تعدیل نسبی هزینه (proration) را امروز تأیید کند؟ می‌خواهیم قبل از اجرای فرایند صدور صورتحساب امشب، به پلن پایین‌تر برویم."
+expected = true
+
+[[task.cases]]
+state = "آیا کاتالوگ چاپی دارید که برایمان پست کنید؟ اصلاً عجله‌ای نیست."
+expected = false
+
+[[task.cases]]
+state = "رویداد راه‌اندازی ما فردا ساعت 10 است و صفحه‌ی ثبت‌نام هنوز تاریخ سال گذشته را نشان می‌دهد."
+expected = true
+
+[[task.cases]]
+state = "برای برنامه‌ریزی Q3، لطفاً هر وقت صلاح دانستید راهنمایی درباره‌ی ظرفیت را برایمان ارسال کنید."
+expected = false
+
+[[task.cases]]
+state = "این تصمیم را تا نیمه‌شب امروز لازم دارم، وگرنه باید موضوع را به هیئت مدیره ارجاع دهم."
+expected = true
+
+[[task.cases]]
+state = "هر وقت این آماده شد، برای چرخه‌ی بودجه‌ی سال آینده مفید خواهد بود — عجله‌ای نیست."
+expected = false
+
+[[task.cases]]
+state = "جلسه‌ی عمومی کل کارکنان یک ساعت دیگر شروع می‌شود؛ کسی می‌تواند قبل از اینکه روی صفحه نمایش داده شود، نگاهی به badge خراب بیندازد؟"
+expected = true
+
+[[task.cases]]
+state = "نهاد نظارتی مهلت پاسخ را جمعه ساعت 17:00 تعیین کرده است؛ سکوت به منزله‌ی پذیرش یافته‌ها تلقی خواهد شد."
+expected = true
+
+[[task.cases]]
+state = "مدیرعامل ما دیروز درباره‌ی این موضوع پرسید، پس از طرف شما هیچ فوریتی وجود ندارد — ماه آینده پیگیری می‌کنیم."
+expected = false
+
+[[task.cases]]
+state = "این موضوع بستن حساب‌های سه‌ماهه‌ی ما را متوقف کرده است — حسابرسان منتظر خروجی هستند. هر اقدامی امروز کمک می‌کند."
+expected = true
+
+[[task.cases]]
+state = "پیگیری درخواست مربوط به رنگ badge از ماه گذشته — اصلاً مهلتی در کار نیست، فقط دارم صندوق ورودی‌ام را مرتب می‌کنم."
+expected = false
+
+[[task]]
+id = "secret_leak_v2_fas"
+type = "noul"
+
+[task.question]
+instructions = "The text contains a password, API key, token, or private key that should be handled as a secret"
+
+[[task.cases]]
+state = "برای job گزارش‌ها، از روی jump box با postgresql://reporting:Tw9vKz2QmN4b@10.0.4.12/analytics وصل شوید."
+expected = true
+
+[[task.cases]]
+state = "درخواستی که با خطا مواجه شد این هدر را داشت: Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.7fLxQx5vBd4Tq8ZcWq0uHf3Rexample"
+expected = true
+
+[[task.cases]]
+state = "لطفاً deploy key من را به allowlist اضافه کنید: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH8vpLg7Xq3rT2X2mFk9cY4BdQ1WzN example@laptop"
+expected = false
+
+[[task.cases]]
+state = "طبق سیاست پوشاندن اطلاعات (masking)، رمز عبور در vault به‌صورت ████████ نمایش داده می‌شود؛ آن را هر سه ماه یک‌بار rotate کنید."
+expected = false
+
+[[task.cases]]
+state = "ما JWT_SECRET را در AWS Parameter Store همراه با rotation نگه می‌داریم؛ سرویس آن را هنگام بوت بارگذاری می‌کند."
+expected = false
+
+[[task.cases]]
+state = "رمز عبورم همان اسم سگم است — Biscuit — شوکه‌کننده است، می‌دانم."
+expected = true
+
+[[task.cases]]
+state = "برای بازتولید مشکل این دستور را اجرا کنید: curl -u admin:hunter2 https://internal.example.com/health"
+expected = true
+
+[[task.cases]]
+state = "احراز هویت دومرحله‌ای برای همه حساب‌های ادمین اجباری است."
+expected = false
+
+[[task.cases]]
+state = "در مثال‌ها همیشه از placeholder مستندات یعنی sk-live-XXXX-XXXX-XXXX استفاده کنید — هرگز از کلید واقعی استفاده نکنید."
+expected = false
+
+[[task.cases]]
+state = "-----BEGIN OPENSSH PRIVATE KEY----- b3BlbnNzaC1rZXktdjEAAAAAGmZnRyeXQgb25seSBmb3IgdGVzdGluZwAAAA -----END OPENSSH PRIVATE KEY-----"
+expected = true
+
+[[task.cases]]
+state = "کلیدهای service account را این هفته با runbook استاندارد rotate کنید و پایان کار را در کانال گزارش دهید."
+expected = false
+
+[[task.cases]]
+state = "JWT_SECRET هفته گذشته rotate شد؛ مقدار قبلی در یک اسکرین‌شات افتاده بود، پس محض احتیاط دوباره آن را rotate کنید."
+expected = false
+
+[[task.cases]]
+state = "CLOUDINARY_URL=cloudinary://9812345678901:aa4f92c7BzQ0wXyT1vR3sN5mKjH8dL6pF@acme"
+expected = true
+
+[[task.cases]]
+state = "سیاست public bucket را پیوست کردم — arn:aws:s3:::acme-public/* عمداً برای همه قابل خواندن است."
+expected = false
+
+[[task.cases]]
+state = "در فایل .env نمونه‌تان، OPENAI_API_KEY=your-key-here را قرار دهید — چیز واقعی paste نکنید."
+expected = false
+
+[[task.cases]]
+state = "دستور SSH این است: ssh -i ~/.ssh/id_ed25519 deploy@host"
+expected = false
+
+[[task]]
+id = "frustration_level_v2_fas"
+type = "score"
+
+[task.question]
+instructions = "How frustrated does the customer appear?"
+criteria = [
+    "Calm, just stating facts",
+    "Frustrated but civil",
+    "Very angry, using strong language",
+]
+
+[[task.cases]]
+state = "یک سؤال سریع: چطور می‌توانم ترتیب ستون‌ها را در نمای گزارش تغییر دهم؟"
+expected = 0
+
+[[task.cases]]
+state = "همگام‌سازی شبانه ساعت 03:14 با شکست مواجه شد؛ لاگ‌ها پیوست است."
+expected = 0
+
+[[task.cases]]
+state = "ما در سمت خودمان هیچ تغییری نداده‌ایم، اما درخواست‌ها اکنون با خطای 429 رد می‌شوند. آیا مشکلی در سمت شما وجود دارد؟"
+expected = 0
+
+[[task.cases]]
+state = "این سومین هفته پشت سر هم است که مجموع‌ها اشتباه است. خوب می‌شد اگر بالاخره این مشکل حل می‌شد."
+expected = 1
+
+[[task.cases]]
+state = "دو روز پیش درباره‌ی این موضوع پرسیدم و هنوز جوابی نگرفته‌ام؛ یک پاسخ واقعاً به ما کمک می‌کند که کارمان متوقف نماند."
+expected = 1
+
+[[task.cases]]
+state = "به ما گفته شد این مشکل در نسخه‌ی قبلی رفع شده، اما ما همچنان با آن مواجه هستیم. ناامیدکننده است."
+expected = 1
+
+[[task.cases]]
+state = "می‌خواهم درباره‌ی قطعی‌های مکرر یک شکایت رسمی ثبت کنم؛ این موضوع روی SLAهای ما تأثیر می‌گذارد."
+expected = 1
+
+[[task.cases]]
+state = "اوه عالی، باز هم یک راه‌حل «موقت». محشر است."
+expected = 1
+
+[[task.cases]]
+state = "این مسخره است!! من همین پنج سند را چهار بار دوباره فرستاده‌ام و تیم شما مدام دوباره آن‌ها را می‌خواهد."
+expected = 2
+
+[[task.cases]]
+state = "بس است. این چهارمین بار است که دیپلوی به خاطر CLI شما شکست می‌خورد. هم تیکت باز کنید، هم با من تماس بگیرید."
+expected = 2
+
+[[task.cases]]
+state = "دیگر کاملاً کلافه شده‌ام. هر آپدیت یک چیز دیگر را خراب می‌کند. افتضاح."
+expected = 2
+
+[[task.cases]]
+state = "بس کنید! سه بار لغو عضویت کرده‌ام و باز هم آشغال‌های تبلیغاتی‌تان را برایم ایمیل می‌کنید!"
+expected = 2
+
+[[task.cases]]
+state = "متوجه شدم کاشی‌های داشبورد در مانیتورهای اولتراواید ناهم‌تراز هستند؛ خوشحال می‌شوم یک اسکرین‌شات پیوست کنم."
+expected = 0
+
+[[task.cases]]
+state = "هر. هفته. بدون. استثنا. کارم به خاطر این چیز از بین می‌رود. واقعاً دیگر تحمل ندارم."
+expected = 2
+
+[[task.cases]]
+state = "می‌توانید تأیید کنید که آیا برنامه‌ی 2FA از چند حساب پشتیبانی می‌کند؟"
+expected = 0
+
+[[task.cases]]
+state = "ببینید، من با سه نفر از پشتیبان‌ها صحبت کرده‌ام و مدام همان موضوع را دوباره توضیح می‌دهم. دست‌کم اول تیکت را بخوانید."
+expected = 1
+
+[[task.cases]]
+state = "خروجی دوباره یک ستون کم دارد. این مدام تکرار می‌شود و من دیگر گزارش دادنش را کنار گذاشته‌ام."
+expected = 1
+
+[[task.cases]]
+state = "چرا این هنوز خراب است؟؟ سه بار ایمیل زده‌ام. شما اصلاً این‌ها را می‌خوانید؟"
+expected = 2
+
+[[task]]
+id = "incident_severity_v2_fas"
+type = "score"
+
+[task.question]
+instructions = "Rate the operational severity of this incident report."
+criteria = [
+    "Minor cosmetic issue with no functional impact",
+    "Low impact; a workaround exists",
+    "Major annoyance; a core feature is degraded with no easy workaround",
+    "Critical; a core feature is unusable for most or all users with no workaround",
+    "Catastrophic; the entire service is down or data has been lost",
+]
+
+[[task.cases]]
+state = "یک مشتری گزارش کرده که صفحه تنظیمات فقط روی صفحه‌نمایش iPad Mini لوگو را کشیده نشان می‌دهد."
+expected = 0
+
+[[task.cases]]
+state = "غلط تایپی: صفحه قیمت‌گذاری در بخش hero عبارت 'Managment' را نشان می‌دهد."
+expected = 0
+
+[[task.cases]]
+state = "اپلیکیشن موبایل نمی‌تواند عکس پیوست کند؛ کاربران همچنان می‌توانند از طریق اپلیکیشن وب آپلود کنند."
+expected = 1
+
+[[task.cases]]
+state = "خروجی CSV برای گزارش‌های بیش از 1,000 ردیف، ردیف آخر را حذف می‌کند؛ خروجی گرفتن در دو دسته درست کار می‌کند."
+expected = 1
+
+[[task.cases]]
+state = "از زمان ارتقای سامانه احراز هویت، هر ورود 25 تا 40 ثانیه طول می‌کشد، اما در نهایت موفق می‌شود."
+expected = 2
+
+[[task.cases]]
+state = "تمام آپلودهای فایل در منطقه EU از ساعت 08:00 با شکست مواجه شده‌اند؛ آپلود، گردش‌کار اصلی آن منطقه است."
+expected = 3
+
+[[task.cases]]
+state = "از زمان انقضای گواهی درگاه پرداخت، پرداخت‌های کارتی همه مشتریان رد می‌شود."
+expected = 3
+
+[[task.cases]]
+state = "یک مایگریشن جدول orders محیط production را حذف کرده است؛ جدیدترین نسخه پشتیبان 26 ساعت قدمت دارد."
+expected = 4
+
+[[task.cases]]
+state = "از ساعت 14:02، همه APIها و اپلیکیشن وب در تمام مناطق خطای connection refused برمی‌گردانند."
+expected = 4
+
+[[task.cases]]
+state = "کنتراست حالت تاریک در پنل تنظیمات باعث می‌شود خواندن برچسب‌ها سخت شود؛ برگشتن به حالت روشن مشکل را برطرف می‌کند."
+expected = 1
+
+[[task.cases]]
+state = "از ساعت 06:30، API عمومی تقریباً همه درخواست‌ها را با خطای 401 رد کرده است؛ پورتال مستندات هنوز کار می‌کند."
+expected = 3
+
+[[task.cases]]
+state = "از زمان تغییر دامنه، ایمیل خلاصه هفتگی گاهی در اسپم قرار می‌گیرد؛ افزودن آن به فهرست سفید برای کاربران جواب می‌دهد."
+expected = 1
+
+[[task.cases]]
+state = "سال کپی‌رایت در فوتر هنوز 2025 است."
+expected = 0
+
+[[task.cases]]
+state = "انتخابگر تاریخ به‌طور پیش‌فرض ماه اشتباه را نشان می‌دهد؛ انتخاب دستی تاریخ کار می‌کند."
+expected = 1
+
+[[task]]
+id = "review_sentiment_v2_fas"
+type = "score"
+
+[task.question]
+instructions = "Rate the sentiment of this product review on a five-level scale."
+criteria = [
+    "Extremely negative, one star",
+    "Negative, two stars",
+    "Neutral or mixed, three stars",
+    "Positive, four stars",
+    "Extremely positive, five stars",
+]
+
+[[task.cases]]
+state = "عاشق این هستم که 400 دلار خرج کنم و تک‌تک اتصالات را خودم با دست سنباده بزنم. چه کیفیت ساخت بی‌نقصی! اگر آشپزخانه‌ی خودم نبود، خیلی خنده‌دار بود."
+expected = 0
+
+[[task.cases]]
+state = "بعد از یازده روز خراب شد و پشتیبانی هرگز پاسخی نداد. صفر ستاره."
+expected = 0
+
+[[task.cases]]
+state = "این‌همه سروصدا را نمی‌فهمم. فقط یک وزنه‌ی کاغذ گران‌قیمت است."
+expected = 0
+
+[[task.cases]]
+state = "می‌خواستم عاشقش بشوم — طراحی‌اش فوق‌العاده است — اما سه بار تعویض در دو ماه یعنی من دیگر کنار می‌کشم."
+expected = 1
+
+[[task.cases]]
+state = "ای، بد نیست. کار می‌کند، به‌زور. خب، هر چقدر پول بدهی، همان‌قدر آش می‌خوری دیگر."
+expected = 1
+
+[[task.cases]]
+state = "ساخت محکمی دارد، اما راه‌اندازی‌اش گیج‌کننده بود و برنامه مدام کرش می‌کرد تا اینکه آخرین به‌روزرسانی آمد."
+expected = 2
+
+[[task.cases]]
+state = "خدمات عالی بود؛ خود محصول نسبتاً متوسط است."
+expected = 2
+
+[[task.cases]]
+state = "ترکیبی از خوب و بد: دوربین عالی است، اما عمر باتری افتضاح است."
+expected = 2
+
+[[task.cases]]
+state = "بعد از دو ماه استفاده‌ی روزانه، ارزش خریدش را دارد؛ چند ایراد با بند دارد، اما چیزی نیست که جلوی خرید را بگیرد."
+expected = 3
+
+[[task.cases]]
+state = "قابل اعتماد است و همه‌ی قولی را که داده انجام می‌دهد؛ برنامه‌ی همراهش می‌توانست بهتر باشد."
+expected = 3
+
+[[task.cases]]
+state = "آن‌قدر خوب بود که یکی دیگر هم برای خواهرم خریدم. ارسالش هم سریع بود."
+expected = 4
+
+[[task.cases]]
+state = "دو سال استفاده‌ی روزانه و هنوز مثل روز اول کار می‌کند. هیچ پشیمانی‌ای ندارم."
+expected = 4
+
+[[task.cases]]
+state = "تبلت ارزان هم پیدا می‌شود؛ این یکی ثابت می‌کند که باید ارزان‌تر از این باشند. صفحه‌نمایش کم‌نور است و از همین حالا دیگر به‌روزرسانی نمی‌گیرد."
+expected = 1
+
+[[task.cases]]
+state = "دوربینش در رده‌ی خودش بهترین است؛ بقیه‌ی چیزهایش معمولی است. بد نیست دیگر."
+expected = 2
+
+[[task.cases]]
+state = "همین‌طوری و بی‌فکر این را برای دخترم خریدم و سه هفته است که از دستش زمین نگذاشته. عالی است."
+expected = 4
+
+[[task.cases]]
+state = "پولتان را نگه دارید. بند در یک هفته ساییده شد، صفحه‌نمایش خط‌وخش‌دار رسید و برنامه وسط تمرین مرا از حساب خارج کرد."
+expected = 0
+
+[[task.cases]]
+state = "برای این قیمت، بسته‌ی شروع خوبی است؛ حرفه‌ای‌ها کم‌کم به چیزی بیشتر از این نیاز پیدا می‌کنند، اما در این رده نمی‌توانم ایرادی به آن بگیرم."
+expected = 3
+
+[[task.cases]]
+state = "این سومی است که می‌خرم — اعضای خانواده مدام از من کش می‌روند. بی‌برو‌برگرد باز هم می‌خرم."
+expected = 4
+
+[[task]]
+id = "expense_category_fas"
+type = "choice"
+
+[task.question]
+instructions = "Which expense category does this business expense belong to?"
+
+[task.question.criteria]
+meals = "Food or drink for the employee or their own team while working or traveling"
+travel = "Transportation (flights, trains, taxis, rideshare), lodging, and related travel fees"
+office_supplies = "Physical items and equipment for offices or home offices"
+software = "Digital tools: licenses, subscriptions, SaaS, and app purchases"
+client_entertainment = "Food, events, tickets, or gifts provided to clients, prospects, or job candidates"
+
+[[task.cases]]
+state = "تاکسی از فرودگاه O'Hare تا دفتر مشتری در مرکز شهر شیکاگو، 42 دلار به‌علاوه انعام."
+expected = "travel"
+
+[[task.cases]]
+state = "شام در Ruth's Chris با تیم خرید Acme برای جشن گرفتن تمدید قرارداد، 310 دلار."
+expected = "client_entertainment"
+
+[[task.cases]]
+state = "تمدید سالانه Adobe Creative Cloud برای گروه طراحی، 599 دلار."
+expected = "software"
+
+[[task.cases]]
+state = "دو میز ایستاده و پایه‌ی نگه‌دارنده‌ی مانیتور برای دفترهای کار خانگی همکاران تازه‌استخدام‌شده، 780 دلار."
+expected = "office_supplies"
+
+[[task.cases]]
+state = "Airbnb برای اقامت سه‌شبه در زمان کنفرانس، در مجموع 410 دلار."
+expected = "travel"
+
+[[task.cases]]
+state = "بلیت رفت‌وبرگشت پرواز اکونومی به برلین برای نمایشگاه تجاری، به‌علاوه قطار به آمستردام پس از آن، 890 دلار."
+expected = "travel"
+
+[[task.cases]]
+state = "تمدید فضای کاری Notion Team، 540 دلار برای یک سال."
+expected = "software"
+
+[[task.cases]]
+state = "قهوه و شیرینی، 38 دلار، که برای صبح مصاحبه‌های حضوری کاندیدا در محل شرکت تدارک دیده شد."
+expected = "client_entertainment"
+
+[[task.cases]]
+state = "ناهار تیمی چهار نفره در برنامه‌ی تیمی خارج از دفتر (offsite)، 86 دلار."
+expected = "meals"
+
+[[task.cases]]
+state = "MacBook Pro 14 اینچی برای طراح جدید، 2,399 دلار."
+expected = "office_supplies"
+
+[[task.cases]]
+state = "ناهار از فست‌فودی ماشینی (drive-thru) در هر دو روز کنفرانس، در مجموع 22 دلار."
+expected = "meals"
+
+[[task.cases]]
+state = "لایسنس‌های فصلی LinkedIn Learning برای تیم مالی — 240 دلار."
+expected = "software"
+
+[[task.cases]]
+state = "عوارض جاده و پارکینگ هنگام رانندگی با ماشین شخصی خودم به محل مشتری در اسلو، 320 کرون."
+expected = "travel"
+
+[[task.cases]]
+state = "گل ارسال‌شده به دفتر مشتری برای تبریک جذب سرمایه‌ی آن‌ها."
+expected = "client_entertainment"
+
+[[task.cases]]
+state = "اشتراک ماهانه‌ی Zoom Business برای تیم دورکار، 199 دلار."
+expected = "software"
+
+[[task.cases]]
+state = "هدفون جایگزین برای مهندسی که هدفونش را در سفر کاری گم کرده، 120 دلار."
+expected = "office_supplies"
+
+[[task.cases]]
+state = "دسترسی به لانژ فرودگاه در زمان توقف بین دو پرواز، در سفر کاری برای دیدار با مشتری، 45 دلار."
+expected = "travel"
+
+[[task.cases]]
+state = "کاغذ و تونر برای چاپگر دفتر، 85 دلار."
+expected = "office_supplies"
+
+[[task]]
+id = "oncall_route_fas"
+type = "choice"
+
+[task.question]
+instructions = "Which on-call team should this production issue be routed to?"
+
+[task.question.criteria]
+payments = "Card processing, billing pipelines, invoicing logic, and payment gateway integrations"
+web = "The user-facing site and app: page rendering, client-side behavior, and browser errors"
+infra = "Cloud, compute, deployments, networking, and third-party provider outages"
+data = "ETL pipelines, data freshness, warehouse jobs, and analytics/reporting correctness"
+model = "The ML models: prediction quality, training jobs, and model outputs"
+
+[[task.cases]]
+state = "هشدار: نرخ خطای checkout-service برابر با 12% است (مقدار پایه 0.1%)؛ stack trace پر از exceptionهای timeout مربوط به Stripe است."
+expected = "payments"
+
+[[task.cases]]
+state = "کاربران iOS 17 گزارش می‌دهند که دیالوگ تأیید خالی رندر می‌شود؛ API با کد 200 و JSON معتبر پاسخ می‌دهد."
+expected = "web"
+
+[[task.cases]]
+state = "استقرار در میانه rollout روی 50% از podها متوقف شده است؛ بقیه پس از timeout شدن helm upgrade در وضعیت CrashLoopBackOff هستند."
+expected = "infra"
+
+[[task.cases]]
+state = "ETL شبانه‌ی انتقال سفارش‌ها به انبار داده 14 ساعت عقب است؛ فروشگاه‌های آنلاین موجودی دیروز را نمایش می‌دهند."
+expected = "data"
+
+[[task.cases]]
+state = "podهای API از زمان انتشار v172 روی 100% CPU هستند و autoscaler به سقف 30 replica رسیده است."
+expected = "infra"
+
+[[task.cases]]
+state = "نرخ مثبت کاذب مدل تشخیص تقلب از زمان بازآموزی روز دوشنبه دو برابر شده است؛ 200 سفارش معتبر طی شب مسدود شده‌اند."
+expected = "model"
+
+[[task.cases]]
+state = "یکی از نمایندگان می‌پرسد چرا داشبورد موجودی مشتری‌اش خالی است؛ job مربوط به store-import ساعت 03:12 با کد 1 خارج شد و هیچ ردیفی بارگذاری نشد."
+expected = "data"
+
+[[task.cases]]
+state = "کاربران گزارش می‌دهند سایت بالا نمی‌آید؛ صفحه‌ی وضعیت یک قطعی منطقه‌ای S3 را نشان می‌دهد و CDN نمی‌تواند bundleها را دریافت کند."
+expected = "infra"
+
+[[task.cases]]
+state = "جمع سبد خرید در سبدهای چندکالایی، وقتی اعتبار فروشگاه و محاسبه‌ی نسبی (proration) با هم اعمال می‌شوند، یک سنت اختلاف دارد."
+expected = "payments"
+
+[[task.cases]]
+state = "صفحه‌ی تنظیمات به‌صورت مقطعی در همه‌ی مرورگرها به‌جای وزن‌ها NaN نشان می‌دهد؛ کنسول یک TypeError را در bundle 2.3.1 نشان می‌دهد."
+expected = "web"
+
+[[task.cases]]
+state = "PDFهای فاکتور با ترتیب نادرست اقلام تولید می‌شوند؛ جمع‌ها درست هستند."
+expected = "payments"
+
+[[task.cases]]
+state = "بنر رضایت کوکی در حالت افقی (landscape) روی موبایل، دکمه‌های ناوبری را می‌پوشاند."
+expected = "web"
+
+[[task.cases]]
+state = "کار (job) شبانه‌ی آموزش مدل پیش‌بینی با کمبود حافظه مواجه شد و از روز چهارشنبه تاکنون مدلی تولید نکرده است."
+expected = "model"
+
+[[task.cases]]
+state = "داشبورد درآمد از اجرای dbt امروز صبح برای EMEA خالی نمایش داده می‌شود."
+expected = "data"
+
+[[task.cases]]
+state = "کاربران Android 15 هنگام اجرای برنامه صفحه‌ی سفید می‌بینند؛ iOS مشکلی ندارد."
+expected = "web"
+
+[[task.cases]]
+state = "شمارنده‌ی بیلینگ مبتنی بر مصرف از دیروز برای همه‌ی حساب‌ها افزایش پیدا نمی‌کند."
+expected = "payments"
+
+[[task.cases]]
+state = "podها در سراسر nodeهای eu-west به دلیل فشار حافظه evict می‌شوند."
+expected = "infra"
+
+[[task]]
+id = "churn_risk_fas"
+type = "score"
+
+[task.question]
+instructions = "How likely is this customer to cancel their subscription soon, based on this message?"
+criteria = [
+    "Committed: renewed, upgraded, or is actively expanding usage",
+    "Content: satisfied overall, at most minor friction and no signals of leaving",
+    "Concerned: recurring unresolved problems or clear disappointment; satisfaction is dropping",
+    "Evaluating: comparing alternatives, asking about contract end terms, or setting conditions to stay",
+    "Leaving: explicit cancellation or non-renewal notice",
+]
+
+[[task.cases]]
+state = "ما همین الان به طرح سالانه Scale ارتقا دادیم و کل تیم همراه است — از داشبوردهای جدید خیلی راضی‌ایم."
+expected = 0
+
+[[task.cases]]
+state = "از زمان بازطراحی، میزان استفاده 40% افزایش یافته. حالا که صحبتش شد، می‌توانیم 20 کاربر دیگر هم اضافه کنیم؟"
+expected = 0
+
+[[task.cases]]
+state = "جلسه QBR خوب پیش رفت. چند مورد در فهرست خواسته‌هایمان هست — مثلاً فرمت‌های خروجی بیشتر — اما در مجموع راضی هستیم."
+expected = 1
+
+[[task.cases]]
+state = "راه‌اندازی اولیه پرچالش بود، اما پشتیبانی خوب جبران کرد و ما با احتیاط خوش‌بینیم."
+expected = 1
+
+[[task.cases]]
+state = "این سومین ماه پیاپی است که جمع‌های ما با هم نمی‌خوانند. با این وضعیت نمی‌توانیم پیش‌بینی حقوق و دستمزد انجام دهیم."
+expected = 2
+
+[[task.cases]]
+state = "ابزار کار می‌کند، اما تیم مدام به صفحه‌گسترده‌ها برمی‌گردد و در نتیجه کمتر و کمتر از آن استفاده می‌کنیم. مطمئن نیستیم ارزش هزینه‌اش را داشته باشد."
+expected = 2
+
+[[task.cases]]
+state = "می‌توانید شرایط مربوط به مهلت اخطار در قرارداد ما را برایمان بفرستید؟ همچنین می‌خواهیم بدانیم خروجی کامل داده‌ها شامل چه مواردی می‌شود."
+expected = 3
+
+[[task.cases]]
+state = "اگر قیمت‌گذاری مبتنی بر میزان مصرف تا پایان امسال عرضه نشود، وقتی از سطح فعلی فراتر رفتیم مجبور می‌شویم سراغ گزینه‌های دیگر برویم."
+expected = 3
+
+[[task.cases]]
+state = "لطفاً با اعمال از پایان دوره صورت‌حساب فعلی، اشتراک ما را لغو کنید و کتباً تأیید نمایید."
+expected = 4
+
+[[task.cases]]
+state = "لطفاً حساب ما را ببندید — انتقال به Acme هفته گذشته تمام شد."
+expected = 4
+
+[[task.cases]]
+state = "از امروز طبق بند 8.2 اخطار 30 روزه‌ی خود را اعلام می‌کنیم؛ دیگر ادامه نمی‌دهیم."
+expected = 4
+
+[[task.cases]]
+state = "راستش بد نیست، اما با توجه به مبلغی که می‌پردازیم انتظار داشتم تا الان بخش گزارش‌گیری پیشرفته‌تر شده باشد."
+expected = 2
+
+[[task.cases]]
+state = "بین خودمان باشد، مسئول جدید پلتفرم ما دارد ابزارها را به‌صورت کلی محک می‌زند، پس منتظر سؤال‌هایی باشید."
+expected = 3
+
+[[task.cases]]
+state = "گاهی در جست‌وجو اشکالاتی پیش می‌آید، البته، اما فرایندهای کاری ما از اول تا آخر اجرا می‌شود و ارزش کار روشن است."
+expected = 1
+
+[[task.cases]]
+state = "مدیر موفقیت مشتری (CSM) ما شش هفته پیش رفت و از آن موقع هیچ‌کس با ما تماس نگرفته، برای همین کمی سردرگم هستیم."
+expected = 2
+
+[[task.cases]]
+state = "تمدید از طرف ما تأیید شد — لطفاً MSA به‌روزشده را برای امضا بفرستید."
+expected = 0
+
+[[task.cases]]
+state = "فصل بعد دو تیم دیگر اضافه می‌کنیم — طرح Enterprise شامل چه چیزهایی می‌شود؟"
+expected = 0
+
+[[task.cases]]
+state = "لطفاً تمدید خودکار اشتراک ما را متوقف کنید؛ تا پیش از مهلت مقرر تصمیم می‌گیریم که ادامه بدهیم یا نه."
+expected = 3
+
+[[task]]
+id = "lead_qualification_fas"
+type = "score"
+
+[task.question]
+instructions = "How qualified is this inbound lead for the enterprise sales team?"
+criteria = [
+    "Unqualified: no budget or realistic commercial use case — a student, a hobby project, a job seeker, or a vendor pitch",
+    "Low: exploratory, small-team, no timeline, or unclear needs",
+    "Medium: a real team problem with likely budget and a decision within the next quarter or so",
+    "High: clear budget and authority, an active purchase process, and an enterprise-scale need",
+]
+
+[[task.cases]]
+state = "سلام! من دانشجوی علوم کامپیوتر هستم و برای پایان‌نامه‌ام یک داشبورد اقلیمی می‌سازم. آیا تخفیف دانشجویی دارید؟"
+expected = 0
+
+[[task.cases]]
+state = "سلام، من ابزارهای لید جنریشن (جذب سرنخ) می‌فروشم — فکر می‌کنم بتوانیم با هم همکاری کنیم؛ این هم اسلایدهای معرفی من."
+expected = 0
+
+[[task.cases]]
+state = "ابزار باحالیه! دارم از پلن رایگان برای زمان‌بندی جلسات گروه D&D خودم استفاده می‌کنم. تا الان عالی کار کرده."
+expected = 0
+
+[[task.cases]]
+state = "ما یک استودیوی چهار نفره هستیم و فعلاً پلن رایگان برای ما کافی است. آیا پلن Pro پشتیبانی از Zapier را هم اضافه می‌کند؟ فقط دارم بررسی می‌کنم."
+expected = 1
+
+[[task.cases]]
+state = "API دارید؟ ممکن است بخواهم در آینده یک یکپارچه‌سازی بسازم، ولی هنوز مطمئن نیستم دقیقاً چه چیزی."
+expected = 1
+
+[[task.cases]]
+state = "دارم ابزارهای داشبورد را برای تیم پشتیبانی 40 نفره‌مان ارزیابی می‌کنم. بودجه‌ی اولیه کم است؛ می‌خواهم ماه آینده با پنج کاربر یک پایلوت اجرا کنم."
+expected = 2
+
+[[task.cases]]
+state = "من یک آژانس 12 نفره دارم و هر هفته حدود 10 ساعت را صرف تهیه‌ی دستیِ گزارش برای مشتریان می‌کنیم؛ می‌خواهم این مشکل را قبل از شروع کار سه مشتری جدید در ماه آینده حل کنم."
+expected = 2
+
+[[task.cases]]
+state = "برای ممیزی ژانویه‌مان به BI دارای حاکمیت داده (governed BI) نیاز داریم. الان دارم فهرست کوتاه را تهیه می‌کنم، اما خرید قبل از اکتبر انجام نخواهد شد."
+expected = 2
+
+[[task.cases]]
+state = "مدیر فنی (CTO) ما از من خواسته فروشندگان را برای جایگزینی زیرساخت پیش‌بینیِ خانگی‌مان ارزیابی کنم — 300 مهندس روی این پلتفرم کار می‌کنند، بودجه تأیید شده و تصمیم تا پایان فصل آینده گرفته می‌شود."
+expected = 3
+
+[[task.cases]]
+state = "من VP Ops یک خرده‌فروشی با 900 فروشگاه هستم. قرارداد WMS ما پنج هفته‌ی دیگر تمام می‌شود و هیئت‌مدیره بودجه‌ی مهاجرت 2 میلیون دلاری را تصویب کرده است. می‌توانیم همین هفته یک POC را شروع کنیم؟"
+expected = 3
+
+[[task.cases]]
+state = "برای تیم فروش 60 نفره‌مان در حال ارزیابی فروشندگان هستیم؛ واحد تدارکات تا پایان ماه مه سه گزینه‌ی نهایی را لازم دارد."
+expected = 2
+
+[[task.cases]]
+state = "دمو را در یک غرفه دیدم — چیز جالبی بود. برای یک پروژه‌ی آینده نشانه‌گذاری‌اش کردم."
+expected = 1
+
+[[task.cases]]
+state = "تصمیم پلتفرمی ما تا سال 2028 به رقیب شما گره خورده است، اما از طرفداران محصولتان هستیم."
+expected = 0
+
+[[task.cases]]
+state = "مدیر مالی (CFO) بودجه‌ی یک قرارداد سه‌ساله را تأیید کرده و بررسی امنیتیِ ما این هفته بسته می‌شود."
+expected = 3
+
+[[task.cases]]
+state = "ما یک شرکت بیمه‌ی 500 نفره هستیم و RFP ما برای یک پلتفرم داده ماه آینده منتشر می‌شود."
+expected = 3
+
+[[task.cases]]
+state = "درباره‌ی قیمت برای یک دفتر حسابداری سه نفره کنجکاو هستم."
+expected = 1
+
+[[task]]
+id = "app_review_intent_fas"
+type = "choice"
+
+[task.question]
+instructions = "What kind of app review is this?"
+
+[task.question.criteria]
+bug_report = "Describes something in the app that is broken or behaves wrongly"
+feature_request = "Asks for new functionality, content, or settings"
+praise = "Positive feedback about the app or the team"
+pricing_billing = "Subscription, pricing, refund, or payment questions and complaints"
+
+[[task.cases]]
+state = "هر بار که می‌خواهم پیش‌نویسی را که آفلاین ذخیره کرده‌ام باز کنم، برنامه کرش می‌کند. Pixel 8، نسخه v3.2.1."
+expected = "bug_report"
+
+[[task.cases]]
+state = "امکانش هست ویجت صفحه‌ی اصلی برای شمارنده‌ی روزهای پیاپی تمرین اضافه شود؟"
+expected = "feature_request"
+
+[[task.cases]]
+state = "واقعاً ارزش دانلود دارد — حالت آفلاین یک پرواز چهار ساعته‌ام را نجات داد."
+expected = "praise"
+
+[[task.cases]]
+state = "چطور می‌توانم پول طرح سالانه را پس بگیرم؟ قصدم خرید طرح ماهانه بود."
+expected = "pricing_billing"
+
+[[task.cases]]
+state = "از آخرین به‌روزرسانی به بعد، ویجت مجموع‌های دیروز را نشان می‌دهد تا وقتی که آن را به‌زور ببندم."
+expected = "bug_report"
+
+[[task.cases]]
+state = "لطفاً از حالت صفحه‌ی تقسیم‌شده در تبلت پشتیبانی کنید؛ یادداشت‌برداری کنار فایل‌های PDF این برنامه را کامل می‌کند."
+expected = "feature_request"
+
+[[task.cases]]
+state = "بعد از عوض کردن دستگاه، دو بار از حسابم پول کسر شد؛ قبل از اینکه از طریق ارائه‌دهنده‌ی کارتم اعتراض کنم، این مشکل را حل کنید."
+expected = "pricing_billing"
+
+[[task.cases]]
+state = "سازنده‌ها واقعاً گوش می‌دهند — پرچم‌هایی که در دسامبر خواسته بودم اضافه شده‌اند. سرعت کارتان قابل‌توجه است."
+expected = "praise"
+
+[[task.cases]]
+state = "ورود با حساب Google مدیریت‌شده‌ام در پروفایل کاری تا ابد در حلقه می‌افتد؛ حساب شخصی مشکلی ندارد."
+expected = "bug_report"
+
+[[task.cases]]
+state = "شمارنده‌ی روزهای پیاپی نیمه‌شب با منطقه‌ی زمانی اشتباه ریست شد — چون در سفر بودم، یک رکورد 45 روزه را از دست دادم."
+expected = "bug_report"
+
+[[task.cases]]
+state = "در iOS وقتی مخزن یادداشت‌هایم (vault) بیش از 100 یادداشت دارد، مدام خطای «sync failed» می‌گیرم."
+expected = "bug_report"
+
+[[task.cases]]
+state = "دوست داشتم راهی بود که بدون ارسال خروجی، قالب‌ها را با تیمم به اشتراک بگذارم."
+expected = "feature_request"
+
+[[task.cases]]
+state = "اشتراک با قیمت کامل تمدید شد، با اینکه دوره‌ی آزمایشی را پیش از پایانش لغو کرده بودم."
+expected = "pricing_billing"
+
+[[task.cases]]
+state = "نقشه‌های آفلاین جدید همه‌چیز را عوض کرده‌اند. ممنون!"
+expected = "praise"
+
+[[task.cases]]
+state = "دو سال گذشته و هنوز حالت تاریک ندارید. همه‌ی اپ‌های دیگر دارند. یک فکری به حالش بکنید."
+expected = "feature_request"
+
+[[task.cases]]
+state = "چطور می‌توانم از طرح سالانه به پرداخت ماهانه تغییر بدهم؟"
+expected = "pricing_billing"
+
+[[task]]
+id = "content_moderation_fas"
+type = "choice"
+
+[task.question]
+instructions = "Which moderation category does this user post fall under?"
+
+[task.question.criteria]
+harassment = "Insults, abuse, or hostile attacks on a person or group"
+threat = "Stated intent to harm a specific person, doxxing, or incitement of violence"
+self_harm = "Expressing intent or desire to hurt oneself, or encouraging others to do so"
+spam = "Unsolicited promotion, chain messages, or repeated irrelevant content, often with links"
+none = "Legitimate content that violates no rules"
+
+[[task.cases]]
+state = "تو رقت‌انگیزی. هیچ‌کس در این جامعه نمی‌خواهد تو اینجا باشی. آفلاین شو و دیگر برنگرد."
+expected = "harassment"
+
+[[task.cases]]
+state = "🔥🔥 در یک شب 5000 فالوور بگیرید!! همین حالا کلیک کنید، قبل از اینکه تمام شود bit.ly/f4stf0ll0w"
+expected = "spam"
+
+[[task.cases]]
+state = "فکر نمی‌کنم اگر نباشم کسی متوجه شود. خسته شده‌ام از اینکه وانمود کنم همه‌چیز خوب است."
+expected = "self_harm"
+
+[[task.cases]]
+state = "کسی می‌داند چرا پست‌های من مدام گزارش می‌شوند؟ من فقط زمان parkrun خودم را به اشتراک گذاشتم."
+expected = "none"
+
+[[task.cases]]
+state = "دوباره آدرس خانه‌اش را بگذارید؛ دیگر هیچ‌وقت نمی‌تواند یک کلمه هم آنلاین بنویسد. می‌دانیم بچه‌هایش به کدام مدرسه می‌روند."
+expected = "threat"
+
+[[task.cases]]
+state = "کسانی که Mercy مین می‌کنند دلیل این هستند که رنکد هیچ‌وقت رقابتی نمی‌شود. آدم‌های درجه‌پایین."
+expected = "harassment"
+
+[[task.cases]]
+state = "تبریک برای راه‌اندازی! ما به استارتاپ‌هایی مثل شما کمک می‌کنیم پایپ‌لاینشان را 10 برابر کنند — یک ارزیابی رشد رایگان می‌خواهید؟ جزئیات را برایتان دایرکت می‌فرستم."
+expected = "spam"
+
+[[task.cases]]
+state = "امروز روز 60ام است که به خودم آسیب نزده‌ام. اگر در سختی هستی، دایرکتم باز است."
+expected = "none"
+
+[[task.cases]]
+state = "اولین برف فصل! واکس‌هایتان را دربیاورید، اسکی‌بازها ⛷️"
+expected = "none"
+
+[[task.cases]]
+state = "این را برای 10 نفر از دوستانت بفرست تا خوش‌شانس شوی، وگرنه بیل گیتس دیگر برایت پول نمی‌فرستد!!1"
+expected = "spam"
+
+[[task.cases]]
+state = "تصورش را بکن آدم پول واقعی خرج کند که در بازی این‌قدر بد باشد. انگار پدر و مادر بعضی‌ها هیچ‌وقت به‌شان «نه» نگفته‌اند."
+expected = "harassment"
+
+[[task.cases]]
+state = "به اون دختره‌ی بخش بازاریابی‌تان بگو وقتی تا ماشینش می‌رود، حواسش به خودش باشد."
+expected = "threat"
+
+[[task.cases]]
+state = "به گروه VIP سیگنال‌های من بپیوندید — 92% نرخ برد 🚀 t.me/whalesclub"
+expected = "spam"
+
+[[task.cases]]
+state = "خطاب به مدیری که هفته پیش تاپیک مرا حذف کرد — تقصیر من بود که پست سنجاق‌شده‌ی قوانین را ندیدم."
+expected = "none"
+
+[[task.cases]]
+state = "راهنمای شما در یک دوره‌ی سخت به من کمک کرد — ممنونم."
+expected = "none"
+
+[[task.cases]]
+state = "مدیرها چقدر به تو می‌دهند که درباره‌ی بن‌ها ساکت بمانی؟ خبرچین‌ها."
+expected = "harassment"
+
+[[task.cases]]
+state = "سازندگان باید به‌خاطر این پچ اخراج شوند. دلقک‌های به‌درد‌نخور."
+expected = "harassment"
+
+[[task.cases]]
+state = "یک کیف پول با مقداری پول نقد در خیابان پنجم پیدا کردم — برای دریافتش به من پیام خصوصی بدهید."
+expected = "none"
+
+[[task]]
+id = "code_review_intent_fas"
+type = "choice"
+
+[task.question]
+instructions = "What is the primary concern of this code review comment?"
+
+[task.question.criteria]
+bug = "Points out incorrect behavior or a defect that will produce wrong results"
+performance = "Inefficiency: unnecessary work, N+1 queries, or hot-path waste"
+security = "A vulnerability: injection, missing authorization, or sensitive data exposure"
+style = "Idioms and conventions: naming, formatting, and language best practices on correct code"
+refactor = "Structural reorganization of correct code: extracting, splitting, or moving pieces for clarity"
+nit = "Trivial preference or typo; safe for the author to ignore"
+
+[[task.cases]]
+state = "دریافت داده از SDK موبایل اینجا باعث KeyError می‌شود — آن کلاینت `group` را ارسال نمی‌کند. حالت نبودِ این کلید را مدیریت کنید."
+expected = "bug"
+
+[[task.cases]]
+state = "فراخوانی json.dumps(config) را از حلقه بیرون ببرید؛ در هر درخواست همان config را دوباره سریالایز می‌کنید."
+expected = "performance"
+
+[[task.cases]]
+state = "الحاق user_id به این رشته SQL، به محض اینکه مقدار اعتبارسنجی نشود، یک نقطه تزریق کاملاً کلاسیک است؛ از پارامتر bind شده استفاده کنید."
+expected = "security"
+
+[[task.cases]]
+state = "`if len(rows) > 0` به شکل `if rows` خواناتر است."
+expected = "style"
+
+[[task.cases]]
+state = "غلط املایی در نام متغیر: `recieve_metrics` باید `receive_metrics` باشد."
+expected = "nit"
+
+[[task.cases]]
+state = "این endpoint با 300 خط کد، هم احراز مجوز دسترسی انجام می‌دهد، هم لاگ و هم ایمیل. لطفاً آن را تقسیم کنید؛ به این شکل هیچ بخشی از آن قابل تست نیست."
+expected = "refactor"
+
+[[task.cases]]
+state = "منطقه زمانی فقط یک بار هنگام ورود پارس می‌شود. اگر کاربر سفر کند، اعلان‌ها بر اساس ساعت محلی منطقه اولیه ارسال می‌شوند — ظریف است ولی واقعی."
+expected = "bug"
+
+[[task.cases]]
+state = "یک `except Exception: pass` خالی در اینجا خطاهای پر شدن دیسک را می‌بلعد و حلقه تلاش مجدد هم روی یک عملیات نوشتنِ گیرکرده تا ابد می‌چرخد. استثناها را محدودتر بگیرید."
+expected = "bug"
+
+[[task.cases]]
+state = "هر `.author.name` در تمپلیت یک کوئری جداگانه اجرا می‌کند — یک بار نمایش صفحه 200 کوئری ایجاد می‌کند."
+expected = "performance"
+
+[[task.cases]]
+state = "این endpoint مقدار user_id را مستقیماً از درخواست می‌گیرد؛ هر کاربر احرازهویت‌شده‌ای می‌تواند با تغییر URL، فاکتورهای کاربران دیگر را فهرست کند."
+expected = "security"
+
+[[task.cases]]
+state = "به‌جای دستکاری رشته‌ای با os.path، اینجا از pathlib استفاده کنید؛ کدبیس در میانه مهاجرت است و این فایل از قبل از این قرارداد نوشته شده است."
+expected = "style"
+
+[[task.cases]]
+state = "من اسم این را `job_display` می‌گذاشتم، ولی اصراری ندارم — هر طور خودتان صلاح می‌دانید."
+expected = "nit"
+
+[[task.cases]]
+state = "این ماژول همه‌جا از `Optional[str]` استفاده می‌کند؛ حالا `str | None` خالی را قاطی‌اش نکنیم."
+expected = "style"
+
+[[task.cases]]
+state = "پیام استثنا به کلاینت برگردانده می‌شود و شامل stack trace همراه با میزبان پایگاه داده است. آن را حذف یا پنهان کنید."
+expected = "security"
+
+[[task.cases]]
+state = "حالا که مهاجرت (migration) منتشر شده، می‌توانیم `# TODO: remove after migration` را حذف کنیم؟"
+expected = "nit"
+
+[[task.cases]]
+state = "این کلید کش شناسه tenant را ندارد؛ کاربران داده‌های یکدیگر را خواهند دید."
+expected = "security"
+
+[[task.cases]]
+state = "import موجود در خط 4 استفاده نشده است."
+expected = "nit"
+
+[[task]]
+id = "commit_intent_fas"
+type = "choice"
+
+[task.question]
+instructions = "What is the primary purpose of this commit message?"
+
+[task.question.criteria]
+feature = "Adds new functionality or a new endpoint"
+fix = "Corrects broken or incorrect behavior"
+refactor = "Restructures existing code without changing behavior"
+docs = "Documentation: README, runbooks, and explanatory notes"
+test = "Adds or repairs tests"
+chore = "Tooling, dependencies, CI, and other housekeeping"
+
+[[task.cases]]
+state = "اصلاح گرد کردن نرخ تبدیل ارز برای ارزهای بدون رقم اعشار مانند JPY"
+expected = "fix"
+
+[[task.cases]]
+state = "استخراج اعتبارسنجی مشترک payload به یک ماژول مجزا"
+expected = "refactor"
+
+[[task.cases]]
+state = "افزودن یادداشت در CONTRIBUTING مبنی بر اینکه تست‌های یکپارچگی در صورت NO_DB=1 اجرا نمی‌شوند"
+expected = "docs"
+
+[[task.cases]]
+state = "ارتقای flask به نسخه 3.0.3 و به‌روزرسانی lockfile"
+expected = "chore"
+
+[[task.cases]]
+state = "پوشش دادن مرز نیمه‌شب در تست‌های rollover حضور و غیاب"
+expected = "test"
+
+[[task.cases]]
+state = "جلوگیری از از دست رفتن بی‌صدای داده‌ها هنگام قطع شدن اتصال آپلود در میانه‌ی جریان"
+expected = "fix"
+
+[[task.cases]]
+state = "افزودن endpoint برای خروجی گرفتن از میزان استفاده به‌ازای هر tenant"
+expected = "feature"
+
+[[task.cases]]
+state = "راه‌اندازی یک GitHub Action برای lint کردن عنوان‌های PR"
+expected = "chore"
+
+[[task.cases]]
+state = "حذف فلگ قدیمی canary و مسیرهای کد مرده‌ی آن"
+expected = "refactor"
+
+[[task.cases]]
+state = "افزودن چیدمان دایره‌ای (circles) پشت یک feature flag"
+expected = "feature"
+
+[[task.cases]]
+state = "رفع مشکل تست ناپایدار منطقه زمانی با ثابت نگه داشتن ساعت در setUp"
+expected = "test"
+
+[[task.cases]]
+state = "به‌روزرسانی README با مسیر نصب CUDA"
+expected = "docs"
+
+[[task.cases]]
+state = "مهاجرت فرایند بیلد به pyproject و یکپارچه‌سازی پیکربندی mypy"
+expected = "chore"
+
+[[task.cases]]
+state = "افزودن PyPy به ماتریس CI شبانه"
+expected = "chore"
+
+[[task.cases]]
+state = "پشتیبانی از جداکننده‌های CSV غیر از ویرگول هنگام import"
+expected = "feature"
+
+[[task]]
+id = "recipe_cuisine_fas"
+type = "choice"
+
+[task.question]
+instructions = "Which cuisine is this dish or ingredient list closest to?"
+
+[task.question.criteria]
+italian = "Pasta, risotto, olive oil, parmigiano, balsamic, basil; the food of Italy"
+french = "Butter, cream, wine reductions, stocks, herbes de Provence, souffles, and bistro classics"
+mexican = "Corn tortillas, chilies, cilantro, lime, cumin, queso, and salsas"
+indian = "Garam masala, turmeric, cumin seed, ginger, garlic, ghee, cream or yogurt, basmati rice, and Southern dosa/idli traditions"
+thai = "Lemongrass, galangal, makrut lime leaves, fish sauce, Thai basil, chilies, and jasmine rice"
+middle_eastern = "Tahini, sumac, za'atar, flatbread, lamb, pickled vegetables, and shawarma-style preparation"
+
+[[task.cases]]
+state = "ورقه‌های پاستای تازه به‌صورت لایه‌لایه با راگوی دم‌پخت‌شده با حرارت ملایم، سس بشامل و پارمیجانو رجیانو، پخته‌شده در فر تا طلایی شدن."
+expected = "italian"
+
+[[task.cases]]
+state = "ساق گوساله دم‌پخت‌شده در شراب سفید، سرو‌شده روی ریزوتوی زعفرانی."
+expected = "italian"
+
+[[task.cases]]
+state = "تورتیلای ذرت پر‌شده با کارنیتاس گوشت خوک کباب‌شده با حرارت ملایم، با پیاز خرد‌شده، گشنیز، لیمو ترش و سالسا ورده."
+expected = "mexican"
+
+[[task.cases]]
+state = "تاکوی سیب‌زمینی شیرین کبابی و لوبیا سیاه با کرمای چیپوتله، پنیر کوتیخا و پیاز قرمز ترشی."
+expected = "mexican"
+
+[[task.cases]]
+state = "مرغی که آرام در سسی از گرام ماسالا، زردچوبه، زیره، سیر و زنجبیل پخته شده، در آخر خامه به آن اضافه می‌شود و روی برنج باسماتی سرو می‌شود."
+expected = "indian"
+
+[[task.cases]]
+state = "کرپ ترد برنج تخمیری که دور ماسالای سیب‌زمینی ادویه‌دار پیچیده شده و با سامبار و چاتنی نارگیل سرو می‌شود."
+expected = "indian"
+
+[[task.cases]]
+state = "خمیر کاری سبز با ریحان تایلندی، سس ماهی، شیر نارگیل، برگ لیمو ماکروت و بادمجان، و برنج یاسمن در کنار آن."
+expected = "thai"
+
+[[task.cases]]
+state = "سالاد نودل شیشه‌ای با علف لیمو، فلفل چیلی چشم‌پرنده، لیمو ترش، نعنا، سس ماهی و بادام‌زمینی کوبیده (یام وون سن)."
+expected = "thai"
+
+[[task.cases]]
+state = "مرغ دم‌پخت‌شده در شراب بورگوندی با لاردون، پیاز مرواریدی و قارچ کرمینی."
+expected = "french"
+
+[[task.cases]]
+state = "راتاتویی از بادمجان، کدو سبز و کنفی گوجه‌فرنگی با طعم گیاهان معطر پروونس."
+expected = "french"
+
+[[task.cases]]
+state = "رول شاورمای مرغ با توم سیر، شلغم ترشی و پیاز سماقی."
+expected = "middle_eastern"
+
+[[task.cases]]
+state = "مرغ سینی‌پز مزه‌دارشده با زعتر و فلفل جامائیکا (آل‌اسپایس)، سرو‌شده با نان تخت و سس سیر و طحینه."
+expected = "middle_eastern"
+
+[[task.cases]]
+state = "کرپ شیرین با کمپوت گرم سیب و کالوادوس."
+expected = "french"
+
+[[task.cases]]
+state = "برگ مو پر‌شده با برنج، مغز کاج و کشمش ریز، سرو‌شده با برش‌های لیمو."
+expected = "middle_eastern"
+
+[[task.cases]]
+state = "کاسترد نرم با رویه‌ی ترد شکر کاراملی، سرو‌شده با بیسکویت شورت‌برد."
+expected = "french"
+
+[[task.cases]]
+state = "سوپ عدس با زردچوبه، گی، سیر و زیره، سرو‌شده با نان هندی (naan)."
+expected = "indian"
+
+[[task.cases]]
+state = "تاکو آل پاستور با آناناس، پیاز و گشنیز روی تورتیلای ذرت."
+expected = "mexican"
+
+[[task.cases]]
+state = "بشقاب فلافل با حمص، تبوله و شلغم ترشی."
+expected = "middle_eastern"
+
+[[task]]
+id = "question_duplicate_fas"
+type = "noul"
+
+[task.question]
+instructions = "The two questions listed in the state are duplicates asking the same thing"
+
+[[task.cases]]
+state = "Q1: چطور رمز عبورم را بازنشانی کنم؟\nQ2: روش بازنشانی رمز ورود من چیست؟"
+expected = true
+
+[[task.cases]]
+state = "Q1: چطور رمز عبورم را بازنشانی کنم؟\nQ2: بدون دسترسی به ایمیلم چطور رمز عبورم را بازنشانی کنم؟"
+expected = false
+
+[[task.cases]]
+state = "Q1: چرا باتری من بعد از به‌روزرسانی این‌قدر زود خالی می‌شود؟\nQ2: از وقتی نسخه جدید را نصب کرده‌ام، گوشی‌ام خیلی سریع شارژ خالی می‌کند — مشکل از چیست؟"
+expected = true
+
+[[task.cases]]
+state = "Q1: چرا باتری من این‌قدر زود خالی می‌شود؟\nQ2: چطور باتری‌ام را عوض کنم؟"
+expected = false
+
+[[task.cases]]
+state = "Q1: آیا می‌توانم بابت خرید دیجیتال وجه خود را پس بگیرم؟\nQ2: آیا امکان دریافت بازپرداخت برای یک بازی دانلودشده وجود دارد؟"
+expected = true
+
+[[task.cases]]
+state = "Q1: بهترین لپ‌تاپ برای دانشگاه کدام است؟\nQ2: بهترین دانشگاه برای مدرک علوم کامپیوتر کدام است؟"
+expected = false
+
+[[task.cases]]
+state = "Q1: وای‌فای من هر چند دقیقه یک بار قطع می‌شود — چطور درستش کنم؟\nQ2: وای‌فای هر چند دقیقه یک بار قطع و وصل می‌شود. راه‌حلی دارد؟"
+expected = true
+
+[[task.cases]]
+state = "Q1: آیا کراتین باعث ریزش مو می‌شود؟\nQ2: آیا کراتین به رشد عضلات کمک می‌کند؟"
+expected = false
+
+[[task.cases]]
+state = "Q1: ارسال به کانادا چقدر طول می‌کشد؟\nQ2: زمان تحویل به آدرس‌های کانادا چقدر است؟"
+expected = true
+
+[[task.cases]]
+state = "Q1: ارسال به کانادا چقدر طول می‌کشد؟\nQ2: هزینه ارسال به کانادا چقدر است؟"
+expected = false
+
+[[task.cases]]
+state = "Q1: بچه‌ام حساب‌های کاربری ما را حذف کرده — چیزی قابل بازیابی است؟\nQ2: به‌اشتباه همه حساب‌ها را از طرح خانوادگی حذف کرده‌ام؛ راهی برای برگرداندنش هست؟"
+expected = true
+
+[[task.cases]]
+state = "Q1: در یک شات اسپرسو چقدر کافئین وجود دارد؟\nQ2: نوشیدن چند شات اسپرسو در روز زیاد است؟"
+expected = false
+
+[[task.cases]]
+state = "Q1: چرا SSD من خیلی کندتر از مقداری است که تبلیغ شده بود؟\nQ2: SSD من خیلی کندتر از چیزی است که روی جعبه وعده داده شده بود — چرا؟"
+expected = true
+
+[[task.cases]]
+state = "Q1: چطور پرینتر را به وای‌فای وصل کنم؟\nQ2: آیا پرینتر بدون وای‌فای کار می‌کند؟"
+expected = false
+
+[[task.cases]]
+state = "Q1: آیا به صندوق پستی (PO box) ارسال می‌کنید؟\nQ2: آیا سفارش‌ها را می‌توان به آدرس صندوق پستی (PO box) تحویل داد؟"
+expected = true
+
+[[task.cases]]
+state = "Q1: آیا MC-2000 با macOS Sonoma سازگار است؟\nQ2: آیا MC-2000 با Windows 11 کار می‌کند؟"
+expected = false
+
+[[task]]
+id = "sql_injection_risk_fas"
+type = "noul"
+
+[task.question]
+instructions = "The query construction in this code is vulnerable to SQL injection"
+
+[[task.cases]]
+state = "db.execute(\"SELECT * FROM users WHERE email = '\" + email + \"'\")"
+expected = true
+
+[[task.cases]]
+state = "db.execute(\"SELECT * FROM users WHERE email = %s\", (email,))"
+expected = false
+
+[[task.cases]]
+state = "query = f\"DELETE FROM sessions WHERE token = {request.args.get('token')}\""
+expected = true
+
+[[task.cases]]
+state = "sql = \"SELECT * FROM users WHERE email = \" + quote_literal(email)"
+expected = false
+
+[[task.cases]]
+state = "sort_col = request.form['sort']\ncursor.execute(f\"SELECT name FROM products ORDER BY {sort_col}\")"
+expected = true
+
+[[task.cases]]
+state = "cursor.execute(\"SELECT name FROM products ORDER BY created_at\")"
+expected = false
+
+[[task.cases]]
+state = "stmt = \"UPDATE users SET name = '%s' WHERE id = %d\" % (name, user_id)\ncursor.execute(stmt)"
+expected = true
+
+[[task.cases]]
+state = "stmt = sqlalchemy.text(\"SELECT * FROM users WHERE name = :name\").bindparams(name=name)"
+expected = false
+
+[[task.cases]]
+state = "db.exec_script(\"INSERT INTO logs VALUES ('\" + user_input + \"')\")"
+expected = true
+
+[[task.cases]]
+state = "if not user_id.isdigit(): abort(400)\ncursor.execute(f\"SELECT * FROM users WHERE id = {user_id}\")"
+expected = false
+
+[[task.cases]]
+state = "cursor.execute(\"SELECT * FROM logs LIMIT \" + request.query['n'])"
+expected = true
+
+[[task.cases]]
+state = "col = ALLOWED_SORT_COLS.get(request.form['sort'], 'created_at')\ncursor.execute(f\"SELECT name FROM products ORDER BY {col}\")"
+expected = false
+
+[[task.cases]]
+state = "result = session.query(User).filter_by(email=email).first()"
+expected = false
+
+[[task.cases]]
+state = "db.execute(f\"SELECT * FROM reports WHERE owner = '{user.email}'\")"
+expected = true
+
+[[task.cases]]
+state = "report_id = int(request.args['id'])\ndb.execute('SELECT * FROM reports WHERE id = %s', [report_id])"
+expected = false
+
+[[task]]
+id = "travel_policy_violation_fas"
+type = "noul"
+
+[task.question]
+instructions = "The expense submission violates the company travel policy: hotels over $200/night, business class on flights under 8 hours, meals over $60/day, alcohol, premium rideshare tiers, rideshares where transit was available, and home-to-office commuting are not covered"
+
+[[task.cases]]
+state = "Hampton Inn Chicago، دو شب، هر شب 185 دلار، برای حضور در محل مشتری."
+expected = false
+
+[[task.cases]]
+state = "Hotel Theo، سه شب، هر شب 209 دلار — در زمان کنفرانس ارزان‌ترین گزینه موجود بود."
+expected = true
+
+[[task.cases]]
+state = "صورت‌حساب بار در لانج هتل: دو کوکتل، 45 دلار، در هفته‌ی شام با مشتری."
+expected = true
+
+[[task.cases]]
+state = "کلاس بیزینس ORD به LHR (7 ساعت و 55 دقیقه)؛ فقط 400 دلار بیشتر از اکونومی بود."
+expected = true
+
+[[task.cases]]
+state = "United اکونومی SFO به JFK (5 ساعت و 50 دقیقه)، 310 دلار."
+expected = false
+
+[[task.cases]]
+state = "Lyft از هتل به دفتر مشتری هر روز به مبلغ 18 دلار در روز، به مدت سه روز؛ در شعاع دو مایلی محل مشتری هیچ گزینه‌ی حمل‌ونقل عمومی وجود نداشت."
+expected = false
+
+[[task.cases]]
+state = "Uber Black از فرودگاه، 95 دلار — باران شدیدی می‌بارید."
+expected = true
+
+[[task.cases]]
+state = "رسیدهای روز اول: صبحانه 14 دلار، ناهار 19 دلار، شام 22 دلار — مجموع 55 دلار."
+expected = false
+
+[[task.cases]]
+state = "سوخت برای رانندگی با خودروی شخصی خودم به دفتر مرکزی از دوشنبه تا جمعه‌ی هفته‌ی گذشته، 40 دلار."
+expected = true
+
+[[task.cases]]
+state = "Delta اکونومی ATL به MCO، 210 دلار برای نشست شرکا."
+expected = false
+
+[[task.cases]]
+state = "Courtyard by Marriott Austin، دو شب، هر شب 178 دلار، برای هفته‌ی آموزشی."
+expected = false
+
+[[task.cases]]
+state = "Grand Hyatt برای هفته‌ی مشتری: دقیقاً شبی 200 دلار برای دو شب."
+expected = false
+
+[[task.cases]]
+state = "کلاس بیزینس، SIN به YYZ (17 ساعت و 55 دقیقه)، 4,800 دلار."
+expected = false
+
+[[task.cases]]
+state = "صبحانه‌ی روم‌سرویس، 24 دلار؛ مجموع هزینه‌ی غذا در آن روز 58 دلار بود."
+expected = false
+
+[[task.cases]]
+state = "بلیت قطار درجه‌ی یک، 85 دلار — در آن روز هیچ کلاس دیگری موجود نبود."
+expected = false
+
+[[task.cases]]
+state = "شام و دو آبجو در فرودگاه: در مجموع 72 دلار."
+expected = true
+
+[[task.cases]]
+state = "ارتقا به پریمیوم اکونومی در پرواز 14 ساعته با پرداخت 220 دلار اضافه."
+expected = false
+
+[[task]]
+id = "contains_pii_fas"
+type = "noul"
+
+[task.question]
+instructions = "The text contains personally identifiable information: an email address, phone number, home or postal address, government ID or Social Security number, date of birth, or bank and card account numbers"
+
+[[task.cases]]
+state = "شماره تأمین اجتماعی من 531-24-8897 است؛ فرم بازپرداخت مدام آن را رد می‌کند."
+expected = true
+
+[[task.cases]]
+state = "بعد از ساعت 5 عصر می‌توانید با شماره 512-555-0142 با من تماس بگیرید."
+expected = true
+
+[[task.cases]]
+state = "ایمیل من peggyDOTmueller AT exampleDOTcom است — آدرسی که در سیستم ثبت شده برگشت می‌خورد."
+expected = true
+
+[[task.cases]]
+state = "درباره‌ی حساب شوهرم تماس می‌گیرم — حساب به نام خودش است، نه من."
+expected = false
+
+[[task.cases]]
+state = "شعبه‌ی خیابان میپل به من گفت با شماره‌ای که روی صورت‌حسابم است تماس بگیرم."
+expected = false
+
+[[task.cases]]
+state = "هفته‌ی آینده خانه‌ی پدر و مادرم هستیم، اگر لازم شد برایمان بفرستید: 388 Broderick St, Apt 4, San Francisco, CA 94117."
+expected = true
+
+[[task.cases]]
+state = "شماره مسیریابی (Routing) 021000021، شماره حساب 000123456789 — لطفاً بازپرداخت را به همان حساب واریز کنید."
+expected = true
+
+[[task.cases]]
+state = "فاکتور INV-2213 به مبلغ 42.50 دلار در تاریخ 3/14 با کارت پرداخت شد."
+expected = false
+
+[[task.cases]]
+state = "من تارجی هدلی هستم، متولد 7 مارس 1989، و برای ارتقا باید هویتم را تأیید کنم."
+expected = true
+
+[[task.cases]]
+state = "وقتی ارسال شد فقط برایم پیامک بزنید — شماره‌ام را که دارید."
+expected = false
+
+[[task.cases]]
+state = "شرکت ما، Blue Harbor Logistics، سه دفتر در انتاریو دارد."
+expected = false
+
+[[task.cases]]
+state = "کارتم را بازپرداخت کنید — دو بار از آن پول کسر کرده‌اید، یک بار روز اول و یک بار روز دوم."
+expected = false
+
+[[task.cases]]
+state = "از گوشی مادرم پیامک می‌دهم چون گوشی خودم خراب شده — با گوشی او تماس بگیرید: (415) 555-2728."
+expected = true
+
+[[task.cases]]
+state = "الکس چن، نویسنده‌ی صاحب‌اثر، در ماه مارس به هیئت تحریریه‌ی ما می‌پیوندد."
+expected = false
+
+[[task.cases]]
+state = "شماره پاسپورت من N1234567 است؛ فرم تمدید آن را می‌خواهد."
+expected = true
+
+[[task.cases]]
+state = "شماره گواهینامه‌ی رانندگی من D1234-5678-9012 است."
+expected = true
+
+[[task.cases]]
+state = "شناسه‌ی مالیاتی فروشگاه ما 88-1234567 است."
+expected = false
+
+[[task]]
+id = "contains_spoiler_fas"
+type = "noul"
+
+[task.question]
+instructions = "This post contains spoilers: details of plot twists, character deaths, endings, or major reveals for a film or show"
+
+[[task.cases]]
+state = "باورم نمی‌شه که از اول قاتل همون زن بوده — اون 20 دقیقه‌ی آخر حالم رو بد کرد."
+expected = true
+
+[[task.cases]]
+state = "کسی این آخر هفته داره می‌بینه؟ دنبال یه دورهمی تماشای بدون اسپویلر برای قسمت آخر هستم."
+expected = false
+
+[[task.cases]]
+state = "نمای پایانی، با اون در نیمه‌باز، تأیید می‌کنه که او در واقع هیچ‌وقت از حلقه‌ی زمانی فرار نکرده."
+expected = true
+
+[[task.cases]]
+state = "شب افتتاحیه دیدمش. انتخاب آیمکس انتخاب درستی بود و فیلمبرداری‌اش لایق همه‌ی جایزه‌هاست. از طرف من هیچ اسپویلری نیست."
+expected = false
+
+[[task.cases]]
+state = "خب، من اصلاً انتظار پیچش مربوط به مربی رو نداشتم. هنوز هم دهنم باز مونده."
+expected = true
+
+[[task.cases]]
+state = "فیلم حدود 30 دقیقه بیش از حد طول می‌کشه تا راه بیفته، و بله، مشکلات ریتمی که مردم بهش اشاره می‌کنن واقعیه."
+expected = false
+
+[[task.cases]]
+state = "ضمناً وقتی سگ توی صحنه‌ی پل می‌میره، همه‌ی سالن سینما داشتن هق‌هق گریه می‌کردن."
+expected = true
+
+[[task.cases]]
+state = "همین الان فصل دوم رو تموم کردم — گروه بازیگران فوق‌العاده‌ان، به‌خصوص بازیگر نقش اصلی."
+expected = false
+
+[[task.cases]]
+state = "پایان فیلم مبهمه، ولی صحنه‌ی لباس عروس نزدیک آخر تقریباً روشن می‌کنه که او خودش رو انتخاب کرد."
+expected = true
+
+[[task.cases]]
+state = "این رو کجا می‌شه با زیرنویس دید؟ سینمای محل ما فیلم مستقل اکران نمی‌کنه."
+expected = false
+
+[[task.cases]]
+state = "صحنه‌ی بعد از تیتراژ رو رد کنم؟ اصلاً! همون‌جاست که میرا رو زنده می‌کنن."
+expected = true
+
+[[task.cases]]
+state = "سه قسمت گذشته و فصل مدام بهتر می‌شه؛ فقط انتخاب بازیگرها به تنهایی ارزشش رو داره."
+expected = false
+
+[[task.cases]]
+state = "تا قسمت آخر رو دیدم — واقعاً اوج تلویزیونه. اون نمای آخر باعث شد جیغ بزنم."
+expected = false
+
+[[task.cases]]
+state = "بله، سم می‌میره. متأسفم، ولی خودت پرسیدی."
+expected = true
+
+[[task.cases]]
+state = "پایان اون قسمت؟ عالی بود. هیچ‌وقت حدس نمی‌زنی در دقیقه‌ی آخر کی وارد می‌شه."
+expected = false
+
+[[task.cases]]
+state = "فصل 3 شخصیت اصلی رو توی قسمت 2 کشت و سریال دیگه هیچ‌وقت خودش رو پیدا نکرد."
+expected = true
+
+[[task]]
+id = "formality_level_fas"
+type = "score"
+
+[task.question]
+instructions = "How formal is the register of this message?"
+criteria = [
+    "Formal: ceremonial, legal, or official written register",
+    "Professional: standard business communication with greetings and sign-offs; contractions are fine",
+    "Casual: friendly and colloquial, everyday phrasing, emoticons or light slang",
+    "Intimate: heavy slang, abbreviations, and in-group shorthand; texts between close friends",
+]
+
+[[task.cases]]
+state = "در پی مذاکرات مورخ 14 مارس، متن اصلاحی قرارداد جهت بررسی و امضای جنابعالی به پیوست ایفاد می‌گردد."
+expected = 0
+
+[[task.cases]]
+state = "اینجانب بدین‌وسیله نارضایتی عمیق خود را از نحوهٔ رسیدگی به این موضوع ابراز می‌دارم و درخواست می‌کنم ظرف چهارده روز پاسخ رسمی داده شود."
+expected = 0
+
+[[task.cases]]
+state = "سلام دانا، ممنون که این کار را این‌قدر سریع انجام دادی. چند نکته در سند نوشته‌ام؛ اگر جایی مبهم بود، به من بگو."
+expected = 1
+
+[[task.cases]]
+state = "سلام، پیگیر تیکت 8823 هستم. می‌توانید زمان تخمینی رفع مشکل را اعلام کنید؟ از کمک شما سپاسگزارم."
+expected = 1
+
+[[task.cases]]
+state = "سلام! فقط یادآوری می‌کنم که مبادا گم شده باشه — عجله‌ای نیست :)"
+expected = 2
+
+[[task.cases]]
+state = "سلام بچه‌ها، یه یادآوری سریع دربارهٔ دموی فردا — هر وقت وقت کردید یه نگاهی به اسلایدها بندازید، ممنون!"
+expected = 2
+
+[[task.cases]]
+state = "حتماً! بعد از اینکه بیلد تموم شد بهت خبر می‌دم — زود تموم می‌شه."
+expected = 2
+
+[[task.cases]]
+state = "خخخ باشه، اون جلسه می‌تونست یه ایمیل باشه، جدی می‌گم"
+expected = 3
+
+[[task.cases]]
+state = "وااای تو محشری!! 😭😭 فعلاً بای"
+expected = 3
+
+[[task.cases]]
+state = "الان برمی‌گردم، رفتم قهوه بگیرم، اگه پیجر زنگ خورد خبرم کن خخ"
+expected = 3
+
+[[task.cases]]
+state = "با احترام، وصول نامهٔ مورخ دوشنبهٔ گذشتهٔ جنابعالی را اعلام می‌دارم."
+expected = 0
+
+[[task.cases]]
+state = "هی!! میشه اونو مرج کنی؟ باید زودی ریلیز شه"
+expected = 3
+
+[[task.cases]]
+state = "بدین‌وسیله مفاد اصلاحی به اطلاع کلیهٔ طرفین می‌رسد؛ این مفاد بلافاصله لازم‌الاجرا است."
+expected = 0
+
+[[task.cases]]
+state = "فردا استعلاجی‌ام، به‌زور دووم آوردم"
+expected = 3
+
+[[task.cases]]
+state = "طبق صحبتمان در تماس تلفنی، دامنهٔ کار اصلاح‌شده را برای تأیید و امضای شما پیوست کرده‌ام."
+expected = 1
+
+[[task.cases]]
+state = "داداش بیلد لایو شد، خراب بود بگو"
+expected = 3
+
+[[task]]
+id = "phishing_email_fas"
+type = "noul"
+
+[task.question]
+instructions = "The message is a phishing or social-engineering attempt: impersonation of a bank, company, courier, or executive to steal credentials, card details, gift cards, or money via pressure and links"
+
+[[task.cases]]
+state = "مشتری گرامی، حساب پی‌پال شما محدود شده است. ظرف 24 ساعت هویت خود را تأیید کنید، در غیر این صورت حساب شما برای همیشه مسدود خواهد شد: paypa1-secure.example/verify"
+expected = true
+
+[[task.cases]]
+state = "من پشت‌سرهم در جلسه هستم — اندرو، سریع به ارزش 500 دلار کارت هدیه برای بسته‌های خوشامدگویی مشتریان بخر و کدها را برایم پیامک کن. با موبایلم تماس نگیر. —From: c.e.o.schmidt@acm3-mail.example"
+expected = true
+
+[[task.cases]]
+state = "یادآوری از طرف IT: تغییر اجباری رمز عبور روز جمعه از طریق پورتال داخلی IdP به نشانی idp.acmecorp.example انجام می‌شود. ما هرگز رمز عبور را از طریق ایمیل درخواست نمی‌کنیم."
+expected = false
+
+[[task.cases]]
+state = "بسته پستی شما تحویل داده نشد. برای آزادسازی آن، هزینه ارسال مجدد 1.20 دلار را پرداخت کنید: courier-trackin.example"
+expected = true
+
+[[task.cases]]
+state = "فاکتور INV-44821 از Riverside Consulting بابت خدمات محوطه‌سازی ماه مارس، پرداخت ظرف 15 روز. این صورت‌حساب ماهانه‌ی همیشگی ماست؛ فایل PDF پیوست است."
+expected = false
+
+[[task.cases]]
+state = "رمز عبور Microsoft 365 شما امروز منقضی می‌شود. برای حفظ دسترسی خود وارد شوید: https://login.micros0ft.example"
+expected = true
+
+[[task.cases]]
+state = "تولدت مبارک، پریا! از طرف همه‌ی ما در تیم مدیریت 🎂 (نیازی به پاسخ نیست.)"
+expected = false
+
+[[task.cases]]
+state = "هشدار: حساب بانکی شما قفل شده است. برای بازگرداندن فوری دسترسی، همین حالا شماره کارت و پین خود را تأیید کنید."
+expected = true
+
+[[task.cases]]
+state = "وقت شما برای سه‌شنبه ساعت 10:30 در EyeCare Associates تأیید شد — برای تغییر زمان آن از همان پورتالی که با آن نوبت گرفتید استفاده کنید."
+expected = false
+
+[[task.cases]]
+state = "اطلاعیه IRS: شما واجد شرایط دریافت بازپرداخت مالیاتی به مبلغ 1,742.03 دلار هستید. ظرف 48 ساعت فرم 8829 را ثبت کنید: irs-refunds.example"
+expected = true
+
+[[task.cases]]
+state = "Zoom: جلسه‌ی «Q2 Sync» شما همین حالا شروع می‌شود — از طریق لینک موجود در دعوت‌نامه‌ی تقویم خود وارد شوید."
+expected = false
+
+[[task.cases]]
+state = "Apple ID شما به دلیل فعالیت مشکوک مسدود شده است؛ برای فعال‌سازی مجدد، از طریق apple-id-recovery.example وارد شوید."
+expected = true
+
+[[task.cases]]
+state = "یادآوری: اشتراک شما در 3 مارس با مبلغ 9.99 دلار تمدید می‌شود — هر زمان که خواستید آن را از بخش تنظیمات مدیریت کنید."
+expected = false
+
+[[task.cases]]
+state = "حساب شما بسته خواهد شد مگر اینکه امروز رمز عبور خود را تأیید کنید. برای تأیید، رمز عبور خود را در پاسخ ارسال کنید."
+expected = true
+
+[[task.cases]]
+state = "فوری: اطلاعات بانکی ما تغییر کرده است. لطفاً تمام پرداخت‌های معوق فاکتورها را به حساب جدید زیر واریز کنید و با پاسخ دادن تأیید کنید."
+expected = true
+
+[[task.cases]]
+state = "ورود جدیدی به حساب شما شناسایی شد: Chrome روی macOS، از برلین، امروز صبح. اگر این شما بودید، نیازی به هیچ اقدامی نیست؛ در غیر این صورت رمز عبور خود را در تنظیمات امنیتی برنامه تغییر دهید."
+expected = false
+
+[[task.cases]]
+state = "دوره‌ی آموزش امنیتی سالانه‌ی تیم شما تا جمعه باید تکمیل شود؛ آن را از طریق لینک پورتال آموزشی در اینترانت انجام دهید."
+expected = false
+
+[[task]]
+id = "meeting_conflict_fas"
+type = "noul"
+
+[task.question]
+instructions = "The proposed event overlaps in time with at least one existing calendar event"
+
+[[task.cases]]
+state = "تقویم: استندآپ 9:00-9:30؛ دندان‌پزشک 10:00-11:00. پیشنهادی: جلسه هماهنگی با مشتری 10:30-11:15."
+expected = true
+
+[[task.cases]]
+state = "تقویم: ناهار تیمی 12:00-13:00. پیشنهادی: زمان نوشتن 11:00-11:45."
+expected = false
+
+[[task.cases]]
+state = "تقویم: بازبینی طراحی 14:00-15:00. پیشنهادی: جمع‌بندی 14:45-15:15."
+expected = true
+
+[[task.cases]]
+state = "تقویم: زمان تمرکز 15:00-16:00. پیشنهادی: جلسه‌ی یک‌به‌یک با پریا 16:00-16:30."
+expected = false
+
+[[task.cases]]
+state = "تقویم: جلسه عمومی کل شرکت 10:00-11:30. پیشنهادی: تماس با شریک تجاری 10:30-11:00."
+expected = true
+
+[[task.cases]]
+state = "تقویم: مصاحبه 09:00-10:00؛ پرواز SFO به NYC 14:00-18:00. پیشنهادی: جلسه کاری 10:15-11:30."
+expected = false
+
+[[task.cases]]
+state = "تقویم: جلسه آنبوردینگ 15:00-16:00؛ آماده‌سازی جلسه هیئت‌مدیره 15:45-16:15. پیشنهادی: 14:00-15:30."
+expected = true
+
+[[task.cases]]
+state = "تقویم: جلسه یک‌به‌یک با منتور 09:00-09:30. پیشنهادی: گپ دوستانه سر قهوه 09:30-09:50."
+expected = false
+
+[[task.cases]]
+state = "تقویم: استندآپ عملیات هر جمعه 10:00-10:15. پیشنهادی: بازبینی نقشه راه جمعه 10:00-11:00."
+expected = true
+
+[[task.cases]]
+state = "تقویم: جمعه به‌عنوان روز مهلت تحویل کاملاً رزرو شده است. پیشنهادی: کارگاه پنجشنبه 15:00-16:30."
+expected = false
+
+[[task.cases]]
+state = "تقویم: جلسه رتروسپکتیو اسپرینت 11:00-12:00. پیشنهادی: ناهار با مشتری 12:00-13:00."
+expected = false
+
+[[task.cases]]
+state = "تقویم: تماس با تأمین‌کننده 13:30-14:00؛ دندان‌پزشک 15:00-16:00. پیشنهادی: جلسه‌ی جمع‌بندی تیمی (debrief) 13:45-14:15."
+expected = true
+
+[[task.cases]]
+state = "تقویم: جلسه‌ی هماهنگی هفتگی 09:00-09:45 هر دوشنبه. پیشنهادی: جلسه‌ی یک‌به‌یک دوشنبه 09:40-10:10."
+expected = true
+
+[[task.cases]]
+state = "تقویم: یوگا 07:00-08:00. پیشنهادی: صبحانه 08:00-08:45."
+expected = false
+
+[[task.cases]]
+state = "تقویم: خارج از دفتر — سفر برای کنفرانس، تمام روز جمعه. پیشنهادی: کارگاه نقشه راه جمعه 14:00-16:00."
+expected = true
+
+[[task.cases]]
+state = "تقویم: کار عمیق 09:00-12:00؛ ناهار 12:30-13:15. پیشنهادی: قهوه 15:00-15:30."
+expected = false
+
+[[task.cases]]
+state = "تقویم: بازبینی طراحی 14:30-15:00. پیشنهادی: جلسه کاری 14:00-16:00."
+expected = true
+
+[[task]]
+id = "hazmat_shipping_fas"
+type = "noul"
+
+[task.question]
+instructions = "The shipment requires hazmat (dangerous goods) handling: anything containing lithium batteries, pressurized aerosol containers, flammable liquids (perfume, solvents, butane), or corrosive chemicals qualifies"
+
+[[task.cases]]
+state = "سفارش 88132: دو پاوربانک (10,000 mAh، لیتیوم-یون) و یک کابل USB."
+expected = true
+
+[[task.cases]]
+state = "سفارش 88133: یک رمان شومیز، دو جفت جوراب نخی، یک لیوان لعابی."
+expected = false
+
+[[task.cases]]
+state = "مرجوعی RMA: تبلتی با باتری داخلی متورم‌شده، با صفحه‌نمایش سالم."
+expected = true
+
+[[task.cases]]
+state = "سفارش 88021: بسته 24 عددی باتری قلمی AA آلکالاین و بدنه یک چراغ پیشانی."
+expected = false
+
+[[task.cases]]
+state = "محموله جعبه‌ابزار: مشعل بوتانی، سیم لحیم، مجموعه آچار."
+expected = true
+
+[[task.cases]]
+state = "کارتن کمد لباس: پالتو، چکمه و لباس بافتنی."
+expected = false
+
+[[task.cases]]
+state = "سفارش تکمیل موجودی سالن زیبایی: یک لیتر مایع مونومر اکریلیک ناخن و لاک‌پاک‌کن."
+expected = true
+
+[[task.cases]]
+state = "سفارش کمپینگ: قاشق‌چنگال تیتانیومی، پتوی پشمی و فیلتر آب."
+expected = false
+
+[[task.cases]]
+state = "قطعات خودرو: اسپری رنگ افشانه‌ای، اسپری تمیزکننده ترمز، دستکش مکانیک."
+expected = true
+
+[[task.cases]]
+state = "ست آشپزخانه: یک بطری 750 میلی‌لیتری روغن زیتون، یک تابه‌ی سرامیکی و مایع ظرفشویی غلیظ."
+expected = false
+
+[[task.cases]]
+state = "سفارش: اسکیت‌برد برقی با پک لیتیومی یکپارچه و شارژر آن."
+expected = true
+
+[[task.cases]]
+state = "سفارش آشپزخانه: تابه چدنی، قاشق چوبی، پیش‌بند نخی."
+expected = false
+
+[[task.cases]]
+state = "سفارش: چهار بطری پاک‌کننده لاک (استون)."
+expected = true
+
+[[task.cases]]
+state = "سفارش: ست ظروف سرامیکی."
+expected = false
+
+[[task.cases]]
+state = "سفارش: دو بطری 100 میلی‌لیتری عطر برای هدیه."
+expected = true
+
+[[task.cases]]
+state = "سفارش: یک گالن اسید استخر (اسید کلریدریک) برای شروع فصل شنا."
+expected = true
+
+[[task]]
+id = "dietary_vegan_fas"
+type = "noul"
+
+[task.question]
+instructions = "The item is suitable for a vegan diet — that excludes meat, fish, dairy, eggs, honey, gelatin, and any other animal-derived ingredients"
+
+[[task.cases]]
+state = "سالاد خانگی: سبزی‌های مخلوط، گوجه‌فرنگی گیلاسی، خیار، وینگرت مرکباتی، تخمه کدو."
+expected = true
+
+[[task.cases]]
+state = "پیتزا مارگاریتا: سس گوجه‌فرنگی، موتزارلای تازه، ریحان."
+expected = false
+
+[[task.cases]]
+state = "دنده‌های سیتان در سس باربیکیو (گوجه‌فرنگی، ملاس، پاپریکای دودی)."
+expected = true
+
+[[task.cases]]
+state = "خرس‌های ژله‌ای: شربت گلوکز، شکر، ژلاتین، کنسانتره‌های آب میوه."
+expected = false
+
+[[task.cases]]
+state = "بادام بوداده با روکش عسل."
+expected = false
+
+[[task.cases]]
+state = "حمص کلاسیک: نخود، ارده، لیمو، سیر، روغن زیتون."
+expected = true
+
+[[task.cases]]
+state = "برگر سبزیجات: مخلوط غلات، سبزیجات رنده‌شده و چسب سفیده‌ی تخم‌مرغ."
+expected = false
+
+[[task.cases]]
+state = "کاری با آب سبزیجات و شیر نارگیل روی برنج یاسمن."
+expected = true
+
+[[task.cases]]
+state = "نان: آرد، آب، نمک، مخمر، آب‌پنیر (whey)."
+expected = false
+
+[[task.cases]]
+state = "سوربه‌ی میوه: پوره‌ی انبه، شکر و لیمو ترش."
+expected = true
+
+[[task.cases]]
+state = "سوشی رول: برنج، نوری، آووکادو، خیار و خرچنگ مصنوعی."
+expected = false
+
+[[task.cases]]
+state = "اسموتی پروتئینی: شیر جو دوسر، موز، کره بادام‌زمینی، کاکائو."
+expected = true
+
+[[task.cases]]
+state = "پد تای تهیه‌شده با سس ماهی."
+expected = false
+
+[[task.cases]]
+state = "فرنی جو دوسر با شیر بادام، دارچین و بلوبری."
+expected = true
+
+[[task.cases]]
+state = "کرمر غیرلبنی: جامدات شربت ذرت، روغن سویای نیمه‌هیدروژنه، کازئینات سدیم."
+expected = false
+
+[[task.cases]]
+state = "آبنبات توت‌فرنگی: شکر، شربت ذرت و کارمین (E120) برای رنگ."
+expected = false
+
+[[task.cases]]
+state = "شکلات تلخ: توده کاکائو، شکر، کره کاکائو، وانیل."
+expected = true
+
+[[task]]
+id = "news_topic_fas"
+type = "choice"
+
+[task.question]
+instructions = "Which desk should this news article be assigned to?"
+
+[task.question.criteria]
+politics = "Government, elections, legislation, diplomacy, and public policy"
+business = "Companies, markets, deals, earnings, labor, and the economy"
+technology = "Tech products, software, hardware, and technical research advances"
+sports = "Competitions, leagues, athletes, and results"
+culture = "Arts, media, entertainment, awards, and reviews"
+
+[[task.cases]]
+state = "کمیته سنا لایحه مسکن را با رأی 15 به 9 به مرحله بعد فرستاد و زمینه را برای رأی‌گیری در صحن پیش از تعطیلات فراهم کرد."
+expected = "politics"
+
+[[task.cases]]
+state = "سود فصل سوم: حاشیه سود عملیاتی 120 نقطه پایه افزایش یافت و شرکت پیش‌بینی خود را برای کل سال بالا برد."
+expected = "business"
+
+[[task.cases]]
+state = "یک ضربه‌ی سر در وقت‌های تلف‌شده، برد 2 بر 1 در نیمه‌نهایی را قطعی کرد و باشگاه را برای نخستین بار در یک دهه به فینال رساند."
+expected = "sports"
+
+[[task.cases]]
+state = "نمایش جهانی فیلم در جشنواره ونیز با یک تشویق ایستاده شش‌دقیقه‌ای همراه شد، پیش از آنکه مسیر خود را در جشنواره ادامه دهد."
+expected = "culture"
+
+[[task.cases]]
+state = "شرکت سازنده تراشه، فناوری ساخت 3 نانومتری را معرفی کرد و مدعی شد مصرف انرژی در بارهای اوج 15% کمتر است."
+expected = "technology"
+
+[[task.cases]]
+state = "بروکسل رسیدگی مرحله دوم به تخلف را درباره قانون جدید رسانه آغاز کرد."
+expected = "politics"
+
+[[task.cases]]
+state = "مدیر مالی اپل نسبت به کاهش حاشیه سود آیفون در فصل آینده به‌دلیل افزایش هزینه حافظه هشدار داد؛ سهام پس از ساعات معاملاتی 3% نوسان کرد."
+expected = "business"
+
+[[task.cases]]
+state = "یک حافظه پنهان رمزگشایی‌شده، پیش‌نویس اولیه دهمین سمفونی ناتمام آهنگساز را آشکار کرد که اکنون برای اجرایی در مراسم ویژه برنامه‌ریزی شده است."
+expected = "culture"
+
+[[task.cases]]
+state = "بازیکن فارغ‌التحصیل آکادمی باشگاه، قراردادی پنج‌ساله با ارزش گزارش‌شده 40 میلیون دلار امضا کرد و به ماه‌ها شایعه نقل‌وانتقالات پایان داد."
+expected = "sports"
+
+[[task.cases]]
+state = "یک تیم رمزنگاری، ارزیابی امنیتی سه طرح امضای پساکوانتومی را منتشر کرد و یکی از آن‌ها را به‌دلیل ضعف‌های رده‌های باقیمانده مشکل‌دار دانست."
+expected = "technology"
+
+[[task.cases]]
+state = "بانک مرکزی نرخ بهره را در 4% نگه داشت اما از احتمال کاهش آن در پاییز خبر داد؛ بازارها صعود کردند."
+expected = "business"
+
+[[task.cases]]
+state = "خانه‌ی اپرا فصل جدیدی را اعلام کرد که شامل دو اجرای نخست جهانی و یک اثر کلاسیک احیاشده است."
+expected = "culture"
+
+[[task.cases]]
+state = "پارلمان پس از یک جلسه ماراتنی، طرح عدم اعتماد را با 301 رأی در برابر 289 رأی رد کرد."
+expected = "politics"
+
+[[task.cases]]
+state = "این استارتاپ برای گسترش شبکه لجستیک خود 40 میلیون دلار سرمایه سری B جذب کرد."
+expected = "business"
+
+[[task.cases]]
+state = "سیگنال رمزنگاری مقاوم در برابر کوانتوم را به نسخه بتای هفتگی خود افزود و پروتکل را در دسترس کلاینت‌های شخص ثالث قرار داد."
+expected = "technology"
+
+[[task.cases]]
+state = "انتقال مهاجم رکورد قبلی باشگاه را شکست؛ پیراهن او ظرف چهار ساعت پس از اعلام، تمام شد."
+expected = "sports"
+
+[[task.cases]]
+state = "قانون‌گذاران امروز در کمیته، علی‌رغم مخالفت صنعت، لایحه کنترل صادرات نیمه‌هادی‌ها را به مرحله بعد فرستادند."
+expected = "politics"
+
+[[task]]
+id = "document_type_fas"
+type = "choice"
+
+[task.question]
+instructions = "What kind of document is this text from?"
+
+[task.question.criteria]
+invoice = "A bill from a supplier listing amounts owed, dates, and payment instructions"
+purchase_order = "A buyer-issued order for goods or services before fulfillment"
+receipt = "Proof that a payment already happened"
+contract = "Legal terms between parties: clauses, effective dates, signatures"
+resume = "A job seeker's employment history, education, and skills"
+
+[[task.cases]]
+state = "فاکتور 04381 — پرداخت 30 روزه. خدمات: 24 ساعت کار برقی با نرخ 85 دلار در ساعت. مبلغ قابل پرداخت: 2,040 دلار."
+expected = "invoice"
+
+[[task.cases]]
+state = "هدف شغلی: مهندس نرم‌افزار Staff. 2021 تاکنون: مهندس ارشد پلتفرم، Acme — هدایت مهاجرت؛ مهارت‌ها: Go، Terraform."
+expected = "resume"
+
+[[task.cases]]
+state = "رسید — پرداخت 418.20 دلار با کارت ویزا با شماره پایانی 7715 در تاریخ 03/02، 341 Katahdin Dr Unit 2؛ مانده 0.00 دلار."
+expected = "receipt"
+
+[[task.cases]]
+state = "3. محدودیت مسئولیت. مسئولیت کل هر یک از طرفین به موجب این قرارداد از مبلغ کارمزدهای پرداخت‌شده در دوازده ماه قبل از طرح دعوا فراتر نخواهد رفت."
+expected = "contract"
+
+[[task.cases]]
+state = "سفارش خرید 991-2541 به EastGate Fabrication: 500 واحد از SKU EM-114 تا 4/12؛ ارسال به سکوی بارگیری (Dock) 4؛ پرداخت 45 روزه پس از تحویل."
+expected = "purchase_order"
+
+[[task.cases]]
+state = "مبلغ معوق: 1,702.00 دلار. پس از 3/15، جریمه دیرکرد ماهانه 1.5% اعمال می‌شود. وجه را به accounts@... ارسال کنید."
+expected = "invoice"
+
+[[task.cases]]
+state = "از خرید شما سپاسگزاریم — 2 قلم کالا، 34.98 دلار پرداخت نقدی، بقیه‌ی پول 5.02 دلار. شماره‌ی مرجع (REF) 003118."
+expected = "receipt"
+
+[[task.cases]]
+state = "دارنده مجوز نمی‌تواند بدون رضایت کتبی قبلی، این قرارداد را به دیگری واگذار کند، انتقال دهد یا زیرمجوز صادر کند. امضا: ____ (مدیر ارشد فناوری، دارنده مجوز) ____ (مدیر ارشد عملیات، صادرکننده مجوز)."
+expected = "contract"
+
+[[task.cases]]
+state = "گواهینامه‌ها: PMP (2023)، AWS SA (2021). زبان‌ها: پرتغالی (زبان مادری)، انگلیسی (مسلط)."
+expected = "resume"
+
+[[task.cases]]
+state = "جمع کل: 89.99 دلار، مالیات 7.20 دلار، مبلغ دریافتی نقد 100.00 دلار، بقیه‌ی پول 2.81 دلار — از خرید شما از GREENLEAF GROCERS سپاسگزاریم."
+expected = "receipt"
+
+[[task.cases]]
+state = "سوابق کاری: مسئول عملیات، 2018-2023 — مدیریت تیمی نه‌نفره؛ کارشناسی اقتصاد، 2016."
+expected = "resume"
+
+[[task.cases]]
+state = "این قرارداد از تاریخ 5 ژانویه میان Acme و Beta منعقد می‌شود."
+expected = "contract"
+
+[[task.cases]]
+state = "فاکتور اشتراک — Acme Cloud، 12 کاربر با نرخ 29 دلار برای هر کاربر، محاسبه به‌نسبت از 3/14 تا 3/31؛ مبلغ قابل پرداخت 168.84 دلار در تاریخ 4/1."
+expected = "invoice"
+
+[[task.cases]]
+state = "اصلاحیه سفارش خرید 991-2541: افزایش تعداد SKU EM-114 به میزان 75 واحد؛ سایر شرایط بدون تغییر."
+expected = "purchase_order"
+
+[[task.cases]]
+state = "این مجوز فقط برای استفاده شخصی و غیرتجاری صادر شده است و قابل انتقال نیست."
+expected = "contract"
+
+[[task]]
+id = "reading_level_fas"
+type = "score"
+
+[task.question]
+instructions = "What reading level is this passage written at?"
+criteria = [
+    "Simple: short sentences and everyday words; readable by children",
+    "General: typical adult-level journalism, customer-facing or service prose",
+    "Specialist: technical, legal, scientific, or professional jargon",
+]
+
+[[task.cases]]
+state = "گربه کنار پنجره نشسته بود. او پرنده‌ها را تماشا می‌کرد که روی چمن جست‌وخیز می‌کردند. یکی‌شان پرید و رفت. دمش تکان تکان خورد."
+expected = 0
+
+[[task.cases]]
+state = "فروشگاه ما از 15 مارس برای بازسازی تعطیل می‌شود و 1 آوریل دوباره باز می‌شود؛ در این مدت، سفارش‌های کلیک‌و‌دریافت به شعبه Union St منتقل می‌شوند."
+expected = 1
+
+[[task.cases]]
+state = "مطابق ماده 17(b)(iv)، جبران‌کننده خسارت موظف است طرف مورد جبران را از هرگونه خسارت تبعی ناشی از دعاوی اشخاص ثالث مصون نگه دارد."
+expected = 2
+
+[[task.cases]]
+state = "داده‌ها در صدک‌های 2.5 و 97.5 وینسورایز (winsorize) شدند؛ استنباط آماری با برآوردگر واریانس مقاوم خوشه‌ای انجام شد."
+expected = 2
+
+[[task.cases]]
+state = "باتری را مثل وان حمام در نظر بگیرید: شارژ کردن آن را پر می‌کند و برنامه‌هایتان آبش را خالی می‌کنند."
+expected = 0
+
+[[task.cases]]
+state = "بادهای شدید باعث شد کشتی مسافربری شبانه حرکت نکند؛ بلیت مسافران به سفری که سپیده‌دم حرکت کرد منتقل شد."
+expected = 1
+
+[[task.cases]]
+state = "تگ‌های نشست در اولین رندر به‌صورت تنبل (lazy) بارگذاری می‌شوند؛ پس از ورود به سیستم، در کش گرم هستند."
+expected = 2
+
+[[task.cases]]
+state = "بلیت‌های فصلی در ماه مارس به‌طور خودکار تمدید می‌شوند، مگر اینکه این گزینه را در تنظیمات حساب کاربری خود خاموش کنید."
+expected = 1
+
+[[task.cases]]
+state = "یک قرص را سر صبحانه با آب بخورید و یکی را موقع خواب، تا قوطی تمام شود."
+expected = 0
+
+[[task.cases]]
+state = "سگ‌ها وقتی خوشحال‌اند دمشان را تکان می‌دهند. گربه‌ها خرخر می‌کنند. ماهی‌ها حباب می‌دمند."
+expected = 0
+
+[[task.cases]]
+state = "دادگاه تجدیدنظر با توجه به رویه قضایی جدیدی که در این فاصله شکل گرفته بود، پرونده را برای بررسی مجدد بازگرداند."
+expected = 2
+
+[[task.cases]]
+state = "تیم مالی هزینه‌ها را در پنجم ماه بررسی خواهد کرد؛ رسیدها را پیش از آن ارسال کنید."
+expected = 1
+
+[[task.cases]]
+state = "بیمار با تشدید حاد بیماری مزمن انسدادی ریه مراجعه کرد و درمان با BiPAP برای او آغاز شد."
+expected = 2
+
+[[task.cases]]
+state = "بانک خانه را گرفت، چون شش ماه کسی پول را نداد. خانواده رفتند پیش فامیل‌ها زندگی کنند."
+expected = 0
+
+[[task.cases]]
+state = "روتر خود را راه‌اندازی مجدد کنید، دو دقیقه صبر کنید، سپس بررسی کنید که چراغ وضعیت سفید ثابت شده است یا نه."
+expected = 1
+
+[[task.cases]]
+state = "دفاع Cover-2 تمام بعدازظهر زیر ضرب slot curl تکه‌پاره شد؛ بلیتز هیچ‌وقت به هدف نرسید و سیفتی‌ها تاوانش را دادند."
+expected = 2
+
+[[task]]
+id = "insurance_claim_priority_fas"
+type = "score"
+
+[task.question]
+instructions = "How urgently should this insurance claim or inquiry be handled?"
+criteria = [
+    "Routine: cosmetic, informational, or no pressure to act soon",
+    "Standard: repair or reimbursement needed, but life or business is unaffected",
+    "Priority: significant damage or financial disruption that should move fast",
+    "Immediate: safety is at risk, damage is ongoing, or the situation is critical right now",
+]
+
+[[task.cases]]
+state = "ماشینم در پارکینگ خورده؛ روی سپر یک خط‌وخش رنگ به اندازه یک‌چهارم اینچ افتاده. عجله‌ای نیست، فقط می‌خواهم ثبت شود."
+expected = 0
+
+[[task.cases]]
+state = "ترک شیشه جلوی ماشینم در حال گسترش است — حدود یک فوت طول دارد اما خارج از میدان دید است. می‌شود این هفته برای تعمیر شیشه وقت بگیریم؟"
+expected = 1
+
+[[task.cases]]
+state = "سقف حمام بعد از نشتی آب از طبقه بالا فرو ریخته؛ نمی‌توانیم از آن اتاق استفاده کنیم، ولی خود لوله ترکیده بسته شده است."
+expected = 2
+
+[[task.cases]]
+state = "آب از داخل چراغ‌های سقفی می‌ریزد و کلید اتوماتیک برق روشن نمی‌ماند؛ خانواده بیرون، توی ماشین نشسته‌اند."
+expected = 3
+
+[[task.cases]]
+state = "آیا بیمه‌نامه من خودروی کرایه‌ای را پوشش می‌دهد؟ برای سفر ماه آینده می‌پرسم — هنوز خسارتی اعلام نکرده‌ام."
+expected = 0
+
+[[task.cases]]
+state = "دیشب کسی ماشین پارک‌شده‌ام را از بغل زده و یک یادداشت گذاشته. آینه آسیب دیده و بدنه‌ی کنار در خط افتاده؛ ماشین قابل رانندگی است."
+expected = 1
+
+[[task.cases]]
+state = "اسپرینکلرهای آتش‌نشانی انبار را خیس کردند — حدود 12 هزار دلار کالا آب‌زده شده و مغازه تا پایان پاکسازی تعطیل است."
+expected = 2
+
+[[task.cases]]
+state = "در طوفان درختی روی سقف افتاد؛ هنوز باران داخل می‌آید و اتاق خواب درست زیر آن ناایمن است."
+expected = 3
+
+[[task.cases]]
+state = "روی فرش رنگ ریختم؛ برآورد هزینه نظافت 180 دلار است و می‌خواهم بدانم ادعای خسارت ثبت کنم یا خودم پرداخت کنم."
+expected = 1
+
+[[task.cases]]
+state = "تصادف جزئی در پارکینگ طبقاتی؛ هر دو سپر خراش کوچکی برداشته‌اند و مشخصات را رد و بدل کردیم."
+expected = 1
+
+[[task.cases]]
+state = "هر وقت باران شدید می‌آید زیرزمین را آب می‌گیرد و امشب هم دوباره همین شد — آب مدام نشت می‌کند."
+expected = 3
+
+[[task.cases]]
+state = "تگرگ کاپوت و سقف ماشین را فرو برده؛ قابل رانندگی است و عجله‌ای نیست."
+expected = 1
+
+[[task.cases]]
+state = "کسی از در پشتی وارد خانه شده؛ امشب اینجا نمی‌مانیم و به تخته‌کوبی اضطراری نیاز داریم."
+expected = 3
+
+[[task.cases]]
+state = "چرخ دستی خرید در پارکینگ یک فرورفتگی کوچک روی ماشین ایجاد کرده؛ عجله‌ای نیست، فقط می‌خواهم ثبت شود."
+expected = 0
+
+[[task.cases]]
+state = "آیا بیمه‌نامه من گم شدن حلقه نامزدی را پوشش می‌دهد یا این مورد الحاقیه جداگانه می‌خواهد؟ فقط دارم از قبل برنامه‌ریزی می‌کنم."
+expected = 0
+
+[[task.cases]]
+state = "ماشین ظرفشویی شب نشتی داشته؛ کفپوش لمینت آشپزخانه تاب برداشته، اما نشتی متوقف شده است."
+expected = 2
+
+[[task]]
+id = "symptom_triage_fas"
+type = "score"
+
+[task.question]
+instructions = "How urgently does this patient need medical care, based on their message?"
+criteria = [
+    "Emergency: needs immediate emergency response — call 911 or go to the ER now",
+    "Same-day urgent care",
+    "Appointment within a few days",
+    "Self-care or routine follow-up",
+]
+
+[[task.cases]]
+state = "درد فشارنده و شدید قفسه سینه دارم که به بازوی چپ و فکم کشیده می‌شود، 20 دقیقه پیش شروع شد و احساس تنگی نفس دارم."
+expected = 0
+
+[[task.cases]]
+state = "دختر 8 ساله‌ام تب 39.5 دارد و نمی‌توانم او را درست بیدار کنم."
+expected = 0
+
+[[task.cases]]
+state = "سردرد ناگهانی، بدترین سردرد عمرم، ده دقیقه پیش مثل صاعقه به سراغم آمد."
+expected = 0
+
+[[task.cases]]
+state = "قند خونم 38 را نشان می‌دهد و دست‌وپایم می‌لرزد و عرق کرده‌ام."
+expected = 0
+
+[[task.cases]]
+state = "بچه 2 ساله‌ام حدود یک ساعت پیش یک باتری سکه‌ای (دکمه‌ای) قورت داده است."
+expected = 0
+
+[[task.cases]]
+state = "موقع خرد کردن سبزی انگشتم را بریدم؛ بعد از 15 دقیقه فشار دادن هنوز خونریزی بند نیامده است."
+expected = 1
+
+[[task.cases]]
+state = "از دیشب دندان‌درد شدیدی دارم و یک طرف صورتم دارد ورم می‌کند؛ مسکن‌ها اصلاً اثری ندارند."
+expected = 1
+
+[[task.cases]]
+state = "دو روز است که دانه‌های قرمز خارش‌داری روی دست‌هایم پخش می‌شود؛ آنتی‌هیستامین‌های بدون نسخه تقریباً کمکی نمی‌کنند."
+expected = 2
+
+[[task.cases]]
+state = "یک هفته است که یبوست دارم، دچار نفخ و ناراحتی هستم؛ فیبر و آب هیچ تأثیری ندارند."
+expected = 2
+
+[[task.cases]]
+state = "دو روز است که گلودرد خفیفی دارم، بدون تب."
+expected = 3
+
+[[task.cases]]
+state = "با گردن‌درد و خشکی از خواب بیدار شدم و وقتی سرم را می‌چرخانم درد می‌کند؛ جز این حالم خوب است."
+expected = 3
+
+[[task.cases]]
+state = "داروی نسخه‌ام تمام شده است؛ برای همان دوز همیشگی‌ام به تجدید نسخه نیاز دارم."
+expected = 3
+
+[[task.cases]]
+state = "آفتاب‌سوختگی خفیف از ساحل — پوستم قرمز و گرم است، بدون تاول."
+expected = 3
+
+[[task.cases]]
+state = "ناگهان یک طرف صورتم ضعیف شده و حرف زدنم نامفهوم شده است؛ 30 دقیقه پیش شروع شد."
+expected = 0
+
+[[task.cases]]
+state = "یک تابه داغ پشت دستم را سوزاند؛ تاول زده و خیلی درد دارد."
+expected = 1
+
+[[task.cases]]
+state = "بچه 3 ساله‌ام بعد از اینکه پسرخاله‌اش دستش را محکم کشید، بازویش را تکان نمی‌دهد؛ اگر به آن دست بزنم گریه می‌کند."
+expected = 1
+
+[[task.cases]]
+state = "ده دقیقه پیش زنبور عسل مرا نیش زد و لبم دارد ورم می‌کند."
+expected = 0
+
+[[task.cases]]
+state = "روی پله‌ها زانویم پیچ خورد؛ دو برابر اندازه معمولی ورم کرده و نمی‌توانم روی آن بایستم."
+expected = 1
+
+[[task.cases]]
+state = "این همان میگرن همیشگی من با همان اورای همیشگی است — فقط باید دارویی که دوباره تهیه کرده‌ام اثر کند."
+expected = 3
+
+[[task]]
+id = "delivery_exception_fas"
+type = "choice"
+
+[task.question]
+instructions = "What is the primary delivery exception described here?"
+
+[task.question.criteria]
+address_issue = "Address is incomplete, wrong, or nonexistent, or the recipient is unknown"
+customs_hold = "Package held by customs; duties or missing paperwork are blocking release"
+weather_delay = "Delays caused by storms, floods, or other weather events"
+failed_attempt = "Delivery attempted but the recipient was unavailable"
+damaged = "Package or contents damaged in transit"
+
+[[task.cases]]
+state = "پیک ساعت 14:05 رسید؛ کسی خانه نبود. یک برگه‌ی اطلاع‌رسانی برای دریافت بسته گذاشت."
+expected = "failed_attempt"
+
+[[task.cases]]
+state = "آدرس «221B Baker St, Flat 9» نامعتبر است — ساختمان واحد 9 ندارد."
+expected = "address_issue"
+
+[[task.cases]]
+state = "بسته در گمرک فرانکفورت نگه داشته شده است؛ فاکتور تجاری لازم است."
+expected = "customs_hold"
+
+[[task.cases]]
+state = "مرکز منطقه‌ای به دلیل طوفان یخی بسته شد؛ تمام مسیرها تا بازگشایی جاده‌ها متوقف است."
+expected = "weather_delay"
+
+[[task.cases]]
+state = "بسته در حالی رسید که گوشه جعبه له شده بود؛ محتویات داخل آن جابه‌جا شده بود."
+expected = "damaged"
+
+[[task.cases]]
+state = "شماره تلفن گیرنده نامعتبر است و پلاک خانه ذکر نشده است — نیاز به مسیریابی مجدد دارد."
+expected = "address_issue"
+
+[[task.cases]]
+state = "عوارض 34 یورویی پرداخت نشده است؛ بسته در انبار تحت نظارت گمرک منتظر پرداخت است."
+expected = "customs_hold"
+
+[[task.cases]]
+state = "وانت‌های تحویل شش ساعت تأخیر داشتند؛ فرودگاه در زمان وقوع طوفان هاریکن بسته شد."
+expected = "weather_delay"
+
+[[task.cases]]
+state = "جعبه پس از جابه‌جایی در مرکز خیس و له شده بود؛ گیرنده آن را نپذیرفت."
+expected = "damaged"
+
+[[task.cases]]
+state = "تلاش سوم ناموفق بود؛ گیرنده خانه نبود و تحویل بدون حضور گیرنده در محل امن مجاز نشده است."
+expected = "failed_attempt"
+
+[[task.cases]]
+state = "بسته به مبدأ بازگردانده شد — اظهارنامه گمرکی ناقص بود."
+expected = "customs_hold"
+
+[[task.cases]]
+state = "محتویات پس از آتش‌سوزی انبار سوخت؛ محموله به‌عنوان خسارت کامل (total loss) ثبت شد."
+expected = "damaged"
+
+[[task.cases]]
+state = "اصلاح آدرس: نام خیابان اشتباه نوشته شده بود؛ بسته متوقف شده است."
+expected = "address_issue"
+
+[[task.cases]]
+state = "پرواز به دلیل خاکستر آتشفشانی لغو شد؛ تمام بسته‌های ارسالی به این منطقه با تأخیر مواجه شده‌اند."
+expected = "weather_delay"
+
+[[task.cases]]
+state = "گیرنده در تلاش‌های ساعت 10:15 و 16:40 خانه نبود؛ پس از دومین تلاش ناموفق، بسته در نقطه تحویل است."
+expected = "failed_attempt"
+
+[[task.cases]]
+state = "گمرک پیش از آنکه زمان ترخیص تعیین شود، یک نسخه از گذرنامه گیرنده را می‌خواهد."
+expected = "customs_hold"
+
+[[task.cases]]
+state = "بسته یخچالی یک شب در محوطه نگهداری با دمای 28 درجه ماند؛ محتویات فاسد شد."
+expected = "damaged"
+
+[[task.cases]]
+state = "شرکت گیرنده ماه گذشته به واحد دیگری نقل مکان کرد؛ بسته به آدرس قبلی رفت."
+expected = "address_issue"
+
+[[task.cases]]
+state = "عوارض پرداخت شد، اما اکنون برای مواد گیاهی موجود در محموله گواهی بهداشت گیاهی لازم است."
+expected = "customs_hold"
+
+[[task]]
+id = "city_service_request_fas"
+type = "choice"
+
+[task.question]
+instructions = "Which city department should handle this 311 request?"
+
+[task.question.criteria]
+sanitation = "Trash collection, recycling, street cleaning, dumped waste, and pest complaints"
+roads = "Potholes, streetlights, sidewalks, road markings, and traffic hazards"
+noise = "Loud music, construction outside permitted hours, and animal noise"
+permits = "Building permits, construction approvals, signage, and business licensing"
+utilities = "Water pressure or outages, gas smells, and power-line issues"
+
+[[task.cases]]
+state = "در خیابان میپل، بین خیابان سوم و چهارم، یک چاله به عرض تقریباً یک فوت هست — ماشین‌ها برای دور زدن آن منحرف می‌شوند."
+expected = "roads"
+
+[[task.cases]]
+state = "سطل بازیافت من سه‌شنبه‌ی گذشته جمع نشد؛ هنوز کنار جدول خیابان مانده است."
+expected = "sanitation"
+
+[[task.cases]]
+state = "سگ همسایه این هفته هر شب از ساعت 2 تا 6 صبح پارس می‌کند."
+expected = "noise"
+
+[[task.cases]]
+state = "خانه‌ی کناری بدون مجوز در حیاط پشتی در حال ساخت یک سکوی چوبی (دک) است — کجا باید گزارش بدهم؟"
+expected = "permits"
+
+[[task.cases]]
+state = "امروز صبح فشار آب در کل این بلوک افت کرد."
+expected = "utilities"
+
+[[task.cases]]
+state = "چراغ خیابان در تقاطع خیابان اِلم و خیابان پنجم خاموش است؛ هفته‌هاست که آنجا تاریک است."
+expected = "roads"
+
+[[task.cases]]
+state = "یک تشک و یک تخت‌خواب سر کوچه‌ی اوک رها شده و چند روز است که همان‌جا مانده است."
+expected = "sanitation"
+
+[[task.cases]]
+state = "همسایه‌ی کناری یکشنبه ساعت 6 صبح با پیکور مشغول ساخت‌وساز بود."
+expected = "noise"
+
+[[task.cases]]
+state = "نزدیک زمین بازی در خیابان پاین بوی شدید گاز می‌آید."
+expected = "utilities"
+
+[[task.cases]]
+state = "می‌خواهم بالای ویترین مغازه‌ام سایبان نصب کنم — چه مدارکی لازم دارم؟"
+expected = "permits"
+
+[[task.cases]]
+state = "یک کامیون زباله‌ی واژگون‌شده دو خط از جاده‌ی شماره‌ی 9 را مسدود کرده است."
+expected = "roads"
+
+[[task.cases]]
+state = "موش‌ها دور سطل زباله‌ی بزرگ پشت نانوایی در خیابان ششم جمع شده‌اند."
+expected = "sanitation"
+
+[[task.cases]]
+state = "پیاده‌رو ترک خورده و بالا آمده است — نزدیک مدرسه خطر زمین خوردن دارد."
+expected = "roads"
+
+[[task.cases]]
+state = "کسی در میدان یک چرخ‌دستی غذافروشی بدون مجوز راه انداخته است."
+expected = "permits"
+
+[[task.cases]]
+state = "بلندگوهای فضای باز کارائوکه‌بار شب‌های میان‌هفته تا ساعت 3 صبح با صدای بلند پخش می‌کنند."
+expected = "noise"
+
+[[task.cases]]
+state = "ترکیدگی لوله‌ی اصلی آب، تقاطع خیابان چهارم و خیابان گرند را آب برداشته است."
+expected = "utilities"
+
+[[task.cases]]
+state = "آیا برگزاری حراج وسایل خانه (yard sale) آخر هفته مجوز لازم دارد و تابلو چقدر می‌تواند بزرگ باشد؟"
+expected = "permits"
+
+[[task.cases]]
+state = "قوطی‌های رنگ و حلال قدیمی را کجا باید تحویل بدهم؟ در گاراژم دارند روی هم تلنبار می‌شوند."
+expected = "sanitation"
+
+[[task.cases]]
+state = "ناقوس‌های کلیسا شروع کرده‌اند هر ساعت در طول شب به صدا درآیند."
+expected = "noise"
+
+[[task]]
+id = "ad_policy_violation_fas"
+type = "noul"
+
+[task.question]
+instructions = "The ad violates advertising policy: it makes unsupported health claims, guarantees results, promotes tobacco, weapons, or drugs, or tells users to stop taking prescribed medication"
+
+[[task.cases]]
+state = "تابه سرامیکی ما گرما را یکنواخت پخش می‌کند و در چند ثانیه تمیز می‌شود — نتایج آزمایش 30 روزه ما را ببینید."
+expected = false
+
+[[task.cases]]
+state = "از نظر بالینی ثابت شده که درد مفاصل را در 3 روز درمان می‌کند. پزشکان از آن متنفرند."
+expected = true
+
+[[task.cases]]
+state = "ارسال رایگان برای همه سفارش‌ها در این آخر هفته."
+expected = false
+
+[[task.cases]]
+state = "در 30 روز 30 پوند وزن کم کنید، وگرنه پولتان را پس می‌گیرید — تضمینی!"
+expected = true
+
+[[task.cases]]
+state = "دفترچه‌های چرمی دست‌ساز از یک کارگاه کوچک در فلورانس."
+expected = false
+
+[[task.cases]]
+state = "پکیج شروع ویپ — امروز 50% تخفیف، بدون نیاز به بررسی کارت شناسایی."
+expected = true
+
+[[task.cases]]
+state = "امتیاز 4.8 ستاره از 12,000 خریدار تأییدشده."
+expected = false
+
+[[task.cases]]
+state = "مکمل ما دیابت را درمان می‌کند — از همین امروز مصرف داروی تجویزی‌تان را قطع کنید."
+expected = true
+
+[[task.cases]]
+state = "سرخ‌کن بدون روغن: ظرفیت 5.5 لیتر، سبد قابل شست‌وشو در ماشین ظرفشویی."
+expected = false
+
+[[task.cases]]
+state = "دوره آزمایشی رایگان، لغو در هر زمان، بدون نیاز به کارت اعتباری."
+expected = false
+
+[[task.cases]]
+state = "پزشکان این ترفند عجیب را برای معکوس کردن پیری به شما نمی‌گویند."
+expected = true
+
+[[task.cases]]
+state = "فقط این هفته: تفنگ‌های شکاری موجود است، با هر خرید انتقال مالکیت رایگان."
+expected = true
+
+[[task.cases]]
+state = "مودافینیل بدون نسخه، ارسال یک‌شبه، بدون هیچ سؤالی."
+expected = true
+
+[[task.cases]]
+state = "کارمزدهای حساب جاری را کنار هم مقایسه کنید — بدون هزینه پنهان، بدون نکات ریز و پنهان در قرارداد."
+expected = false
+
+[[task.cases]]
+state = "قوزبندِ مشهور در تیک‌تاک — ستاره‌ها قسم می‌خورند کمردرد را برطرف می‌کند، فقط 599 دلار."
+expected = true
+
+[[task.cases]]
+state = "انتخاب‌شده به‌عنوان «بهترین بال مرغ شهر» در نظرسنجی مشتریان ما در سال 2023."
+expected = false
+
+[[task]]
+id = "fair_housing_violation_fas"
+type = "noul"
+
+[task.question]
+instructions = "The rental or sale listing contains discriminatory language under fair housing rules: expressing preferences or restrictions based on race, religion, national origin, familial status, or disability"
+
+[[task.cases]]
+state = "آپارتمان دل‌نشین دوخوابه نزدیک پارک، با آشپزخانه‌ی نوسازی‌شده و ماشین لباسشویی داخل واحد."
+expected = false
+
+[[task.cases]]
+state = "مناسب زوج جوان شاغل — بدون بچه."
+expected = true
+
+[[task.cases]]
+state = "این خیابان به‌عنوان محله‌ای مسیحی‌نشین شناخته می‌شود؛ فقط خریداران جدی."
+expected = true
+
+[[task.cases]]
+state = "بن‌بست مناسب خانواده با حیاط بزرگ و مدارس خوب."
+expected = false
+
+[[task.cases]]
+state = "واحد طبقه همکف با ورودی بدون پله و دستگیره‌های کمکی در حمام."
+expected = false
+
+[[task.cases]]
+state = "برای مهاجران مناسب نیست — همسایه‌ها فقط انگلیسی صحبت می‌کنند."
+expected = true
+
+[[task.cases]]
+state = "فقط افراد مجرد شاغل؛ خانواده پذیرفته نمی‌شود."
+expected = true
+
+[[task.cases]]
+state = "واحد نبش پرنور، با 20 دقیقه رفت‌وآمد تا مرکز شهر."
+expected = false
+
+[[task.cases]]
+state = "استودیوی طبقه همکف، یک بلوک تا مترو؛ نگهداری حیوان خانگی مجاز است."
+expected = false
+
+[[task.cases]]
+state = "ساختمان آجری تاریخی (براون‌استون) با قاب‌بندی‌های اصلی مرمت‌شده و باغ اختصاصی."
+expected = false
+
+[[task.cases]]
+state = "ترجیح می‌دهیم دانشجویان خارجی درخواست ندهند."
+expected = true
+
+[[task.cases]]
+state = "چند قدم تا مسجد جدید — ایده‌آل برای خانواده‌های مسلمان."
+expected = true
+
+[[task.cases]]
+state = "زمین نبش با درختان کهن‌سال، کوره‌ی گرمایشی نو و پارکینگ دو ماشین."
+expected = false
+
+[[task.cases]]
+state = "ساختمان اجازه ورود سگ‌های راهنما یا سایر حیوانات خدمات‌یار را نمی‌دهد."
+expected = true
+
+[[task.cases]]
+state = "مستأجران با تبار اروپایی ترجیح داده می‌شوند."
+expected = true
+
+[[task.cases]]
+state = "دفتر کار خانگی با اینترنت فیبر نوری و گوشه قهوه — ایده‌آل برای دورکاری."
+expected = false
+
+[[task.cases]]
+state = "«شاید در محله متنوعی که آن سوی شهر است راحت‌تر باشید»، مشاور املاک این‌گونه نوشت."
+expected = true
+
+[[task.cases]]
+state = "مجتمع مسکونی ویژه افراد فعال بالای 55 سال با برنامه‌های فعالیت در محل."
+expected = false
+
+[[task]]
+id = "contract_clause_type_fas"
+type = "choice"
+
+[task.question]
+instructions = "What type of contract clause is this?"
+
+[task.question.criteria]
+limitation_of_liability = "Caps or excludes damages one party can claim"
+confidentiality = "Obligations about keeping information secret"
+termination = "How and when the agreement can be ended"
+indemnification = "One party agrees to defend or compensate the other for specified claims"
+force_majeure = "Delays or failures excused by events beyond the parties' control"
+
+[[task.cases]]
+state = "هیچ‌یک از طرفین مسئول خسارت‌های غیرمستقیم، اتفاقی یا تبعی نخواهد بود."
+expected = "limitation_of_liability"
+
+[[task.cases]]
+state = "طرف دریافت‌کننده باید با مراقبت متعارف از اطلاعات محرمانه محافظت کند و آن را برای اشخاص ثالث افشا نکند."
+expected = "confidentiality"
+
+[[task.cases]]
+state = "هر یک از طرفین می‌تواند با ارسال اخطار کتبی 30 روزه قرارداد را خاتمه دهد؛ مفاد باقی‌مانده پس از خاتمه همچنان لازم‌الاجرا خواهند بود."
+expected = "termination"
+
+[[task.cases]]
+state = "پیمانکار باید کارفرما را در برابر دعاوی اشخاص ثالث ناشی از کار، تحت حمایت قرار داده و خسارت او را جبران کند و او را مصون بدارد."
+expected = "indemnification"
+
+[[task.cases]]
+state = "هیچ‌یک از طرفین مسئول تأخیرهای ناشی از حوادث قهری، جنگ، اعتصاب یا اقدام دولت نیست."
+expected = "force_majeure"
+
+[[task.cases]]
+state = "مسئولیت تجمیعی نباید از کارمزدهای پرداخت‌شده در دوازده ماه قبل تجاوز کند."
+expected = "limitation_of_liability"
+
+[[task.cases]]
+state = "تمامی اسرار تجاری، فهرست مشتریان و قیمت‌گذاری‌های افشاشده بر اساس این قرارداد به مدت پنج سال محرمانه باقی می‌مانند."
+expected = "confidentiality"
+
+[[task.cases]]
+state = "فسخ به‌دلیل تخلف: نقض عمده‌ای که ظرف 15 روز از اخطار کتبی رفع نشده باشد."
+expected = "termination"
+
+[[task.cases]]
+state = "هر یک از طرفین باید در برابر دعاوی نقض مالکیت فکری ناشی از تحویل‌شدنی‌ها از طرف دیگر دفاع کند."
+expected = "indemnification"
+
+[[task.cases]]
+state = "تعهدات در طول همه‌گیری‌ها، تحریم‌ها یا قطعی خدمات عمومی که خارج از کنترل یک طرف باشد، معلق می‌شوند."
+expected = "force_majeure"
+
+[[task.cases]]
+state = "کارمند باید هنگام جدایی از کار، تمامی اسناد اختصاصی را بازگرداند و تعهد محرمانگی همچنان ادامه دارد."
+expected = "confidentiality"
+
+[[task.cases]]
+state = "کارفرما باید ارائه‌دهنده را در برابر دعاوی ناشی از استفاده کارفرما از تحویل‌شدنی‌ها مصون بدارد."
+expected = "indemnification"
+
+[[task.cases]]
+state = "طرفین باید شرایط این قرارداد و تمامی مذاکرات را محرمانه نگه دارند."
+expected = "confidentiality"
+
+[[task.cases]]
+state = "شرکت می‌تواند در صورتی که پیمانکار تعهدات محرمانگی را نقض کند، بلافاصله قرارداد را خاتمه دهد."
+expected = "termination"
+
+[[task.cases]]
+state = "هیچ‌یک از طرفین مسئول از دست رفتن سود یا از بین رفتن داده‌ها نخواهد بود، حتی اگر از احتمال وقوع آن‌ها مطلع شده باشد."
+expected = "limitation_of_liability"
+
+[[task.cases]]
+state = "هیچ‌یک از طرفین مسئول تأخیرهای ناشی از شورش، ناآرامی‌های مدنی یا فاجعه هسته‌ای نیست."
+expected = "force_majeure"
+
+[[task.cases]]
+state = "توزیع‌کننده خسارت تولیدکننده را در برابر دعاوی مسئولیت محصول که صرفاً ناشی از مواد بازاریابی توزیع‌کننده باشد، جبران می‌کند."
+expected = "indemnification"
+
+[[task]]
+id = "voice_assistant_intent_fas"
+type = "choice"
+cases = [
+    { state = "چراغای پذیرایی رو خاموش کن.", expected = "device_control" },
+    { state = "فردا هوا چطوره؟", expected = "information_request" },
+    { state = "یادم بنداز ساعت سه به دندون‌پزشک زنگ بزنم.", expected = "reminder" },
+    { state = "یه کم جاز پخش کن.", expected = "music" },
+    { state = "یه جوک برام بگو.", expected = "small_talk" },
+    { state = "ترموستات رو روی 21 درجه تنظیم کن.", expected = "device_control" },
+    { state = "برای ماکارونی یه تایمر ده دقیقه‌ای بذار.", expected = "reminder" },
+    { state = "دیشب بازی رو کی برد؟", expected = "information_request" },
+    { state = "قسمت بعدی پادکستم رو پخش کن.", expected = "music" },
+    { state = "امروز حالت چطوره؟", expected = "small_talk" },
+    { state = "در ورودی رو قفل کن و دزدگیر رو فعال کن.", expected = "device_control" },
+    { state = "داروخونه تا ساعت چند بازه؟", expected = "information_request" },
+    { state = "یه پیمونه چند اونسه؟", expected = "information_request" },
+    { state = "صدای آشپزخونه رو زیاد کن.", expected = "device_control" },
+    { state = "پرواز شیکاگوم رو برای سه‌شنبه صبح به تقویم اضافه کن.", expected = "reminder" },
+    { state = "اون آهنگی که توی تبلیغ قهوه بود رو پخش کن.", expected = "music" },
+    { state = "اسمت چیه؟", expected = "small_talk" },
+    { state = "امروز چتر لازم دارم؟", expected = "information_request" },
+    { state = "یادم بنداز وقتی رسیدم خونه به گیاه‌ها آب بدم.", expected = "reminder" },
+    { state = "شب بخیر.", expected = "small_talk" },
+]
+
+[task.question]
+instructions = "What does the user want from the voice assistant?"
+
+[task.question.criteria]
+device_control = "Turn lights or appliances on/off, set temperature, lock doors"
+information_request = "Questions about weather, time, facts, or anything else"
+reminder = "Reminders, timers, alarms, and calendar events"
+music = "Play music, podcasts, or radio"
+small_talk = "Greetings, jokes, chit-chat, and questions about the assistant itself"
+
+[[task]]
+id = "action_item_assignment_fas"
+type = "noul"
+
+[task.question]
+instructions = "This sentence from meeting notes assigns a concrete task with an owner or a deadline"
+
+[[task.cases]]
+state = "راوی تا روز جمعه اسلاید‌های به‌روزشده را برای مشتری ارسال خواهد کرد."
+expected = true
+
+[[task.cases]]
+state = "شاید بهتر باشد در فرصتی مشکل تأخیر (latency) را بررسی کنیم."
+expected = false
+
+[[task.cases]]
+state = "پریا صورت‌جلسه را بنویسد."
+expected = true
+
+[[task.cases]]
+state = "امروز بحث بسیار خوبی درباره نقشه راه داشتیم."
+expected = false
+
+[[task.cases]]
+state = "مهلت پروژه آزمایشی به 10 ژوئن موکول شد."
+expected = false
+
+[[task.cases]]
+state = "سنا تا پایان هفته محل برگزاری و غذا (کیترینگ) را رزرو خواهد کرد."
+expected = true
+
+[[task.cases]]
+state = "خوب است اگر برای تابستان یک کارآموز بگیریم."
+expected = false
+
+[[task.cases]]
+state = "اقدام: بررسی حقوقی MSA، مسئول: تام، مهلت: سه‌شنبه آینده."
+expected = true
+
+[[task.cases]]
+state = "جلسه بعدی پنجشنبه ساعت 10."
+expected = false
+
+[[task.cases]]
+state = "پیش از آنکه تعهدی بدهیم، بودجه نیاز به بازبینی دیگری دارد."
+expected = false
+
+[[task.cases]]
+state = "من امشب پیش‌نویس پیشنهاد را می‌نویسم و فردا صبح بین بقیه توزیع می‌کنم."
+expected = true
+
+[[task.cases]]
+state = "بعد از عرضه، روحیه تیم بالا رفته است؛ دست همه درد نکند."
+expected = false
+
+[[task.cases]]
+state = "بیایید دفعه بعد دوباره به موضوع قیمت‌گذاری برگردیم."
+expected = false
+
+[[task.cases]]
+state = "دوون تا پایان وقت اداری روز چهارشنبه بودجه به‌روزشده را بین بقیه توزیع خواهد کرد."
+expected = true
+
+[[task.cases]]
+state = "شاید هر کسی که وقت آزاد داشت بتواند اسپرینت بعدی پلی‌بوک را به‌روزرسانی کند."
+expected = false
+
+[[task.cases]]
+state = "نهایی‌کردن طرح‌های اولیه (mockup) پیش از دورهمی خارج از محل کار بر عهده لارس است."
+expected = true
+
+[[task.cases]]
+state = "احتمالاً باید یک نفر مسئول سند مهاجرت (migration) را بر عهده بگیرد."
+expected = false
+
+[[task.cases]]
+state = "دانا مسئول طرح مهاجرت (migration) برای سه‌ماهه سوم است."
+expected = true
+
+[[task.cases]]
+state = "مارتا اشاره کرد که تیم QA دو مورد رگرسیون پیدا کرده است؛ جزئیات در ردیاب (tracker) موجود است."
+expected = false
+
+[[task]]
+id = "suspicious_transaction_fas"
+type = "noul"
+
+[task.question]
+instructions = "This transaction is suspicious under standard fraud rules: geography or velocity that doesn't fit the account holder, round-number amounts unusual for the account, or patterns consistent with account takeover"
+
+[[task.cases]]
+state = "کارت در لاگوس ساعت 03:12 برای مبلغ دقیقاً 2,000 دلار استفاده شده است؛ دارنده کارت در اسلو زندگی می‌کند و دیروز ساعت 14:00 هم همان‌جا بوده است."
+expected = true
+
+[[task.cases]]
+state = "خرید هفتگی مواد غذایی: 64.20 یورو از سوپرمارکت همیشگی، ساعت 11:40."
+expected = false
+
+[[task.cases]]
+state = "دو تراکنش دقیقاً 500.00 دلار با فاصله پنج دقیقه، در کشوری که دارنده کارت هرگز به آن سفر نکرده است."
+expected = true
+
+[[task.cases]]
+state = "پرداخت ماهانه‌ی اجاره به مبلغ 1,850 دلار به حساب همان موجری که در 24 ماه گذشته هم به او پرداخت شده است."
+expected = false
+
+[[task.cases]]
+state = "کارت دو بار رد شد، سپس یک خرید آنلاین 999.99 دلار از یک دستگاه جدید در یک کشور جدید با موفقیت انجام شد."
+expected = true
+
+[[task.cases]]
+state = "قهوه به مبلغ 4.10 دلار در روز دوشنبه ساعت 08:05، در چند قدمی محل کار دارنده کارت."
+expected = false
+
+[[task.cases]]
+state = "واریز حقوق به مبلغ 3,120.44 دلار از طرف کارفرما، هر ماه در همان تاریخ."
+expected = false
+
+[[task.cases]]
+state = "برداشت نقدی 4,900 دلار — درست کمی زیر سقف گزارش‌دهی — چند دقیقه پس از بازنشانی رمز عبور."
+expected = true
+
+[[task.cases]]
+state = "تمدید اشتراک 12.99 دلار برای یک سرویس استریم که دو سال است هر هفته از آن استفاده می‌شود."
+expected = false
+
+[[task.cases]]
+state = "خرید از پمپ بنزین در مارسی، چند دقیقه پس از استفاده از کارت در روتردام."
+expected = true
+
+[[task.cases]]
+state = "مجموعه‌ای از دوازده خرید زیر 2 دلار در همان پایانه پرداخت، ظرف چهار دقیقه."
+expected = true
+
+[[task.cases]]
+state = "حق بیمه سالانه 1,240 دلار در تاریخ معمول تمدید."
+expected = false
+
+[[task.cases]]
+state = "اولین حواله بانکی تاریخ این حساب، به یک دریافت‌کننده‌ی تازه اضافه‌شده، به مبلغ کل موجودی منهای 50 دلار."
+expected = true
+
+[[task.cases]]
+state = "خریدهای پشت‌سرهم کارت هدیه دیجیتال، در مجموع 1,900 دلار ظرف یک ساعت."
+expected = true
+
+[[task.cases]]
+state = "پرداخت مالیات ملک به مبلغ 4,300 دلار به شهرستان (county)، در همان فصل هر سال."
+expected = false
+
+[[task.cases]]
+state = "پرداخت ماهانه‌ی قسط وام مسکن به مبلغ 3,850 دلار در روز اول ماه — طی سه سال بدون تغییر."
+expected = false
+
+[[task.cases]]
+state = "اولین برداشت نقدی اعتباری کارت، که سقف اعتبار را کامل پر می‌کند، از یک خودپرداز در ساعت 3 بامداد."
+expected = true
+
+[[task]]
+id = "return_reason_fas"
+type = "choice"
+
+[task.question]
+instructions = "What is the primary reason for this product return?"
+
+[task.question.criteria]
+damaged_in_transit = "The item arrived broken, crushed, or otherwise damaged from shipping"
+wrong_item = "A different item, color, or size than what was ordered"
+size_or_fit = "The right item was sent, but the size, length, or cut doesn't work for the buyer"
+changed_mind = "No problem with the item; the buyer no longer wants it"
+late_delivery = "The item arrived too late to be useful"
+
+[[task.cases]]
+state = "لیوان خرد شده به دستم رسید؛ جعبه هم له شده بود."
+expected = "damaged_in_transit"
+
+[[task.cases]]
+state = "کاپشن آبی سفارش داده بودم، اما یک کاپشن قرمز با همان سایز درست برایم آمد."
+expected = "wrong_item"
+
+[[task.cases]]
+state = "کفش نیم سایز کوچک است — من سایز 42 لازم دارم، نه 41.5."
+expected = "size_or_fit"
+
+[[task.cases]]
+state = "همین محصول را جای دیگری ارزان‌تر پیدا کردم، برای همین دیگر به آن نیازی ندارم."
+expected = "changed_mind"
+
+[[task.cases]]
+state = "قرار بود دو هفته پیش برای یک تولد برسد؛ حالا دیگر فایده‌ای ندارد."
+expected = "late_delivery"
+
+[[task.cases]]
+state = "خود کالا سالم است — اشتباهی دو تا سفارش داده‌ام."
+expected = "changed_mind"
+
+[[task.cases]]
+state = "این دومین دستگاه جایگزین است که صفحه‌اش ترک خورده است."
+expected = "damaged_in_transit"
+
+[[task.cases]]
+state = "مرسوله یک ماه دیر رسید و به‌عنوان تحویل‌شده ثبت شده بود؛ مراسمی که برایش می‌خواستم تمام شده است."
+expected = "late_delivery"
+
+[[task.cases]]
+state = "سایز M سفارش دادم، اما روی برچسب L نوشته شده است."
+expected = "wrong_item"
+
+[[task.cases]]
+state = "روی کاناپه‌ام جا نمی‌شود — من اندازه‌گیری را اشتباه کرده بودم."
+expected = "size_or_fit"
+
+[[task.cases]]
+state = "هیچ ایرادی ندارد؛ فقط رنگش را از نزدیک دوست ندارم."
+expected = "changed_mind"
+
+[[task.cases]]
+state = "جعبه خشک و سالم بود، اما چراغ داخل آن شکسته بود."
+expected = "damaged_in_transit"
+
+[[task.cases]]
+state = "میز بلوط سفارش دادم، ولی روی جعبه نوشته گردو."
+expected = "wrong_item"
+
+[[task.cases]]
+state = "سایز را اشتباه سفارش دادم — اشتباه از من بود، نه شما."
+expected = "size_or_fit"
+
+[[task.cases]]
+state = "لباس مبدل یک روز بعد از هالووین رسید."
+expected = "late_delivery"
+
+[[task.cases]]
+state = "این را هدیه گرفتم، ولی خودم از قبل یکی دارم."
+expected = "changed_mind"
+
+[[task.cases]]
+state = "دستگاه درست است، اما به‌جای دوشاخه بریتانیایی، دوشاخه اتحادیه اروپا همراهش آمده است."
+expected = "wrong_item"
+
+[[task.cases]]
+state = "برای تحویل در شب کریسمس سفارش داده بودم؛ 3 ژانویه رسید."
+expected = "late_delivery"
+
+[[task]]
+id = "allergen_present_fas"
+type = "noul"
+cases = [
+    { state = "پد تای با بادام‌زمینی خردشده و لیمو ترش.", expected = true },
+    { state = "سینه مرغ گریل‌شده با هویج کبابی و سالاد سبز.", expected = false },
+    { state = "پیتزا مارگاریتا با گوجه‌فرنگی، موتزارلا و ریحان.", expected = true },
+    { state = "کروسان بادام.", expected = true },
+    { state = "کاسه بودا وگان با کینوا، نخود، آووکادو و سس ارده.", expected = true },
+    { state = "ماهی و چیپس با سس تارتار.", expected = true },
+    { state = "سیخ مرغ با چیمیچوری و سیب‌زمینی تنوری.", expected = false },
+    { state = "برج سبزیجات کبابی با کدو سبز، فلفل دلمه‌ای و روغن زیتون.", expected = false },
+    { state = "سالاد میوه با نعناع و لیمو ترش.", expected = false },
+    { state = "سالاد سزار با کروتون و پنیر پارمزان.", expected = true },
+    { state = "تاکوی گوشت گاو با تورتیلای ذرت، سالسا و گواکامولی.", expected = false },
+    { state = "کوکتل میگو با سس ترب کوهی.", expected = true },
+    { state = "ادامامه بخارپز با نمک فلفلی.", expected = true },
+    { state = "کرم بروله با دانه وانیل.", expected = true },
+    { state = "کتلت لوبیا سیاه با ذرت و کینوا در لفاف کاهو.", expected = false },
+    { state = "تیرامیسو.", expected = true },
+    { state = "نودل سوبای 100% گندم سیاه.", expected = false },
+    { state = "شیربرنجِ تهیه‌شده با نوشیدنی شیر برنج و دارچین.", expected = false },
+    { state = "فریتاتا با فلفل دلمه‌ای کبابی و پنیر بز.", expected = true },
+    { state = "بشقاب حمص با نان پیتای گرم.", expected = true },
+    { state = "شیشلیک بره با ژله‌ی نعناع و سبزیجات ریشه‌ای کبابی.", expected = false },
+    { state = "سوربه تمشک با نعناع تازه.", expected = false },
+]
+
+[task.question]
+instructions = "The menu item contains at least one major allergen: peanut, tree nuts, sesame, dairy, egg, wheat/gluten, soy, fish, or shellfish"
+
+[[task]]
+id = "home_service_routing_fas"
+type = "choice"
+
+[task.question]
+instructions = "Which trade should this home-service job be routed to?"
+
+[task.question.criteria]
+plumbing = "Water, drains, toilets, pipes, water heaters, and leaks"
+electrical = "Wiring, outlets, breakers, lighting fixtures, and power problems"
+hvac = "Heating, ventilation, air conditioning, and thermostats"
+handyman = "Small repairs, assembly, mounting, doors, and general fixes"
+appliance_repair = "Washers, dryers, ovens, fridges, and dishwashers"
+
+[[task.cases]]
+state = "شیر آب آشپزخانه مدام چکه می‌کند و سینک دیر خالی می‌شود."
+expected = "plumbing"
+
+[[task.cases]]
+state = "بعد از پریدن فیوز، نیمی از پریزهای اتاق نشیمن از کار افتادند."
+expected = "electrical"
+
+[[task.cases]]
+state = "کولر هوای گرم می‌دهد و صفحه ترموستات خاموش است."
+expected = "hvac"
+
+[[task.cases]]
+state = "یک نفر لازم است تا کیت کمد لباس را مونتاژ کند و دو تلویزیون را نصب کند."
+expected = "handyman"
+
+[[task.cases]]
+state = "خشک‌کن لباس برای خشک کردن یک بار لباس سه دور کار می‌کند و صدای سایش می‌دهد."
+expected = "appliance_repair"
+
+[[task.cases]]
+state = "آبگرمکن از پایین نشت دارد و آب گرم نداریم."
+expected = "plumbing"
+
+[[task.cases]]
+state = "کلید دیمر وقتی آن را فشار می‌دهم جرقه می‌زند."
+expected = "electrical"
+
+[[task.cases]]
+state = "ماشین ظرفشویی پس از پایان چرخه، آب ایستاده در خود باقی می‌گذارد."
+expected = "appliance_repair"
+
+[[task.cases]]
+state = "در ورودی گیر می‌کند و قفل کلیددار دیگر با جای زبانه روی چارچوب هم‌راستا نمی‌شود."
+expected = "handyman"
+
+[[task.cases]]
+state = "کوره‌ی گرمایشی (فِرنِس) هنگام روشن شدن صدای کوبش می‌دهد و گرم نمی‌کند."
+expected = "hvac"
+
+[[task.cases]]
+state = "توالت بعد از کشیدن سیفون مدام آب می‌ریزد."
+expected = "plumbing"
+
+[[task.cases]]
+state = "بوی فاضلاب گاهی از کفشوی حمام مهمان می‌آید و گاهی نمی‌آید."
+expected = "plumbing"
+
+[[task.cases]]
+state = "چراغ سقفی سوسو می‌زند و وزوز می‌کند؛ بدنه چراغ هم گرم است."
+expected = "electrical"
+
+[[task.cases]]
+state = "یک سوراخ به اندازه‌ی مشت در دیوار کناف را ترمیم کنید و رنگ آن را لکه‌گیری کنید."
+expected = "handyman"
+
+[[task.cases]]
+state = "کمپرسور یخچال مدام کار می‌کند و فریزر دیگر یخ نمی‌زند."
+expected = "appliance_repair"
+
+[[task.cases]]
+state = "پمپ حرارتی هر چند دقیقه یک بار مدام خاموش و روشن می‌شود و کد خطا نشان می‌دهد."
+expected = "hvac"
+
+[[task.cases]]
+state = "سیلیکون قدیمی دور وان حمام را بتراشید و دوباره سیلیکون بزنید، بعد دیوار کناف کنارش را ترمیم کنید."
+expected = "handyman"
+
+[[task.cases]]
+state = "فر دمای خود را حفظ نمی‌کند و چرخه خودتمیزشونده نیمه‌کاره می‌ماند."
+expected = "appliance_repair"
+
+[[task.cases]]
+state = "پریز GFCI کنار سینک آشپزخانه هر چیزی که به آن وصل کنم ریست نمی‌شود."
+expected = "electrical"
+
+[[task.cases]]
+state = "نیمی از خانه ناگهان برق را از دست داد، در حالی که همسایه‌ها هنوز برق دارند."
+expected = "electrical"
+
+[[task.cases]]
+state = "یک لکه آب قهوه‌ای روی سقف زیر حمام طبقه بالا در حال گسترش است."
+expected = "plumbing"
+
+[[task.cases]]
+state = "دو اتاق خواب هر قدر ترموستات را بالا بگذارم سرد می‌مانند."
+expected = "hvac"
+
+[[task.cases]]
+state = "دو شلف دیواری شناور و یک آینه‌ی سنگین را در راهرو نصب کنید."
+expected = "handyman"
+
+[[task]]
+id = "gaming_report_type_fas"
+type = "choice"
+
+[task.question]
+instructions = "How should this player report be classified?"
+
+[task.question.criteria]
+cheating = "Aim assistance, wallhacks, scripts, or other software assistance"
+harassment = "Abusive chat, threats, or targeted abuse"
+boosting = "Paid or arranged rank-boosting or account sharing"
+smurfing = "High-skill players competing on low-rank accounts"
+other = "Griefing or other disruptive behavior that fits none of the above"
+
+[[task.cases]]
+state = "این بازیکن هر راند از پشت دیوارها هدشات می‌زند؛ ریپلی را در دقیقه 12:30 ببینید."
+expected = "cheating"
+
+[[task.cases]]
+state = "بعد از اینکه باختیم، در چت صوتی به من گفت خودکشی کن."
+expected = "harassment"
+
+[[task.cases]]
+state = "بوست تا رنک Diamond را به قیمت 50 دلار می‌فروشد — در Discord به من پیام خصوصی بدهید."
+expected = "boosting"
+
+[[task.cases]]
+state = "اکانت لول 5 با 400 ساعت بازی در دو هفته، که در هر بازی 40 کیل می‌گیرد."
+expected = "smurfing"
+
+[[task.cases]]
+state = "تمام مسابقه در اسپاون AFK بود و حاضر به بازی نشد."
+expected = "other"
+
+[[task.cases]]
+state = "ایم‌بات اسنپ می‌کند — کراس‌هیر بین سرها تلپورت می‌شود."
+expected = "cheating"
+
+[[task.cases]]
+state = "بارها و بارها به کل خانواده‌ام توهین‌های تحقیرآمیز و نژادپرستانه کرد."
+expected = "harassment"
+
+[[task.cases]]
+state = "اکانتشان را به یکی از دوستانشان داده‌اند تا دوستشان جوایز رنکد را بگیرد."
+expected = "boosting"
+
+[[task.cases]]
+state = "با حرکات در سطح حرفه‌ای، 18 بازی رنکد را پشت سر هم در رنک Bronze برد؛ معلوم است که این رنک واقعی‌اش نیست."
+expected = "smurfing"
+
+[[task.cases]]
+state = "هم‌تیمی مسیر تیم ما را بست و دو بار تیم‌کیل کرد."
+expected = "other"
+
+[[task.cases]]
+state = "استریمر در استریم اعتراف می‌کند که این اکانت را خریده و آن را بوست کرده‌اند."
+expected = "boosting"
+
+[[task.cases]]
+state = "هر بار یک فلیک مشکوک و کیل از میان دود."
+expected = "cheating"
+
+[[task.cases]]
+state = "بعد از هر راند در چت همگانی «ez» اسپم می‌کرد و به تیم مقابل می‌گفت بازی را پاک کنند."
+expected = "harassment"
+
+[[task.cases]]
+state = "وارد رنکد می‌شود و هر سه مسابقه یک بار در صفحه انتخاب کاراکتر دیسکانکت می‌شود."
+expected = "other"
+
+[[task.cases]]
+state = "او در اکانت اصلی‌اش جزو 500 نفر برتر است و دارد از این اکانت دوم خودش را استریم می‌کند که لابی نقره‌ای ما را زیر دست و پا له می‌کند."
+expected = "smurfing"
+
+[[task.cases]]
+state = "دشمنان را از میان پایگاه ما رد می‌کند تا یک «کلیپ سال» بسازد."
+expected = "other"
+
+[[task.cases]]
+state = "اسکریپت APM او هر بار کمبوهای کامل 17 کلیکی را بی‌نقص اجرا می‌کند — یا ماکرو است یا ورودی‌های جیلبریک‌شده."
+expected = "cheating"
+
+[[task.cases]]
+state = "یک اسکرین‌شات برایمان فرستاد: نام واقعی و آدرس منزل هم‌تیمی ما را در Discord منتشر کرده‌اند."
+expected = "harassment"
+
+[[task.cases]]
+state = "گروهشان مدام ساعت 2 بامداد با همان رقبای مشخص وارد صف می‌شود و زود تسلیم می‌شود — رقبا همین‌طور رنکشان بالا می‌رود."
+expected = "boosting"
+
+[[task.cases]]
+state = "مدام ساخته‌های تیم ما را خراب می‌کند، حتی قبل از اینکه دشمنان برسند."
+expected = "other"
+
+[[task]]
+id = "warranty_claim_eligible_fas"
+type = "noul"
+
+[task.question]
+instructions = "The damage is covered under the standard 2-year manufacturer warranty, which covers defects in materials and workmanship but not accidental damage, liquid damage, normal wear, or misuse"
+
+[[task.cases]]
+state = "پورت شارژ گوشی بعد از چهار ماه استفاده عادی از کار افتاد."
+expected = true
+
+[[task.cases]]
+state = "تبلت افتاد و صفحه‌نمایشش خرد شد."
+expected = false
+
+[[task.cases]]
+state = "کلیدهای لپ‌تاپ بعد از دو سال براق و ساییده شده‌اند."
+expected = false
+
+[[task.cases]]
+state = "مانیتور در ماه هشتم کلاً دیگر روشن نشد."
+expected = true
+
+[[task.cases]]
+state = "بلبرینگ سطل ماشین لباسشویی بعد از چهارده ماه خراب شد."
+expected = true
+
+[[task.cases]]
+state = "قهوه‌ساز بعد از این‌که بدون آب روشن شد از کار افتاد."
+expected = false
+
+[[task.cases]]
+state = "قهوه روی لپ‌تاپ ریخت و حالا کلیدها گیر می‌کنند."
+expected = false
+
+[[task.cases]]
+state = "درایور هدفون چپ بعد از ده ماه، بدون هیچ آسیب فیزیکی، از کار افتاد."
+expected = true
+
+[[task.cases]]
+state = "صفحه‌نمایش تلویزیونی که شش ماه از عمرش می‌گذرد گاهی سوسو می‌زند."
+expected = true
+
+[[task.cases]]
+state = "سگ کابل شارژ را جویده و پاره کرده است."
+expected = false
+
+[[task.cases]]
+state = "تاج (دکمه کناری) ساعت هوشمند هنگام استفاده عادی و بدون هیچ ضربه‌ای افتاد."
+expected = true
+
+[[task.cases]]
+state = "صفحه‌نمایش بدون هیچ سقوطی شروع به لمس‌های خودبه‌خودی (ghost touch) کرد؛ ماه یازدهم است."
+expected = true
+
+[[task.cases]]
+state = "فریم دوچرخه بعد از هشت ماه رفت‌وآمد عادی در محل جوش ترک خورد."
+expected = true
+
+[[task.cases]]
+state = "صفحه‌نمایش با کلیدهایی که در همان جیب بودند خط‌وخش افتاد."
+expected = false
+
+[[task.cases]]
+state = "کفی هر دو کفش بعد از سه ماه استفاده روزانه شروع به جدا شدن کرد."
+expected = true
+
+[[task.cases]]
+state = "یک کابل شارژ فاقد گواهی استاندارد مدار شارژ را سوزاند."
+expected = false
+
+[[task.cases]]
+state = "مخلوط‌کن از همان ابتدا خراب بود؛ حتی بلافاصله بعد از بیرون آوردن از جعبه هم هرگز روشن نشده است."
+expected = true
+
+[[task.cases]]
+state = "باتری گوشی در ماه دهم باد کرد و صفحه‌نمایش را از جا بیرون زد."
+expected = true
+
+[[task.cases]]
+state = "گوشی از روی سقف ماشین سر خورد و روی بزرگراه پرت شد."
+expected = false
+
+[[task.cases]]
+state = "زیر باران شدید گیر کرد و حالا اصلاً شارژ نمی‌شود."
+expected = false
+
+[[task]]
+id = "weather_alert_severity_fas"
+type = "score"
+
+[task.question]
+instructions = "How severe is this weather alert?"
+criteria = [
+    "Informational: notable but not hazardous",
+    "Advisory: potentially hazardous; be aware",
+    "Watch: conditions favor a hazardous event; be prepared",
+    "Warning: a hazardous event is occurring or imminent; take action",
+]
+
+[[task.cases]]
+state = "بارش باران خفیف امروز بعدازظهر پیش‌بینی می‌شود، با مجموع کمتر از 5 میلی‌متر."
+expected = 0
+
+[[task.cases]]
+state = "آسمان صاف همراه با نسیم ملایم در این آخر هفته."
+expected = 0
+
+[[task.cases]]
+state = "نم‌نم باران پراکنده در صبح، با بهبود هوا تا ظهر."
+expected = 0
+
+[[task.cases]]
+state = "مه غلیظ که دید افقی را تا ساعت 9 صبح به کمتر از یک‌چهارم مایل کاهش می‌دهد."
+expected = 1
+
+[[task.cases]]
+state = "توصیه‌ی گرما: دمای احساس‌شده امروز بعدازظهر تا 38 درجه سانتی‌گراد."
+expected = 1
+
+[[task.cases]]
+state = "توصیه‌ی باد: وزش تندبادهایی تا 50 کیلومتر بر ساعت در طول شب پیش‌بینی می‌شود."
+expected = 1
+
+[[task.cases]]
+state = "توصیه‌ی سیل ساحلی: سیل جزر و مدی جزئی در زمان مد."
+expected = 1
+
+[[task.cases]]
+state = "پیش‌هشدار طوفان تندری شدید تا ساعت 8 شب؛ شرایط برای بارش تگرگ درشت مساعد است."
+expected = 2
+
+[[task.cases]]
+state = "پیش‌هشدار طوفان زمستانی: بارش برف قابل‌توجه طی 36 ساعت آینده ممکن است."
+expected = 2
+
+[[task.cases]]
+state = "هشدار گردباد: چرخش تأییدشده توسط رادار در نزدیکی مرز شهرستان."
+expected = 3
+
+[[task.cases]]
+state = "هشدار سیل ناگهانی: سه اینچ باران باریده و بارش بیشتری در راه است."
+expected = 3
+
+[[task.cases]]
+state = "هشدار طوفان هاریکن: برخورد طوفان دسته 3 با خشکی طی 12 ساعت آینده پیش‌بینی می‌شود."
+expected = 3
+
+[[task.cases]]
+state = "توصیه‌ی هوای زمستانی: 2 تا 4 سانتی‌متر برف امشب؛ لغزنده شدن جاده‌ها ممکن است."
+expected = 1
+
+[[task.cases]]
+state = "پیش‌هشدار سیل: بارش سنگین باران روز پنجشنبه ممکن است باعث طغیان رودخانه‌ها و مسیل‌ها شود."
+expected = 2
+
+[[task.cases]]
+state = "هشدار طوفان زمستانی: 25 سانتی‌متر برف امشب پیش‌بینی می‌شود؛ از سفر قویاً پرهیز شود."
+expected = 3
+
+[[task.cases]]
+state = "آسمان دودآلود ناشی از آتش‌سوزی‌های دوردست جنگلی؛ کیفیت هوا در حال حاضر خوب است."
+expected = 0
+
+[[task.cases]]
+state = "هشدار امواج بلند: جریان‌های بازگشتی خطرناک تا پایان آخر هفته پیش‌بینی می‌شود."
+expected = 3
+
+[[task.cases]]
+state = "پیش‌هشدار باد شدید: وزش تندبادها ممکن است شنبه عصر از 90 کیلومتر بر ساعت فراتر رود."
+expected = 2
+
+[[task.cases]]
+state = "رکورد دمای بالا با 31 درجه سانتی‌گراد پنجشنبه بعدازظهر پیش‌بینی می‌شود."
+expected = 0
+
+[[task.cases]]
+state = "هشدار کیفیت هوا: ازن امروز بعدازظهر برای گروه‌های حساس به سطح ناسالم خواهد رسید."
+expected = 1
+
+[[task.cases]]
+state = "پیش‌هشدار گردباد: شرایط برای وقوع گردباد امشب مساعد است."
+expected = 2
+
+[[task.cases]]
+state = "هشدار طوفان تندری شدید: طوفانی که تگرگ به‌اندازه سکه کوارتر تولید می‌کند هم‌اکنون بر فراز شهرستان شماست."
+expected = 3
+
+[[task]]
+id = "content_type_fas"
+type = "choice"
+
+[task.question]
+instructions = "What kind of article is this?"
+
+[task.question.criteria]
+news_report = "Reports facts about recent events without advocacy"
+opinion = "Argues a position in a personal or editorial voice"
+press_release = "An organization's official announcement about itself"
+analysis = "Explains what events mean, with context and interpretation"
+feature = "Human-interest storytelling, profiles, and long-form color"
+
+[[task.cases]]
+state = "شورا روز سه‌شنبه با 6 رأی موافق در برابر 3 رأی مخالف، تغییر کاربری را تصویب کرد و راه را برای ساخت 240 خانه هموار کرد."
+expected = "news_report"
+
+[[task.cases]]
+state = "سیاست مسکن این شهر یک شکست اخلاقی است و شهردار هم این را می‌داند."
+expected = "opinion"
+
+[[task.cases]]
+state = "شرکت Acme Corp امروز از دسترسی عمومی Acme Cloud 3.0، پلتفرم نسل جدید خود، خبر داد."
+expected = "press_release"
+
+[[task.cases]]
+state = "چرا تصمیم مربوط به نرخ‌ها اهمیت دارد: سه نیرویی که فصل آینده را شکل می‌دهند."
+expected = "analysis"
+
+[[task.cases]]
+state = "نگاهی از درون شیفت شب تنها غذاخوری 24 ساعته شهر."
+expected = "feature"
+
+[[task.cases]]
+state = "به نظر من، طرح جدید حمل‌ونقل عمومی منافع مسافران را به سازندگان می‌فروشد."
+expected = "opinion"
+
+[[task.cases]]
+state = "ماجرای ادغام به زبان ساده: این معامله برای مشتریان و رقبا چه معنایی دارد."
+expected = "analysis"
+
+[[task.cases]]
+state = "شرکت Forbes & Co. با خرسندی انتصاب جین دو به سمت مدیر ارشد مالی را، از تاریخ 1 مارس، اعلام می‌کند."
+expected = "press_release"
+
+[[task.cases]]
+state = "آتش‌سوزی جنگلی باعث تخلیه 4,000 نفر شد؛ 30 درصد آتش مهار شده است."
+expected = "news_report"
+
+[[task.cases]]
+state = "او 20 سال را صرف فهرست‌برداری از دیوارنگاره‌های فراموش‌شده شهر کرد. حالا روی آن‌ها رنگ می‌کشند."
+expected = "feature"
+
+[[task.cases]]
+state = "ما معتقدیم داده‌ها روشن است: دورکاری مرکز شهر را توخالی نکرد."
+expected = "opinion"
+
+[[task.cases]]
+state = "چرا کمبود تراشه در حال کاهش است — و این برای قیمت‌ها چه معنایی دارد."
+expected = "analysis"
+
+[[task.cases]]
+state = "با افتخار اعلام می‌کنیم که Meridian Health برای سومین سال پیاپی به‌عنوان یکی از کارفرمایان برتر انتخاب شده است."
+expected = "press_release"
+
+[[task.cases]]
+state = "پلیس روز سه‌شنبه مردی 34 ساله را در ارتباط با آتش‌سوزی عمدی انبار بازداشت کرد؛ هیچ مصدومیتی گزارش نشده است."
+expected = "news_report"
+
+[[task.cases]]
+state = "او 45 سال است که در گوشه بازار گل می‌فروشد؛ حالا شهر قصد دارد همه غرفه‌ها را جابه‌جا کند."
+expected = "feature"
+
+[[task.cases]]
+state = "لایحه اوراق قرضه مدرسه‌ها در انتخابات ویژه روز سه‌شنبه با نتیجه 49 به 51 رد شد."
+expected = "news_report"
+
+[[task.cases]]
+state = "به سردبیر: استفاده از احراز هویت دومرحله‌ای روی همه‌چیز فقط نمایش امنیتی است و من تا آخر پای این حرفم می‌ایستم."
+expected = "opinion"
+
+[[task.cases]]
+state = "در این شهر کوچک چوب‌بری، آخرین کارگاه اره‌کشی چوب در ماه مارس تعطیل شد و هیچ‌کس نمی‌داند قدم بعدی چیست."
+expected = "feature"
+
+[[task.cases]]
+state = "از 1 مه، شرایط خدمات خود را به‌روزرسانی می‌کنیم؛ ادامه استفاده از خدمات به منزله پذیرش آن است."
+expected = "press_release"
+
+[[task.cases]]
+state = "سازمان حمل‌ونقل می‌گوید تعداد مسافران در فصل گذشته 12 درصد افزایش یافته است، که نخستین افزایش از سال 2019 است."
+expected = "news_report"
+
+[[task.cases]]
+state = "ستون مهمان: به‌عنوان پرستار سابق بخش اورژانس، می‌توانم بگویم لایحه نسبت پرسنل به بیمار به اندازه کافی پیش نمی‌رود."
+expected = "opinion"
+
+[[task.cases]]
+state = "اگر مهلت بودجه بدون توافق به پایان برسد، برای کشاورزان چه معنایی خواهد داشت، در پنج نمودار."
+expected = "analysis"
+
+[[task]]
+id = "veterinary_triage_fas"
+type = "score"
+
+[task.question]
+instructions = "How urgently does this pet need veterinary care?"
+criteria = [
+    "Emergency: needs immediate emergency veterinary care now",
+    "Same-day urgent visit",
+    "Appointment within a few days",
+    "Routine or monitor at home",
+]
+
+[[task.cases]]
+state = "سگم یک ساعت پیش یک تخته شکلات تلخ کامل را خورده است."
+expected = 0
+
+[[task.cases]]
+state = "گربه برای ادرار کردن زور می‌زند و ناله می‌کند؛ هیچ چیزی بیرون نمی‌آید."
+expected = 0
+
+[[task.cases]]
+state = "توله‌سگ در دو ساعت شش بار استفراغ کرده و وقتی او را بلند می‌کنم هیچ واکنشی نشان نمی‌دهد."
+expected = 0
+
+[[task.cases]]
+state = "20 دقیقه پیش ماشین به او زده؛ سرپا ایستاده اما تلوتلو می‌خورد."
+expected = 0
+
+[[task.cases]]
+state = "خرگوش از صبح امروز چیزی نخورده و قوز کرده به نظر می‌رسد."
+expected = 0
+
+[[task.cases]]
+state = "چشم سگم آن‌قدر ورم کرده که بسته شده و مدام با پنجه‌اش به آن می‌کشد."
+expected = 1
+
+[[task.cases]]
+state = "بریدگی کف پنجه‌اش هنوز از زیر باند کمی خون می‌آید."
+expected = 1
+
+[[task.cases]]
+state = "علائم عفونت گوش: یک هفته است که سرش را تکان می‌دهد و گوشش بوی بد می‌دهد."
+expected = 2
+
+[[task.cases]]
+state = "معاینه و واکسیناسیون سالانه برای یک گربه سه‌ساله سالم."
+expected = 3
+
+[[task.cases]]
+state = "سؤال درباره تغییر غذای توله‌سگ یازده‌ماهه به غذای سگ بالغ."
+expected = 3
+
+[[task.cases]]
+state = "نوبت معمول کوتاه کردن ناخن."
+expected = 3
+
+[[task.cases]]
+state = "محل بخیه و برش جراحی هفته گذشته قرمز است و کمی ترشح دارد."
+expected = 1
+
+[[task.cases]]
+state = "سگ دو هفته است که گاه‌به‌گاه لنگ می‌زند و بعد از پیاده‌روی طولانی بدتر می‌شود؛ هنوز خوب غذا می‌خورد."
+expected = 2
+
+[[task.cases]]
+state = "سگم از صدای رعد به‌شدت می‌ترسد — خوراکی جویدنی آرام‌بخش دارید؟"
+expected = 3
+
+[[task.cases]]
+state = "سگم یک ساعت پیش یک مشت انگور را از روی کانتر برداشته و خورده است."
+expected = 0
+
+[[task.cases]]
+state = "گربه در دو هفته اخیر به‌طور محسوسی بیشتر آب می‌خورد."
+expected = 2
+
+[[task.cases]]
+state = "توله‌سگ بعد از دو روز ماندن در پانسیون روزانه‌ی سگ‌ها ترشح سبز از بینی دارد و مدام عطسه می‌کند."
+expected = 2
+
+[[task.cases]]
+state = "شکم سگم باد کرده و مدام عق می‌زند، اما چیزی بالا نمی‌آید."
+expected = 0
+
+[[task.cases]]
+state = "در پارک سگ دیگری گازش گرفته و جای دندانش به شکل زخم سوراخی پیداست."
+expected = 1
+
+[[task.cases]]
+state = "موعد تمدید داروی پیشگیری از کک و کنه است — کدام را پیشنهاد می‌کنید؟"
+expected = 3
