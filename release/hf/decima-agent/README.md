@@ -25,24 +25,40 @@ the machine. It speaks TypeSafe's `/v1/systemone` wire format, so hooks written 
 Built by **A. M. Madani** ([@amyrmahdy](https://github.com/amyrmahdy)). The name: **DECI**sion **MA**king, and Decima
 is also the Roman Fate who decides.
 
-| On 130 hand-written agent decisions, held out from training | decima-base (no agent training) | **decima-agent** |
-|---|---:|---:|
-| Secret gate: real credential vs placeholder, env lookup, hash, docs example | 0.50 | **0.95** |
-| Bash gate: allow / ask / deny under a stated policy | 0.77 | **0.95** |
-| Command choice: the exact command among near misses (`reset --soft` vs `--hard`) | 0.33 | **0.93** |
-| Next action: run / look first / test first / small model / escalate | 0.14 | **0.93** |
-| Tool choice: Read, Grep, Glob, Edit, Write, Bash, WebFetch, WebSearch, ask the user | 0.50 | **0.83** |
-| Model tier router: haiku / sonnet / opus / other | 0.93 | **1.00** |
-| **All 130** | 0.58 | **0.90** |
+| On 130 hand-written agent decisions, held out from training | decima-base (no agent training) | decima-agent 2.0 | **decima-agent 2.1** |
+|---|---:|---:|---:|
+| Secret gate: real credential vs placeholder, env lookup, hash, docs example | 0.50 | 0.95 | **1.00** |
+| Bash gate: allow / ask / deny under a stated policy | 0.77 | 0.95 | **0.95** |
+| Read-only or not | — | 0.63 | **1.00** |
+| Command choice: the exact command among near misses (`reset --soft` vs `--hard`) | 0.33 | 0.93 | **0.93** |
+| Next action: run / look first / test first / small model / escalate | 0.14 | 0.93 | **0.93** |
+| Tool choice: Read, Grep, Glob, Edit, Write, Bash, WebFetch, WebSearch, ask the user | 0.50 | 0.83 | **0.92** |
+| Model tier router: haiku / sonnet / opus / other | 0.93 | 1.00 | **0.93** |
+| **All 130** | 0.58 | 0.90 | **0.93** |
 
 - **Gates that catch what matters.** At the recommended thresholds (block at p ≥ 0.8, ask at p ≥ 0.3), **0**
-  of the 9 real secrets in the hand-written set get through.
+  of the 9 real secrets in the hand-written set get through. Of the 9 dangerous commands, the model alone allows
+  one (a `DELETE FROM` on a production database); the bash gate's rules block it. Keep the rules first.
 - **Honest confidence.** Calibration error 0.035. 86 % of the decisions come with confidence ≥ 0.75, and those are
-  right 95 % of the time. Send the rest to a bigger model or to a person.
+  right 98 % of the time. Send the rest to a bigger model or to a person.
 - **Small and local.** int8 ONNX, 355 MB, about 50 ms on one CPU thread and about 20 ms on four (ARM cores of an NVIDIA GB10; short command, the question's options cached) per decision. States up to
   2,048 tokens, so a command plus recent turns and a diff fit.
 
-Numbers are measured on the shipped int8 runtime. On this set fp32 gives the same accuracy (0.90), with an ECE of 0.041.
+Numbers are measured on the shipped int8 runtime. On this set fp32 gives the same accuracy (0.93), with an ECE of 0.037.
+
+**What changed in 2.1 (2026-10-05).** Trained on what the first field logs showed: real agent commands look like
+`cd <dir> && python -c "…"`, call services on the same machine, and clean up with `rm -rf`. 2.0 allowed
+`rm -rf .loop/ data/` at 0.98 and denied a plain `curl 127.0.0.1:9000/health` at 0.96; 2.1 denies the first and
+asks (or allows, under a local-services policy) for the second, at 0.99. On 1,000 held-out commands of that shape it is
+right 99.9 % of the time, and on 600 subtle "is this read-only?" cases 100 %. General decision accuracy is unchanged
+(0.682 vs 0.681 on decima-base's five benchmark sets), and it plays Snake better: 32.4 apples a game, against about
+21 for 2.0.
+
+![decima-agent 2.1 playing Snake: one decision per move, on CPU](snake-agent-2.1.gif)
+
+The game above is a typical one (28 apples, the median of ten), not the best. It ends the way 2.1 still loses: at
+move 326 the game warns that going left leads into a closed pocket smaller than the snake, and the model goes left
+anyway, toward the apple. That is the next thing to train.
 
 ## Quickstart: hooks for Claude Code
 
@@ -82,7 +98,9 @@ The same model answers through `/v1/systemone` (choice, noul and score), so the 
 ## What it was trained on
 
 decima-agent is [decima-base](https://huggingface.co/amyrmahdy/decima-base) (mmBERT-base, 321M) fine-tuned on about
-160k agent decisions, with about 55k rows of decima-base's own training mix replayed so its general skills stay.
+160k agent decisions, with about 55k rows of decima-base's own training mix replayed so its general skills stay. 2.1
+continues from 2.0 on 225k rows (new key formats, subtle read-only commands, a larger command catalogue, real-shape
+shell commands, Snake trap states, and 70k of 2.0's rows) plus 40k replayed general rows.
 Every agent label is either exact or agreed by two models:
 
 - **Exact, from code:**
@@ -114,12 +132,13 @@ formats, file types, command families, tools and phrasings, and are reported sep
     below the ask threshold, so the model alone would let them through. The secret gate's regex rules cover the common
     vendor formats; keep secret scanning in CI.
   - On the held-out command test, where half the goals come from catalogue entries never seen in training, accuracy
-    is 0.65.
-- **"Is this read-only?" is the weakest single question** (0.63 on 8 hand-written cases).
+    is 0.70. On commands for tool families never seen in training (terraform, helm, gcloud, rsync, openssl), written
+    by an LLM, it is 0.26 with five options: do not trust it there.
+- **"Did the tests pass?"** is right on 6 of 8 hand-written cases.
 - **English agent data only.** The underlying model is multilingual, but the agent skills were trained and tested in
   English.
 - **General classification is better on decima-base.** Fine-tuning for agent decisions costs a little general accuracy
-  (0.703 → 0.681 on decima-base's five benchmark sets), and its general calibration is looser (ECE 0.10 vs 0.05).
+  (0.703 → 0.682 on decima-base's five benchmark sets), and its general calibration is looser (ECE 0.10 vs 0.05).
 - Small hand-written subsets (6–22 cases per decision) mean wide error bars; the procedural and LLM-written test sets
   are larger but are not real logs.
 

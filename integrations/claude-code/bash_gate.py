@@ -49,10 +49,12 @@ DENY = [
     (r"\b(curl|wget)\b[^|]*\|\s*(sudo\s+)?(ba|z|)sh\b", "piping a download into a shell"),
     (r"(^|[;&|]\s*)sudo\b", "needs root"),
     (r"\b(mkfs(\.\w+)?|dd\s+if=.*\bof=/dev/)", "writes a raw device"),
-    (r"\b(psql|mysql|mariadb|sqlite3|duckdb|clickhouse-client|cockroach\s+sql)\b.*\b(DROP\s+(TABLE|DATABASE|SCHEMA)|TRUNCATE)\b", "drops or truncates data"),
+    (r"\b(psql|mysql|mariadb|sqlite3|duckdb|clickhouse-client|cockroach\s+sql|mongosh?|redis-cli)\b.*(\b(DROP\s+(TABLE|DATABASE|SCHEMA|COLLECTION)|TRUNCATE|DELETE\s+FROM|dropDatabase|deleteMany|FLUSHALL|FLUSHDB)\b|\.drop\(\))",
+     "deletes or drops database data"),
     (r"\bgit\s+(reset\s+--hard|clean\s+-[a-zA-Z]*f)", "discards uncommitted work"),
     (r"(curl|wget)\b.*(-d|--data(-binary)?|-F|-T|--upload-file)\s+@?\S*(\.env|id_rsa|id_ed25519|\.aws|\.ssh)", "sends secrets off the machine"),
 ]
+DB_WRITE = re.compile(r"\b(psql|mysql|mariadb|sqlite3|duckdb|clickhouse-client|mongosh?|redis-cli)\b.*\b(UPDATE\s+\w+\s+SET|INSERT\s+INTO|ALTER\s+TABLE|GRANT|REVOKE|updateMany|insertOne|SET\s+\w+)\b", re.I)
 READ_ONLY = re.compile(r"^(ls|pwd|cat|head|tail|wc|grep|rg|find|tree|stat|file|which|echo|du|df|"
                        r"git\s+(status|log|diff|show|branch|blame|remote\s+-v|rev-parse|ls-files))\b")
 
@@ -171,6 +173,8 @@ for rx, why in DENY:
     if re.search(rx, cmd, re.I):
         by_rule("deny", f"blocked by rule: {why}.")
 precious = next((t for t in map(deletes_precious, parts) if t), None)
+if DB_WRITE.search(cmd):
+    by_rule("ask", "writes to a database")
 if plainly_read_only(parts):
     by_rule("allow", "read-only by rule")
 if local_get(parts):
