@@ -85,6 +85,9 @@ def dec_row(r, config, origin):
 def build_agent(out):
     o = out / "decima-agent-decisions"
     stats = {}
+    from teacher.decontam_agent import Decontam
+    dc = Decontam(ROOT)                                       # rows that copy a hand-written test case stay out
+    dropped = Counter()
     for cfg, parts in AGENT.items():
         split_rows = {}
         for split in ("train", "test"):
@@ -95,6 +98,9 @@ def build_agent(out):
                     continue
                 for r in jl(p):
                     if tasks and r.get("task") not in tasks:
+                        continue
+                    if split == "train" and dc.hit(r):
+                        dropped[cfg] += 1
                         continue
                     k = (r["state"], r["question"], tuple(r["choices"]))
                     if r["id"] in seen or k in seen:
@@ -111,7 +117,21 @@ def build_agent(out):
         stats[cfg] = {s: len(v) for s, v in split_rows.items()} | {
             "origin": dict(Counter(r["origin"] for r in split_rows["train"] + split_rows["test"]))}
 
-    from bench.agent_eval import GOLD, decode  # hand-written set, decoded to plain text
+    print("[agent] train rows dropped as copies of a test case:", dict(dropped))
+    from bench.agent_eval import GOLD, decode  # hand-written sets, decoded to plain text
+    fresh = tomllib.loads(decode((ROOT / "release/agent/agentbench-fresh.toml").read_text()))
+    frows = []
+    for t in fresh["task"]:
+        crit = t["question"].get("criteria")
+        keys = ["yes", "no"] if t["type"] == "noul" else list(crit)
+        for i, c in enumerate(t["cases"]):
+            exp = c["expected"]
+            exp = "yes" if exp is True else "no" if exp is False else exp
+            frows.append({"id": f"{t['id']}-{i}", "task": t["id"], "type": t["type"], "state": c["state"],
+                          "instructions": t["question"]["instructions"], "criteria": json.dumps(crit) if crit else None,
+                          "choices": keys, "expected": exp, "gold": keys.index(exp)})
+    write(frows, o / "agentbench_fresh" / "test.parquet")
+    stats["agentbench_fresh"] = {"test": len(frows)}
     data = tomllib.loads(decode(GOLD.read_text()))
     rows = []
     for t in data["task"]:

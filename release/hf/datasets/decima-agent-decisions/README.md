@@ -63,6 +63,9 @@ configs:
 - config_name: agentbench
   data_files:
   - {split: test, path: agentbench/test.parquet}
+- config_name: agentbench_fresh
+  data_files:
+  - {split: test, path: agentbench_fresh/test.parquet}
 ---
 
 # Decima Agent Decisions
@@ -88,14 +91,15 @@ Code: [github.com/amyrmahdy/decima](https://github.com/amyrmahdy/decima).
 | config | train | test | what the state is → what is decided |
 |---|---:|---:|---|
 | `secret` | 126,111 | 2,111 | a Write/Edit (file, new text, often a diff in a long agent context) → is a live credential written? |
-| `bash` | 77,867 | 2,513 | a proposed shell command, with a policy → allow / ask / deny, and "does it exfiltrate / delete / need root?" |
-| `readonly` | 14,351 | 600 | a command → does it leave every file, setting and remote unchanged? |
-| `tool` | 26,247 | 1,503 | a goal → Read, Glob, Grep, Edit, Write, Bash, WebFetch, WebSearch, Task, TodoWrite, AskUserQuestion or an MCP tool |
-| `command` | 29,467 | 1,637 | a goal → the exact command among near misses (`git reset --soft` vs `--hard`) |
-| `next_step` | 74,581 | 2,258 | a trajectory or a proposed step → the next action |
+| `bash` | 77,379 | 2,513 | a proposed shell command, with a policy → allow / ask / deny, and "does it exfiltrate / delete / need root?" |
+| `readonly` | 13,823 | 600 | a command → does it leave every file, setting and remote unchanged? |
+| `tool` | 26,246 | 1,503 | a goal → Read, Glob, Grep, Edit, Write, Bash, WebFetch, WebSearch, Task, TodoWrite, AskUserQuestion or an MCP tool |
+| `command` | 33,810 | 1,637 | a goal → the exact command among near misses (`git reset --soft` vs `--hard`) |
+| `next_step` | 74,246 | 2,258 | a trajectory or a proposed step → the next action |
 | `router` | 11,442 | 768 | a coding task → haiku / sonnet / opus-class tier, or a non-coding model |
 | `outcome` | 39,035 | 1,205 | test output or an ops alert → did the tests pass? does a human need to step in? |
-| `agentbench` | — | 130 | hand-written, held out from all of the above (see below) |
+| `agentbench` | — | 130 | hand-written (see the correction below) |
+| `agentbench_fresh` | — | 40 | hand-written after the fact; no exact or near copy in any training data |
 
 About a third of the states are wrapped in a long agent context (recent turns, a file list, the last diff), so the
 decisive line has to be found in 0.5–2k tokens.
@@ -150,11 +154,19 @@ URLs), fake-value types (certificates), file types (Terraform, INI), command fam
 phrasings, and LLM domains (terraform, helm, gcloud, rsync, openssl). Train rows whose state also appears in test were
 removed. Test accuracy therefore measures generalisation to things never seen in training.
 
-### agentbench: 130 hand-written cases
+### agentbench: 130 hand-written cases, and a correction
 
-Written separately from every generator, in the states a real hook sends: secret gate 20, bash gate 22, read-only 8,
-next action 14, tier router 15, tests passed 8, ops intervention 10, tool choice 12, command choice 15, next step 6.
-Credential-shaped values in it are fake. decima-agent scores 0.90 on it, decima-base (no agent training) 0.58.
+Written in the states a real hook sends: secret gate 20, bash gate 22, read-only 8, next action 14, tier router 15, tests
+passed 8, ops intervention 10, tool choice 12, command choice 15, next step 6. Credential-shaped values in it are fake.
+
+**Correction (2026-10-06).** This set is not fully held out from the training data of decima-agent 2.0 and 2.1: our
+read-only templates were near-copies of its 8 read-only cases, and LLM-written rows contained some of its bash-gate
+commands verbatim. This release of the dataset drops every training row that copies a test case exactly or nearly
+(1,693 rows; [`teacher/decontam_agent.py`](https://github.com/amyrmahdy/decima/blob/main/teacher/decontam_agent.py)), but
+the published models were trained before that.
+
+**`agentbench_fresh`** is the honest measurement: 40 cases (read-only 12, bash gate 18, secret gate 10) written after the
+fact and checked against all training data. decima-base 0.60, decima-agent 2.0 0.83, decima-agent 2.1 0.83.
 
 ## Limitations
 

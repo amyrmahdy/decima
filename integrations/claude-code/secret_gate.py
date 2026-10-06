@@ -18,7 +18,10 @@ DENY_AT, ASK_AT = 0.8, 0.3
 CHUNK, OVERLAP = 1500, 200
 RULES = [r"sk-(proj-)?[A-Za-z0-9_-]{32,}", r"sk_live_[A-Za-z0-9]{20,}", r"AKIA[0-9A-Z]{16}", r"ghp_[A-Za-z0-9]{36}",
          r"github_pat_[A-Za-z0-9_]{50,}", r"xox[baprs]-[0-9A-Za-z-]{20,}", r"AIza[0-9A-Za-z_-]{35}", r"SG\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}",
-         r"-----BEGIN [A-Z ]*PRIVATE KEY-----", r"https://hooks\.slack\.com/services/T[A-Z0-9]+/B[A-Z0-9]+/[A-Za-z0-9]+"]
+         r"-----BEGIN [A-Z ]*PRIVATE KEY-----", r"https://hooks\.slack\.com/services/T[A-Z0-9]+/B[A-Z0-9]+/[A-Za-z0-9]+",
+         r"\bkey-[0-9a-f]{32}\b", r"\b\d{8,10}:AA[A-Za-z0-9_-]{33}\b", r"https://(ptb\.|canary\.)?discord(app)?\.com/api/webhooks/\d+/[A-Za-z0-9_-]{60,}",
+         r"glpat-[A-Za-z0-9_-]{20}", r"\bnpm_[A-Za-z0-9]{36}\b", r"\bhf_[A-Za-z0-9]{34}\b", r"sk-ant-api03-[A-Za-z0-9_-]{80,}",
+         r"\b(mongodb(\+srv)?|postgres(ql)?|mysql|redis|amqp)://[^:/\s\"']+:(?!(?:[Pp]ass(word)?|PASSWORD|[Cc]hangeme|[Ss]ecret|[Ee]xample|x+|X+|\*+|<[^>]*>|\$\{?\w+\}?)@)[^@/\s\"']{4,}@"]
 EXAMPLES = ("AKIAIOSFODNN7EXAMPLE", "EXAMPLEKEY", "sk_test_")
 QUESTION = {"type": "noul", "instructions": "Does `new_text` contain a real password, API key, token or connection string with credentials, not a placeholder or env lookup?"}
 

@@ -15,7 +15,9 @@ The name: **DECI**sion **MA**king — and Decima is also the Roman Fate who deci
 
 **2.1 (2026-10-06):**
 - **decima-agent 2.1** ([v2.1](https://huggingface.co/amyrmahdy/decima-agent/tree/v2.1)) is trained on field logs: real-shape
-  shell commands, local services, recursive deletes. Hand-written agent decisions: 0.90 → 0.93.
+  shell commands, local services, recursive deletes. **Correction:** part of the 130-case hand-written set had near-copies in
+  the training data, so its 0.90 → 0.93 overstates the gain. On 40 fresh cases with no copies in training, 2.0 and 2.1 both
+  score 0.83 (decima-base: 0.60). Training mixes now drop any row that copies a test case.
 - **Long questions no longer tie.** When "question + option" ran past the 64-token choice window, the options were cut off,
   could become identical, and the answer was exactly 0.5. Models that predate the fix keep the rendering they were trained
   with, except in that case; every other decision is unchanged (checked on 4,644 typed-decision items). Models trained from
