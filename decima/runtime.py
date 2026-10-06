@@ -18,6 +18,7 @@ from pathlib import Path
 import numpy as np
 
 from .normalize import normalize
+from .render import choice_texts
 from .types import Decision, Question
 
 
@@ -60,7 +61,8 @@ class DecimaOnnx:
         if key not in self._cache:
             if len(self._cache) > 256:
                 self._cache.clear()
-            texts = [self.cfg.get("choice_prefix", "passage: ") + normalize(f"{qt} {c}".strip(), q.lang) for c in q.choices]
+            texts = choice_texts(self.tok, qt, q.choices, q.lang, self.cfg.get("choice_prefix", "passage: "), self.cfg["max_choice_tokens"],
+                                 fit=self.cfg.get("choice_fit", False))
             self._cache[key] = self.encode(texts, self.cfg["max_choice_tokens"])
         return self._cache[key]
 

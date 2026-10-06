@@ -1,6 +1,6 @@
 [project]
 name = "decima"
-version = "2.0.0"
+version = "2.1.0"
 description = "Decima — a small, calibrated, multilingual decision model: situation + question + your options → probabilities. CPU-first."
 readme = "README.md"
 license = "Apache-2.0"

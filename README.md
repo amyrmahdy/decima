@@ -13,6 +13,16 @@ The name: **DECI**sion **MA**king — and Decima is also the Roman Fate who deci
 | [decima-base](https://huggingface.co/amyrmahdy/decima-base) | 321M | general decisions, multilingual | 0.673 |
 | [decima-small](https://huggingface.co/amyrmahdy/decima-small) | 122M | the smallest CPUs and the browser | 0.616 |
 
+**2.1 (2026-10-06):**
+- **decima-agent 2.1** ([v2.1](https://huggingface.co/amyrmahdy/decima-agent/tree/v2.1)) is trained on field logs: real-shape
+  shell commands, local services, recursive deletes. Hand-written agent decisions: 0.90 → 0.93.
+- **Long questions no longer tie.** When "question + option" ran past the 64-token choice window, the options were cut off,
+  could become identical, and the answer was exactly 0.5. Models that predate the fix keep the rendering they were trained
+  with, except in that case; every other decision is unchanged (checked on 4,644 typed-decision items). Models trained from
+  now on keep every option whole ([`decima/render.py`](decima/render.py)).
+- Decima also runs in [Ollaya](https://ollaya.dev/library/decima) (0.11.0), a Rust runtime that matches this code
+  decision for decision.
+
 **2.0 (2026-10-04):**
 - **decima-base** (mmBERT-base) is a new generation.
 - **decima-agent**, fine-tuned from it, is the decision layer for agent loops: 0.90 on 130 hand-written agent decisions

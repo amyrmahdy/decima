@@ -90,8 +90,8 @@ class Collator:
         choices, owner, targets, gold, kinds = [], [], [], [], []
         max_n = max(len(e["choices"]) for e in batch)
         for b, e in enumerate(batch):
-            for c in e["choices"]:
-                choices.append(self.cfg.choice_of(e["question"], c, e["choice_lang"]))
+            for c in self.cfg.choices_of(self.tok, e["question"], e["choices"], e["choice_lang"]):
+                choices.append(c)
                 owner.append(b)
             p = list(e["probs"]) + [0.0] * (max_n - len(e["choices"]))
             targets.append(p); gold.append(e["gold"]); kinds.append(e["kind"])

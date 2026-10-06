@@ -91,6 +91,9 @@ def main() -> None:
     sets = {"gold": list(gold_items()) + list(jsonl_items("release/agent/agentbench-gold-dynamic.jsonl"))}
     if Path("data/agent/proc-test.jsonl").exists():
         sets["proc"] = list(jsonl_items("data/agent/proc-test.jsonl"))[: a.max_proc]
+    kg = sorted(Path("data/kg").glob("*-test.jsonl"))       # knowledge-graph judgments (teacher/kg_proc.py, kg_llm.py)
+    if kg:
+        sets["kg"] = [x for p in kg for x in jsonl_items(p)][: 3 * a.max_proc]
     for name in ("readonly", "shell"):                     # round-2 procedural sets (shell: cd chains, rm -rf of data, local services)
         if Path(f"data/agent/proc-{name}-test.jsonl").exists():
             sets[name] = list(jsonl_items(f"data/agent/proc-{name}-test.jsonl"))[: a.max_proc]

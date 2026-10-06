@@ -141,7 +141,7 @@ def main() -> None:
 
     shape = dict(scorer_layers=args.scorer_layers, max_state_tokens=args.max_state_tokens, max_choice_tokens=args.max_choice_tokens,
                  question_in_state=args.question_in_state, question_in_choices=not args.no_question_in_choices,
-                 state_prefix=args.state_prefix, choice_prefix=args.choice_prefix)
+                 state_prefix=args.state_prefix, choice_prefix=args.choice_prefix, choice_fit=True)
     if args.init:
         model = DecimaModel.load(args.init, args.device)
         for k, v in shape.items():

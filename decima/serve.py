@@ -65,7 +65,7 @@ def make_handler(model: DecimaOnnx, name: str):
             if self.path in ("/", ""):
                 return self._send(200, "Decima is running", "text/plain; charset=utf-8")
             if self.path == "/v1/models":
-                return self._send(200, {"models": [{"name": name, "description": "Decima-small: open Jev-style decision model (122M, CPU)",
+                return self._send(200, {"models": [{"name": name, "description": f"Decima: open Jev-style decision model, CPU (state up to {model.cfg.get('max_state_tokens', 512) if isinstance(getattr(model, 'cfg', None), dict) else 512} tokens)",
                                                     "release_date": time.strftime("%Y-%m-%d")}]})
             self._err(404, "NOT_FOUND", f"no endpoint {self.path}")
 

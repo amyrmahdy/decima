@@ -41,6 +41,7 @@ import torch.nn.functional as F
 from safetensors.torch import load_file, save_file
 
 from .normalize import normalize
+from .render import choice_texts
 from .types import Decision, Question
 
 BACKBONE = "intfloat/multilingual-e5-small"
@@ -58,6 +59,7 @@ class DecimaConfig:
     temperature: float = 1.0          # post-hoc calibration, set by train/calibrate
     question_in_state: bool = False   # V0: False (checkpoints without the key load as V0)
     question_in_choices: bool = True
+    choice_fit: bool = False          # True: options always kept whole in the choice window (decima/render.py); set by train.py
     state_prefix: str = "query: "     # e5's training prefixes; other backbones may want ""
     choice_prefix: str = "passage: "
 
@@ -66,6 +68,11 @@ class DecimaConfig:
 
     def choice_of(self, question: str, choice: str, lang: str) -> str:
         return choice_text(question if self.question_in_choices else "", choice, lang, self.choice_prefix)
+
+    def choices_of(self, tok, question: str, choices: list[str], lang: str) -> list[str]:
+        """All options of one question, each kept whole within max_choice_tokens (decima/render.py)."""
+        return choice_texts(tok, question if self.question_in_choices else "", choices, lang, self.choice_prefix, self.max_choice_tokens,
+                            fit=self.choice_fit)
 
 
 class Attention(nn.Module):
@@ -288,7 +295,7 @@ class Decima:
         if key not in self._cache:
             if len(self._cache) > 256:
                 self._cache.clear()
-            self._cache[key] = self._encode([self.cfg.choice_of(q.text, c, q.lang) for c in q.choices], self.cfg.max_choice_tokens)
+            self._cache[key] = self._encode(self.cfg.choices_of(self.tok, q.text, q.choices, q.lang), self.cfg.max_choice_tokens)
         return self._cache[key]
 
     @torch.no_grad()
