@@ -24,6 +24,21 @@ your system      takes the action
 | `verify` | is this proposition true?               | P(yes), P(no)                         |
 | `rank`   | score each option independently         | one probability per choice            |
 
+### Many questions, long documents, abstention
+
+```python
+from decima import Decima, Question
+d = Decima.from_pretrained("amyrmahdy/decima-small")
+d.decide_many(state, [q1, q2, q3])                 # batched; the same numbers as d.decide one by one
+d.decide_batch([s1, s2, s3], q)                    # one question, many states
+d.decide(contract, q, long="chunk")                # over-long state: overlapping windows, meta["window"] says which decided
+d.decide(state, q, min_confidence=0.7).answer      # None when the top probability is under 0.7
+```
+
+The server takes the same options per request (`"long": "chunk"`, `"aggregate"`, `"min_confidence"`); without
+them it behaves as before. What chunking can and cannot do, and the latency numbers:
+[docs/BENCH-batching.md](docs/BENCH-batching.md).
+
 ## Decima Bench
 
 There is no standard benchmark for decision models, so this one is part of the product.

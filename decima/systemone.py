@@ -85,27 +85,45 @@ def to_question(qid: str, spec: dict, lang: str = "en") -> tuple[str, Question, 
     raise SystemOneError(f"questions.{qid}: unknown type {t!r}", issues=[{"loc": ["body", "questions", qid, "type"], "msg": "must be choice, score or noul", "type": "literal_error"}])
 
 
-def system_one(model, state: Any, questions: dict, lang: str = "en") -> dict:
-    """Answer TypeSafe-style questions about one state. Returns the `answers` object."""
+def system_one(model, state: Any, questions: dict, lang: str = "en", long: str | None = None, aggregate: str = "max",
+               min_confidence: float | None = None) -> dict:
+    """Answer TypeSafe-style questions about one state. Returns the `answers` object.
+
+    All questions go through `model.decide_many` (batched, same numbers as one by one). Opt-in extras, absent
+    from the answers unless asked for: `long="chunk"` decides an over-long state window by window
+    (decima/longdoc.py) and adds "window": {"index", "start", "end", "count"} (character span of the state)
+    to answers that needed more than one window; `min_confidence` adds "abstain": true / false, comparing it
+    with the answer's TypeSafe confidence (for noul, |2·noul − 1|)."""
     if not isinstance(questions, dict) or not (1 <= len(questions) <= MAX_QUESTIONS):
         raise SystemOneError("questions: 1–256 questions required", issues=[{"loc": ["body", "questions"], "msg": "1-256 questions", "type": "value_error"}])
     if isinstance(state, (bool, int, float)) or state is None:
         raise SystemOneError("state: must be a string, object or array", issues=[{"loc": ["body", "state"], "msg": "must be a string, object or array", "type": "state_type"}])
     s = state if isinstance(state, str) else json.dumps(state, ensure_ascii=False)
+    parsed = [(qid, *to_question(qid, spec, lang)) for qid, spec in questions.items()]
+    if hasattr(model, "decide_many"):
+        decisions = model.decide_many(s, [q for _, _, q, _ in parsed], long=long, aggregate=aggregate)
+    else:
+        if long is not None:
+            raise SystemOneError(f"{type(model).__name__} cannot chunk long states")
+        decisions = [model.decide(s, q) for _, _, q, _ in parsed]
     answers = {}
-    for qid, spec in questions.items():
-        t, q, keys = to_question(qid, spec, lang)
-        lp = model.decide_logits(s, q)
-        p = np.exp(lp - lp.max()); p = (p / p.sum()).tolist()
+    for (qid, t, _, keys), d in zip(parsed, decisions):
+        p = d.probs
         if t == "choice":
             i = int(np.argmax(p))
-            answers[qid] = {"type": "choice", "choice": keys[i], "confidence": _r(_confidence(p)),
-                            "probabilities": {k: _r(v) for k, v in zip(keys, p)}}
+            a = {"type": "choice", "choice": keys[i], "confidence": _r(_confidence(p)),
+                 "probabilities": {k: _r(v) for k, v in zip(keys, p)}}
         elif t == "score":
-            answers[qid] = {"type": "score", "score": _r(sum(i * v for i, v in enumerate(p))), "confidence": _r(_confidence(p)),
-                            "legend": {str(i): lv for i, lv in enumerate(keys)}, "probabilities": {str(i): _r(v) for i, v in enumerate(p)}}
+            a = {"type": "score", "score": _r(sum(i * v for i, v in enumerate(p))), "confidence": _r(_confidence(p)),
+                 "legend": {str(i): lv for i, lv in enumerate(keys)}, "probabilities": {str(i): _r(v) for i, v in enumerate(p)}}
         else:
-            answers[qid] = {"type": "noul", "noul": _r(p[0])}
+            a = {"type": "noul", "noul": _r(p[0])}
+        if "windows" in d.meta:
+            lo, hi = d.meta["windows"][d.meta["window"]]
+            a["window"] = {"index": d.meta["window"], "start": lo, "end": hi, "count": len(d.meta["windows"])}
+        if min_confidence is not None:
+            a["abstain"] = _confidence(p) < min_confidence
+        answers[qid] = a
     return answers
 
 

@@ -1,0 +1,29 @@
+# Two Decima servers on CPU: general decisions and agent gates.
+#   docker compose up -d
+#   curl -s localhost:11436/v1/systemone -H 'Content-Type: application/json' \
+#     -d '{"state": "My card was charged twice", "questions": {"refund": {"type": "noul", "instructions": "The customer wants a refund."}}}'
+services:
+  decima-base:
+    build: .
+    ports: ["11436:11436"]
+    environment:
+      DECIMA_MODEL: decima-base
+      DECIMA_THREADS: "2"
+      # DECIMA_API_KEY: change-me           # require "Authorization: Bearer change-me"
+    volumes:
+      - hf-cache:/root/.cache/huggingface   # the model is downloaded once
+    restart: unless-stopped
+
+  decima-agent:
+    build: .
+    ports: ["11437:11436"]
+    environment:
+      DECIMA_MODEL: decima-agent
+      DECIMA_THREADS: "2"
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+      # - ./export/agent3-int8:/model:ro     # or mount a local export and set DECIMA_MODEL=/model, DECIMA_NAME=decima-agent
+    restart: unless-stopped
+
+volumes:
+  hf-cache:

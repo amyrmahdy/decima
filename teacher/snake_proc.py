@@ -119,6 +119,17 @@ def render(f, rng):
     return "\n".join(lines), vocab, agent, food
 
 
+def conflict(snake, apple):
+    """The apple pulls one way and that way is a closed pocket: the state decima-agent 2.1 still dies in (move 326 of
+    its Snake GIF: "left leads into a closed pocket of 5 cells, smaller than your 31-cell body", and it went left)."""
+    hx, hy = snake[0]
+    for d in G.DIRS.values():
+        closer = abs(hx + d[0] - apple[0]) + abs(hy + d[1] - apple[1]) < abs(hx - apple[0]) + abs(hy - apple[1])
+        if closer and G.pocket(snake, apple, d) is not None:
+            return True
+    return False
+
+
 def rows_for(snake, apple, rng, i):
     f = features(snake, apple)
     u = utility(snake, apple)
@@ -151,6 +162,7 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=60000)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--conflict", action="store_true", help="only states where the apple's direction is a closed pocket")
     a = ap.parse_args()
     rng = random.Random(f"snake-room:{a.seed}")
     out = Path(a.out); out.parent.mkdir(parents=True, exist_ok=True)
@@ -165,7 +177,8 @@ def main() -> None:
             while apple in snake:
                 apple = (g.randrange(G.N), g.randrange(G.N))
             for t in range(3000):
-                if rng.random() < 0.35 or any(G.pocket(snake, apple, d) is not None for d in G.DIRS.values()):
+                if (conflict(snake, apple) if a.conflict else
+                        rng.random() < 0.35 or any(G.pocket(snake, apple, d) is not None for d in G.DIRS.values())):
                     for r in rows_for(snake, apple, rng, n):
                         fo.write(json.dumps(r) + "\n"); n += 1
                 mv = G.oracle(snake, apple)

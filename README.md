@@ -1,135 +1,144 @@
-# Decima — open, CPU-sized Jev-style decision models
+# Decima
 
-**Situation + question + your options → calibrated probabilities.**
-Like TypeSafe's Jev, Decima is a *System One* model: typed decisions with probabilities instead of generated
-text. Unlike Jev, it is open (Apache-2.0), runs on a CPU, and speaks the same `/v1/systemone` API.
-
-Built by **A. M. Madani** ([@amyrmahdy](https://github.com/amyrmahdy) · [amyrmahdy.github.io](https://amyrmahdy.github.io)).
-The name: **DECI**sion **MA**king — and Decima is also the Roman Fate who decides.
-
-| Model | Size | For | jabr v2 (49 tasks) |
-|---|---|---|---:|
-| [decima-agent](https://huggingface.co/amyrmahdy/decima-agent) | 321M | coding-agent hooks: secret gate, bash gate, tool and command choice, model routing | 0.675 |
-| [decima-base](https://huggingface.co/amyrmahdy/decima-base) | 321M | general decisions, multilingual | 0.673 |
-| [decima-small](https://huggingface.co/amyrmahdy/decima-small) | 122M | the smallest CPUs and the browser | 0.616 |
-
-**2.1 (2026-10-06):**
-- **decima-agent 2.1** ([v2.1](https://huggingface.co/amyrmahdy/decima-agent/tree/v2.1)) is trained on field logs: real-shape
-  shell commands, local services, recursive deletes. **Correction:** part of the 130-case hand-written set had near-copies in
-  the training data, so its 0.90 → 0.93 overstates the gain. On 40 fresh cases with no copies in training, 2.0 and 2.1 both
-  score 0.83 (decima-base: 0.60). Training mixes now drop any row that copies a test case.
-- **Long questions no longer tie.** When "question + option" ran past the 64-token choice window, the options were cut off,
-  could become identical, and the answer was exactly 0.5. Models that predate the fix keep the rendering they were trained
-  with, except in that case; every other decision is unchanged (checked on 4,644 typed-decision items). Models trained from
-  now on keep every option whole ([`decima/render.py`](decima/render.py)).
-- Decima also runs in [Ollaya](https://ollaya.dev/library/decima) (0.11.0), a Rust runtime that matches this code
-  decision for decision.
-
-**2.0 (2026-10-04):**
-- **decima-base** (mmBERT-base) is a new generation.
-- **decima-agent**, fine-tuned from it, is the decision layer for agent loops: 0.90 on 130 hand-written agent decisions
-  (decima-base without agent training: 0.58).
-- [**Claude Code hooks**](integrations/claude-code) run locally, put rules first and fail closed.
-- A [**Persian edition**](release/jabr-fa) of the jabr benchmark.
-
-**Open data:**
-
-| Dataset | Rows | What |
-|---|---:|---|
-| [decima-agent-decisions](https://huggingface.co/datasets/amyrmahdy/decima-agent-decisions) | 412k | secret gate, bash gate, read-only, tool and command choice, next step, model tier; held-out test splits and 130 hand-written cases |
-| [decima-system-one-tasks](https://huggingface.co/datasets/amyrmahdy/decima-system-one-tasks) | 138k | typed decisions (`noul`, `choice`, `score`) in the Jev/TypeSafe schema, 15k tasks, nine languages |
-| [decima-game-decisions](https://huggingface.co/datasets/amyrmahdy/decima-game-decisions) | 333k | grid, side-scroller and Snake decisions with exact labels |
-| [jabr-v2-persian](https://huggingface.co/datasets/amyrmahdy/jabr-v2-persian) | 845 | the jabr classifier benchmark v2 in Persian, reviewed case by case |
-| [decima-synthetic-decisions](https://huggingface.co/datasets/amyrmahdy/decima-synthetic-decisions) | 190k | decima-small's synthetic decisions |
-
-Decima does not write text. It decides: routing, triage, intent, classification, verification,
-ranking — any bounded choice your software needs to make, with a confidence it can threshold.
-
-- **decima-small: 122M parameters**, ONNX int8, **~20 ms** per decision on one laptop CPU core (4 options, short input)
-- **Options in plain text**, given at call time; evaluated in 20 languages (weakest: Swahili, Hindi)
-- **Order-proof** — shuffling the options never changes the answer (0 %; the four other open decision models we compared: 10–27 %)
-- **Well calibrated as shipped** — lowest calibration error as shipped in every pairwise comparison we ran
-  (ECE 0.058–0.064 vs 0.117–0.370)
-
-[Model on Hugging Face](https://huggingface.co/amyrmahdy/decima-small) · [Technical report](docs/TECHNICAL-REPORT.md) · [Evaluation & claims audit](docs/EVAL.md) · [x86 benchmark](docs/BENCH-x86.md) · [Playground](https://huggingface.co/spaces/amyrmahdy/decima-playground) · [Predictions dataset](https://huggingface.co/datasets/amyrmahdy/decima-bench-predictions) · [Synthetic training data](https://huggingface.co/datasets/amyrmahdy/decima-synthetic-decisions)
-
-![Shuffle the options: Decima's answer never changes](release/figures/option_order_flips.png)
-
-## Install
+**Small local judges for LLM systems.** Give Decima a situation, a question and your options; it returns calibrated
+probabilities in milliseconds, on a CPU, with nothing leaving your machine.
 
 ```bash
-pip install "git+https://github.com/amyrmahdy/decima"      # from source (tag v2.0.0)
+pip install decima-ai
 ```
 
-The runtime (`decima.Decima`) imports no PyTorch and needs no GPU — ONNX Runtime, numpy and a
-tokenizer. The package as it stands still installs the training stack as well (torch,
-sentence-transformers, datasets), because runtime and training share one `pyproject.toml`. A
-runtime-only package without the training dependencies is planned.
+```console
+$ decima "Your API has been returning 500 errors for an hour and our checkout is down!" --preset triage
+decima-base · triage
+category   technical                         ███████████████████▌ 0.97
+urgency    2 Now: the writer or their busi…  ██████████████████▌  0.92
+sentiment  negative                          ███████████████████▍ 0.97
 
-## Use
+$ decima "rm -rf ~/projects/app" --preset agent-gate
+decima-agent · agent-gate
+gate       deny   ███████████████████▋ 0.98
+read_only  no     ▎                    0.01  p(yes)
 
-```python
-from decima import Decima, Question
-
-decima = Decima.from_pretrained("amyrmahdy/decima-small")   # int8 ONNX, ~140 MB, one CPU thread
-
-# outputs below are real (Decima-small int8, export/v1i-int8)
-q = Question("Which team should handle this request?",
-             ["billing", "technical support", "sales", "account security"])
-
-decima.decide("Someone logged into my account from another country.", q)
-# → {'billing': 0.004, 'technical support': 0.031, 'sales': 0.001, 'account security': 0.964}
-
-decima.decide("یک نفر از کشور دیگری وارد حسابم شده است.", q)   # the same message in Persian
-# → {'billing': 0.012, 'technical support': 0.024, 'sales': 0.002, 'account security': 0.962}
+$ decima "I was charged twice for my subscription" --question "Which team?" --choices billing,technical,sales
+decima-base · 81 ms
+answer  billing    ██████████████████▉  0.94
+        technical  ▉                    0.05
+        sales      ▏                    0.01
 ```
 
-Four question kinds: `choose` (one of N) · `score` (ordered levels) · `verify` (yes/no) · `rank`
-(independent probability per option). State, question and options may be in different languages.
-`Question(..., lang="fa")` (or `"ar"`) turns on Persian/Arabic text normalisation; for the Persian
-example above the output is the same with or without it.
+(Outputs shortened to the top answer per question; the CLI also prints the runners-up.)
 
-### Jev / TypeSafe-compatible API
+Decima is the judge, not the writer. Put it next to your LLM, agent or extraction pipeline to decide what is safe, what
+is true, where a request should go, and when the expensive model is really needed. It speaks TypeSafe's
+`/v1/systemone` format (`choice`, `noul`, `score`), so code written for Jev works after a one-line change, and it ships
+in [Ollaya](https://ollaya.dev/library/decima).
 
-Decima speaks TypeSafe's System One wire format (`choice`, `score`, `noul`), so code written for Jev runs on
-a local Decima:
+- **Local and cheap:** int8 ONNX, about 20–50 ms per decision on one CPU core. No GPU, no API key, no data leaves.
+- **Calibrated:** 0.8 means right about 80 % of the time, so you can threshold, abstain, or escalate to a bigger model.
+- **Order-proof:** shuffling the options never changes the answer (0 %; other open models in our tests: 10–27 %).
+- **Your options, at call time:** any labels, any number. Multilingual backbone; evaluated in 20 languages.
+
+## Use it
+
+**Command line**
 
 ```bash
-python -m decima.serve                     # http://127.0.0.1:11436 · POST /v1/systemone, GET /v1/models
-export TYPESAFE_BASE_URL=http://127.0.0.1:11436 TYPESAFE_API_KEY=local TYPESAFE_DEFAULT_MODEL=decima-small
+decima "I was charged twice for my subscription" --question "Which team?" --choices billing,technical,sales
+decima --file ticket.txt --preset triage --json
+decima presets                                   # triage, guardrails, moderation, routing, pii, agent-gate, kg-judge
 ```
+
+**Python**
 
 ```python
-from typesafe_sdk import TypeSafeClient, Choice, Noul, Score
-client = TypeSafeClient(api_key="local", base_url="http://127.0.0.1:11436")
-r = client.system_one("Someone logged into my account from another country and changed my password.", {
-    "team": Choice(instructions="Which team should handle this?",
-                   criteria={"billing": "charges and refunds", "tech": "bugs and errors", "security": "account takeover"}),
-    "urgent": Noul(instructions="The customer needs help within the hour."),
-    "anger": Score(instructions="How upset is the customer?", criteria=["calm", "annoyed", "furious"]),
-}, model="decima-small")
+from decima import Router
+
+router = Router()                                  # downloads the int8 model on first use
+answer = router.predict(
+    {"message": "Someone logged into my account from another country and changed my password."},
+    {"team":   {"type": "choice", "instructions": "Which team should handle this?",
+                "criteria": {"billing": "charges and refunds", "tech": "bugs and errors", "security": "account takeover"}},
+     "urgent": {"type": "noul", "instructions": "The customer needs help within the hour."}},
+)
+print(answer["answers"]["team"]["choice"], answer["answers"]["urgent"]["noul"])     # security 0.72
 ```
 
-Or in-process, without a server: `from decima.systemone import system_one`.
+**HTTP server** (TypeSafe-compatible, binds to 127.0.0.1)
 
-## How it compares
+```bash
+decima serve --model decima-agent --port 11436
+```
 
-| | Decima-small | Kev-0.5B | Kev-0.8B | Laya | Laya-multilingual |
+The official `typesafe-sdk` works against it unchanged: `TypeSafeClient(api_key="local", base_url="http://127.0.0.1:11436")`.
+
+**Integrations:** [Claude Code hooks](integrations/claude-code) (secret and command gates, rules first, fail closed) ·
+[MCP server](integrations/mcp) (`decima mcp`) · [LangChain / LangGraph](integrations/langchain) ·
+[Docker](Dockerfile) · [examples](examples) · [Colab quickstart](examples/quickstart.ipynb)
+
+## Presets
+
+| Preset | Decides | Model |
+|---|---|---|
+| `triage` | team, urgency, sentiment of a ticket or message | decima-base |
+| `routing` | cheapest LLM tier that can answer well: small / medium / frontier | decima-base |
+| `moderation` | which policy a post breaks, and how badly | decima-base |
+| `pii` | is there personal data, and of which kind | decima-base |
+| `guardrails` | prompt injection or jailbreak, personal data, toxicity before a prompt reaches an LLM | decima-agent |
+| `agent-gate` | allow / ask / deny a shell command, secret in an edit, model tier for a task | decima-agent |
+| `kg-judge` | is a fact asserted, hypothetical, denied or planned; are two records one entity; how two things relate | decima-agent |
+
+Presets are JSON files in [`decima/presets`](decima/presets); write your own with any questions.
+
+## Models
+
+| Model | Size | For |
+|---|---|---|
+| [decima-agent](https://huggingface.co/amyrmahdy/decima-agent) 2.2 | 321M | agent gates and knowledge-graph judgments; states up to 2,048 tokens |
+| [decima-base](https://huggingface.co/amyrmahdy/decima-base) 2.0 | 321M | general decisions, multilingual |
+| [decima-small](https://huggingface.co/amyrmahdy/decima-small) 1.1 | 122M | the smallest CPUs and the browser |
+
+## How good is it
+
+Honest numbers, on data the models never trained on unless stated.
+
+**Against the same-size open models**, all re-run by us on one harness:
+
+| | decima-base | decima-small | Laya | Laya-multilingual | Kev-0.8B |
 |---|---:|---:|---:|---:|---:|
-| Parameters | **122M** | 494M | 753M | 421M | 322M |
-| Laya's MASSIVE + XNLI protocol, re-run by us (29 suites, 19 languages; in-distribution for Decima¹) | **0.761** | 0.527 | — | 0.445 | 0.607 |
-| Kev's published protocol, re-run by us (8 suites) | 0.762 | 0.779 | **0.794** | 0.681 | 0.580 |
-| jabr/classifier-benchmark v2, 49 tasks (zero-shot by data) | 0.616 | — | — | 0.583 | — |
-| Answer changes when options are shuffled² | **0 %** | 22 % | 10 % | 27 % | 21 % |
+| Parameters | 321M | **122M** | 421M | 322M | 753M |
+| jabr/classifier-benchmark v2, 49 tasks (zero-shot) | **0.673** | 0.616 | 0.583 | — | — |
+| Kev's published protocol, 8 suites | 0.790 | 0.762 | 0.681 | 0.580 | **0.794** |
+| Answer changes when options are shuffled | **0 %** | **0 %** | 27 % | 21 % | 10 % |
 
-¹ Decima trained on the MASSIVE train split (all 51 locales; test rows differ) and on the XNLI/MNLI train
-splits; Laya reports it did not train on MASSIVE or XNLI.
-² Mean over the Kev, Laya and Decima-bench suites each model was run on.
+Decima trained on the train splits of some suites in Kev's protocol (test rows differ); jabr is zero-shot. The
+frontier is much higher: Jev scores 0.966 on jabr v2, and 4B–27B open models (Kev, SemIf-OpenJev) report Jev-level accuracy on their own tests. Decima wins
+on cost, speed and locality, not on hard open-ended judgment.
 
-All models run by us on one harness; competitors' published numbers were reproduced (to within 0.001)
-first. Decima trained on the train splits of several of these datasets — see [docs/EVAL.md](docs/EVAL.md)
-for what is zero-shot, what is in-distribution, and the limitations (long multi-fact business
-decisions, knowledge-heavy questions). Not recommended for tool-call or shell-command safety.
+**As a local stand-in for Jev in a published knowledge-graph pipeline**
+([William Lyon's notebooks](https://github.com/johnymontana/extraction-knowledge-graph-experiments), same questions):
+
+| | Jev | decima-agent 2.2 (CPU) |
+|---|---:|---:|
+| Planted "maybe / denied / planned" facts caught | 8/11 | **11/11** |
+| Entity matching (Beer, 450 pairs), AUC | **0.992** | 0.972 |
+| Assertion gate over extracted edges, F1 | **0.404** | 0.368 |
+| Extraction ∪ relation selection, gated, F1 | 0.343 | **0.364** |
+
+**As a gate for a coding agent**, on 40 cases written after training with no copies in any training data:
+decima-base 0.60 → decima-agent 2.2 **0.85**. Keep hard rules first; the [hooks](integrations/claude-code) do.
+
+**It also plays games** from text sensors, one decision per move: Snake, 42 apples a game (6 of 10 games alive at the
+600-move limit); a side-scrolling platformer, 9 of 10 levels.
+
+![decima-agent playing Snake on CPU](release/hf/decima-agent/snake-agent-2.2.gif)
+
+## Limitations
+
+- Fuzzy, knowledge-heavy or multi-step decisions belong to a bigger model. Use Decima's confidence to know when.
+- States are limited to 512 tokens (decima-base) or 2,048 (decima-agent); longer input is refused, never silently cut.
+- A model can be confidently wrong. For safety gates, keep rules first and Decima second.
+- decima-base trained on some non-commercial datasets; see [release/LICENSING.md](release/LICENSING.md) before selling
+  a product built on it.
 
 ## Reproduce Decima's numbers
 
@@ -170,7 +179,9 @@ data builders and every experiment — including the ones that failed — are in
 
 | | |
 |---|---|
-| `decima/` | model, ONNX runtime, export, int8 quantisation |
+| `decima/` | ONNX runtime, Router, presets, CLI, server, MCP, LangChain helpers; model, export, int8 quantisation |
+| `integrations/` | Claude Code hooks, MCP, LangChain |
+| `examples/` | runnable examples and a Colab quickstart |
 | `train/` | training (distillation + gold labels, crash-safe checkpoints) |
 | `teacher/` | teacher data generation and gold-label builders |
 | `bench/` | evaluation harness: one item format for every system, scorer, speed |
@@ -190,7 +201,7 @@ If you use Decima, please cite it (GitHub's "Cite this repository" reads [`CITAT
   author = {Madani, A. M.},
   year   = {2026},
   howpublished = {\url{https://github.com/amyrmahdy/decima}},
-  note   = {Model: \url{https://huggingface.co/amyrmahdy/decima-small}}
+  note   = {Models: \url{https://huggingface.co/amyrmahdy}}
 }
 ```
 

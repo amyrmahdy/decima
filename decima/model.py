@@ -40,6 +40,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from safetensors.torch import load_file, save_file
 
+from .longdoc import AGGREGATES, collect, plan, probs
 from .normalize import normalize
 from .render import choice_texts
 from .types import Decision, Question
@@ -327,12 +328,39 @@ class Decima:
         return np.concatenate(out)
 
     def decide(self, state: str, q: Question) -> Decision:
-        import numpy as np
-
         t0 = time.perf_counter()
-        lp = self.logits([state], q)[0]
-        if q.kind == "rank":
-            p = 1 / (1 + np.exp(-lp))
-        else:
-            p = np.exp(lp - lp.max()); p /= p.sum()
+        p = probs(self.logits([state], q)[0], q.kind)          # rank: logits are log σ, so this is σ
         return Decision(probs=p.tolist(), choices=q.choices, latency_ms=(time.perf_counter() - t0) * 1e3)
+
+    def decide_many(self, state: str, questions: list[Question], **kw) -> list[Decision]:
+        """Many questions about one state, batched; options and output as `DecimaOnnx.decide_many`."""
+        return self._decide_pairs([(state, q) for q in questions], **kw)
+
+    def decide_batch(self, states: list[str], question: Question, **kw) -> list[Decision]:
+        return self._decide_pairs([(s, question) for s in states], **kw)
+
+    @torch.no_grad()
+    def _decide_pairs(self, pairs: list[tuple[str, Question]], batch_size: int = 16, long: str | None = None,
+                      aggregate: str = "max", overlap: int = 64, min_confidence: float | None = None, **_) -> list[Decision]:
+        if aggregate not in AGGREGATES:
+            raise ValueError(f"aggregate must be one of {AGGREGATES}, not {aggregate!r}")
+        t0 = time.perf_counter()
+        render = lambda s, q: self.cfg.state_of(s, q.text, q.lang)
+        jobs = plan(self.tok, pairs, render, self.cfg.max_state_tokens, long, overlap)
+        order = sorted(range(len(jobs)), key=lambda j: len(jobs[j][2]))
+        lps: list = [None] * len(jobs)
+        for b0 in range(0, len(order), batch_size):          # length-sorted batches; each row scored at its own length
+            idx = order[b0 : b0 + batch_size]
+            L = len(jobs[idx[-1]][2])
+            ids = torch.full((len(idx), L), self.tok.pad_token_id or 0, dtype=torch.long)
+            mask = torch.zeros((len(idx), L), dtype=torch.long)
+            for k, j in enumerate(idx):
+                ids[k, : len(jobs[j][2])] = torch.tensor(jobs[j][2]); mask[k, : len(jobs[j][2])] = 1
+            Hs = self.model.encode(ids.to(self.device), mask.to(self.device))
+            for k, j in enumerate(idx):
+                n, q = len(jobs[j][2]), pairs[jobs[j][0]][1]
+                Hc, mc = self._choices(q)
+                owner = torch.zeros(len(q.choices), dtype=torch.long, device=self.device)
+                sc, z = self.model.choice_scores(Hs[k : k + 1, :n], mask[k : k + 1, :n].to(self.device), Hc, mc, owner)
+                lps[j] = self.model.log_probs(sc, z, owner, 1, [q.kind], self.cfg.temperature)[0].float().cpu().numpy()
+        return collect(pairs, jobs, lps, aggregate, min_confidence, (time.perf_counter() - t0) * 1e3 / max(1, len(pairs)))

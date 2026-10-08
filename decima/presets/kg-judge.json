@@ -1,0 +1,63 @@
+{
+  "description": "Knowledge-graph judgments (wording from teacher/kg_proc.py): is a sentence's claim a fact; do two mentions or records name the same entity; how two things relate",
+  "model": "amyrmahdy/decima-agent",
+  "state": {"sentence": "{text}"},
+  "questions": {
+    "status": {
+      "type": "choice",
+      "instructions": "Does `sentence` assert its main claim as a fact, or does it hedge, deny, project or merely propose it? Judge the modality of the sentence, not whether the claim is plausible.",
+      "criteria": {
+        "asserted": "The text states this relationship as a present or past fact. It holds, or it held.",
+        "hypothetical": "The text raises this relationship only as a possibility, a condition, a proposal awaiting approval, or something that would happen if something else did. It is not claimed to have happened.",
+        "negated": "The text denies this relationship, or states that it will not happen, is not planned, or is not expected.",
+        "forward_looking": "The text projects, forecasts or guides that this relationship will hold in the future. It has not happened yet, but it is not merely conditional."
+      },
+      "requires": ["sentence"]
+    },
+    "factual": {
+      "type": "noul",
+      "instructions": "If a knowledge graph recorded the relationship this sentence is about as a plain fact, would the graph be correct? Be careful with denials: a sentence saying something will NOT happen or is NOT planned does not make that thing a fact.",
+      "criteria": {
+        "true": "Yes: the sentence asserts the relationship as true now or in the past.",
+        "false": "No: the sentence denies it, conditions it, proposes it, forecasts it, or only reports that someone said it might happen."
+      },
+      "requires": ["sentence"]
+    },
+    "mention_link": {
+      "type": "score",
+      "instructions": "`mention_a` and `mention_b` are two mentions of an entity, each quoted with the surrounding sentence it appeared in. How do they relate?",
+      "criteria": [
+        "They refer to two different real-world entities.",
+        "They refer to closely related entities that may or may not be the same one.",
+        "They refer to one and the same real-world entity."
+      ],
+      "requires": ["mention_a", "mention_b"]
+    },
+    "same_name": {
+      "type": "noul",
+      "instructions": "Ignoring abbreviations, legal suffixes, honorifics and possessives, do `mention_a.text` and `mention_b.text` name the same thing?",
+      "requires": ["mention_a", "mention_b"]
+    },
+    "record_link": {
+      "type": "score",
+      "instructions": "Entity resolution: how do `entity_a` and `entity_b` relate?",
+      "criteria": [
+        "They refer to two different real-world entities.",
+        "They refer to closely related entities that may or may not be the same one.",
+        "They refer to one and the same real-world entity."
+      ],
+      "requires": ["entity_a", "entity_b"]
+    },
+    "relation": {
+      "type": "choice",
+      "instructions": "How do `a` and `b` relate to each other?",
+      "criteria": {
+        "alternatives": "Two options for the same role, such that adopting one usually means giving the other up: two package managers, two programming languages for the same job, two CI systems.",
+        "complementary": "Different kinds of thing that are commonly held together and do not compete: a language and a database, a tool and a city.",
+        "same": "Two names for one and the same thing.",
+        "unrelated": "Nothing to do with each other."
+      },
+      "requires": ["a", "b"]
+    }
+  }
+}

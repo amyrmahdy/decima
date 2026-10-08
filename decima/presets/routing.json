@@ -1,0 +1,15 @@
+{
+  "description": "Cheapest LLM tier that can answer a request well: small, medium or frontier",
+  "model": "amyrmahdy/decima-base",
+  "questions": {
+    "tier": {
+      "type": "choice",
+      "instructions": "Which model tier does this request need to be answered well?",
+      "criteria": {
+        "small": "greeting, simple fact, short translation, grammar fix, simple classification or extraction",
+        "medium": "ordinary writing, summarizing, explaining, or routine code in a familiar pattern",
+        "frontier": "multi-step reasoning, math, hard or unfamiliar code, research, or high-stakes advice"
+      }
+    }
+  }
+}

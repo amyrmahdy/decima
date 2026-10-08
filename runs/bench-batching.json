@@ -1,0 +1,209 @@
+{
+ "machine": "aarch64",
+ "processor": "aarch64",
+ "rows": [
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "1 question, short state",
+   "state_tokens": 30,
+   "questions": 1,
+   "before_ms": 27.2,
+   "after_ms": 27.5,
+   "after_ms_per_question": 27.5,
+   "speedup": 0.99
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "6 questions, short state (cold)",
+   "state_tokens": 30,
+   "questions": 6,
+   "before_ms": 369.1,
+   "after_ms": 309.8,
+   "after_ms_per_question": 51.6,
+   "speedup": 1.19
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "6 questions, short state",
+   "state_tokens": 30,
+   "questions": 6,
+   "before_ms": 181.8,
+   "after_ms": 142.9,
+   "after_ms_per_question": 23.8,
+   "speedup": 1.27
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "24 questions, long state",
+   "state_tokens": 1950,
+   "questions": 24,
+   "before_ms": 86069.5,
+   "after_ms": 87343.4,
+   "after_ms_per_question": 3639.3,
+   "speedup": 0.99
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "48 questions, long state",
+   "state_tokens": 1950,
+   "questions": 48,
+   "before_ms": 174300.4,
+   "after_ms": 176796.3,
+   "after_ms_per_question": 3683.3,
+   "speedup": 0.99
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 1,
+   "case": "1 question, short state",
+   "state_tokens": 30,
+   "questions": 1,
+   "before_ms": 70.2,
+   "after_ms": 74.4,
+   "after_ms_per_question": 74.4,
+   "speedup": 0.94
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 1,
+   "case": "6 questions, short state (cold)",
+   "state_tokens": 30,
+   "questions": 6,
+   "before_ms": 1024.7,
+   "after_ms": 910.6,
+   "after_ms_per_question": 151.8,
+   "speedup": 1.13
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 1,
+   "case": "6 questions, short state",
+   "state_tokens": 30,
+   "questions": 6,
+   "before_ms": 457.2,
+   "after_ms": 389.6,
+   "after_ms_per_question": 64.9,
+   "speedup": 1.17
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 1,
+   "case": "24 questions, long state",
+   "state_tokens": 1950,
+   "questions": 24,
+   "before_ms": 209098.0,
+   "after_ms": 207379.7,
+   "after_ms_per_question": 8640.8,
+   "speedup": 1.01
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 1,
+   "case": "48 questions, long state",
+   "state_tokens": 1950,
+   "questions": 48,
+   "before_ms": 418417.9,
+   "after_ms": 418642.6,
+   "after_ms_per_question": 8721.7,
+   "speedup": 1.0
+  },
+  {
+   "model": "export/base2-int8",
+   "threads": 4,
+   "case": "6 questions, chunked",
+   "state_tokens": 1948,
+   "questions": 6,
+   "before_ms": null,
+   "after_ms": 9290.4,
+   "after_ms_per_question": 1548.4,
+   "speedup": null,
+   "windows": 5
+  },
+  {
+   "model": "export/base2-int8",
+   "threads": 4,
+   "case": "24 questions, chunked",
+   "state_tokens": 1948,
+   "questions": 24,
+   "before_ms": null,
+   "after_ms": 37153.4,
+   "after_ms_per_question": 1548.1,
+   "speedup": null,
+   "windows": 5
+  },
+  {
+   "model": "export/base2-int8",
+   "threads": 4,
+   "case": "6 questions, chunked",
+   "state_tokens": 7990,
+   "questions": 6,
+   "before_ms": null,
+   "after_ms": 38929.5,
+   "after_ms_per_question": 6488.3,
+   "speedup": null,
+   "windows": 20
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "6 questions, chunked",
+   "state_tokens": 7990,
+   "questions": 6,
+   "before_ms": null,
+   "after_ms": 90229.6,
+   "after_ms_per_question": 15038.3,
+   "speedup": null,
+   "windows": 5
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "1 question, scaling",
+   "state_tokens": 155,
+   "questions": 1,
+   "before_ms": null,
+   "after_ms": 77.6,
+   "after_ms_per_question": 77.6,
+   "speedup": null
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "1 question, scaling",
+   "state_tokens": 469,
+   "questions": 1,
+   "before_ms": null,
+   "after_ms": 291.9,
+   "after_ms_per_question": 291.9,
+   "speedup": null
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "1 question, scaling",
+   "state_tokens": 981,
+   "questions": 1,
+   "before_ms": null,
+   "after_ms": 1031.8,
+   "after_ms_per_question": 1031.8,
+   "speedup": null
+  },
+  {
+   "model": "export/agent3-int8",
+   "threads": 4,
+   "case": "1 question, scaling",
+   "state_tokens": 1985,
+   "questions": 1,
+   "before_ms": null,
+   "after_ms": 3564.1,
+   "after_ms_per_question": 3564.1,
+   "speedup": null
+  }
+ ],
+ "date": "2026-10-08"
+}

@@ -1881,6 +1881,10 @@ REL_KIND_CRIT = [
 ]
 
 
+STORE_ROLES = {"rdbms", "docdb", "cache", "graphdb", "search", "warehouse"}   # all store data: whether two of them compete is unclear
+PKG_ROLES = {"pkg_js", "pkg_py"}
+
+
 def relpair_case(rng, i, split):
     test = split == "test"
     hold = test and rng.random() < 0.5
@@ -1903,9 +1907,13 @@ def relpair_case(rng, i, split):
             sub = rng.random()
             own = [r for r in OWN_LANG if allowed(r)]
             tech = [r for r in TECH if allowed(r)]
-            if sub < 0.55:
+            cross = [(a, b) for a in tech for b in tech if a < b and not ({a, b} <= STORE_ROLES) and not ({a, b} <= PKG_ROLES)]
+            if sub < 0.25 or (sub < 0.55 and not cross):
                 r1, r2 = rng.choice([p for p in COMP_ROLES if allowed(*p)])
                 x, y = rng.choice(ROLES[r1]), rng.choice(ROLES[r2])
+            elif sub < 0.55:                                          # two tools from different roles (a CI server and a graph
+                r1, r2 = rng.choice(cross)                            # database): hard negatives, added 2026-10-07 after kg1
+                x, y = rng.choice(ROLES[r1]), rng.choice(ROLES[r2])  # called Jenkins / Neo4j "alternatives" at 0.99
             elif sub < 0.7 and own:
                 r1 = rng.choice(own)
                 x, y = rng.choice(ROLES[r1]), OWN_LANG[r1]

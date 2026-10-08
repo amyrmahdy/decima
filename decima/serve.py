@@ -10,6 +10,13 @@ Endpoints: POST /v1/systemone (alias /v1/decisions), GET /v1/models, GET / (live
 decima/systemone.py. As on TypeSafe's API, a state that would be cut to fit the model's context is an
 error (422 STATE_TRUNCATED), not a silent truncation. Errors use the body {"error", "code", "detail"?}.
 Set DECIMA_API_KEY to require `Authorization: Bearer <key>`; otherwise any key is accepted.
+
+All questions of a request are decided in one batched pass (`DecimaOnnx.decide_many`). Request options
+beyond TypeSafe's schema, all off by default:
+  "long": "chunk"           decide a state longer than the model's window in overlapping windows instead of
+                            refusing it (up to --max-doc-tokens); such answers gain "window" (decima/longdoc.py)
+  "aggregate": "max"        how window answers combine: "max" (strongest window), "mean" or "sum"
+  "min_confidence": 0.5     every answer gains "abstain": true when its confidence is below this
 """
 
 from __future__ import annotations
@@ -23,12 +30,29 @@ import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from .runtime import DecimaOnnx
+from .longdoc import AGGREGATES
 from .systemone import SystemOneError, system_one, to_question
 
 MAX_BODY = 8 * 1024 * 1024
 
 
-def make_handler(model: DecimaOnnx, name: str):
+def _option_error(field: str, msg: str) -> SystemOneError:
+    return SystemOneError(f"{field}: {msg}", issues=[{"loc": ["body", field], "msg": msg, "type": "value_error"}])
+
+
+def options(req: dict) -> dict:
+    """The non-TypeSafe request options, validated."""
+    long, agg, mc = req.get("long"), req.get("aggregate", "max"), req.get("min_confidence")
+    if long not in (None, "chunk"):
+        raise _option_error("long", 'must be "chunk" or absent')
+    if agg not in AGGREGATES:
+        raise _option_error("aggregate", f"must be one of {', '.join(AGGREGATES)}")
+    if mc is not None and (isinstance(mc, bool) or not isinstance(mc, (int, float)) or not 0 <= mc <= 1):
+        raise _option_error("min_confidence", "must be a number between 0 and 1")
+    return {"long": long, "aggregate": agg, "min_confidence": mc}
+
+
+def make_handler(model: DecimaOnnx, name: str, max_doc_tokens: int = 16384):
     lock = threading.Lock()          # one ONNX Runtime session pair, one decision at a time
     key = os.environ.get("DECIMA_API_KEY")
 
@@ -88,17 +112,22 @@ def make_handler(model: DecimaOnnx, name: str):
                                  [{"loc": ["body", "state"], "msg": "Field required", "type": "missing"}])
             state, questions = req["state"], req.get("questions")
             try:
+                opts = options(req)
                 s = state if isinstance(state, str) else json.dumps(state, ensure_ascii=False)
                 limit = model.cfg["max_state_tokens"]
-                for qid, spec in (questions or {}).items():
+                used = len(model.tok(s)["input_ids"])
+                if opts["long"] == "chunk" and used > max_doc_tokens:
+                    return self._err(422, "STATE_TOO_LONG", f"state: {used} tokens, over the {max_doc_tokens} this server chunks",
+                                     [{"loc": ["body", "state"], "msg": f"state over {max_doc_tokens} tokens", "type": "state_too_long",
+                                       "ctx": {"model": name, "max_doc_tokens": max_doc_tokens}}])
+                for qid, spec in (questions or {}).items() if opts["long"] is None else ():
                     _, q, _ = to_question(qid, spec)
                     if len(model.tok(model._state(s, q))["input_ids"]) > limit:
                         return self._err(422, "STATE_TRUNCATED", f"state: part of state would be dropped to fit the context of {name}",
                                          [{"loc": ["body", "state"], "msg": f"part of state would be dropped to fit the context of {name}",
                                            "type": "state_truncated", "ctx": {"model": name, "max_state_tokens": limit}}])
                 with lock:
-                    answers = system_one(model, state, questions)
-                used = len(model.tok(s)["input_ids"])
+                    answers = system_one(model, state, questions, **opts)
             except SystemOneError as e:
                 return self._err(422, e.code, str(e), e.issues)
             except Exception:                  # never leak internals
@@ -116,9 +145,10 @@ def main() -> None:
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=11436)
     ap.add_argument("--name", default="decima-small", help="model name reported in responses")
+    ap.add_argument("--max-doc-tokens", type=int, default=16384, help='longest state accepted with "long": "chunk"')
     a = ap.parse_args()
     model = DecimaOnnx.from_pretrained(a.model, precision=a.precision, threads=a.threads)
-    srv = ThreadingHTTPServer((a.host, a.port), make_handler(model, a.name))
+    srv = ThreadingHTTPServer((a.host, a.port), make_handler(model, a.name, a.max_doc_tokens))
     print(f"Decima System One server on http://{a.host}:{a.port}  (POST /v1/systemone)", flush=True)
     srv.serve_forever()
 

@@ -35,6 +35,7 @@ class Decision:
     choices: list[str]
     latency_ms: float = 0.0
     meta: dict = field(default_factory=dict)
+    abstained: bool = False                  # set by decide(..., min_confidence=…): too unsure to act on
 
     @property
     def top(self) -> str:
@@ -43,6 +44,16 @@ class Decision:
     @property
     def confidence(self) -> float:
         return max(self.probs)
+
+    @property
+    def answer(self) -> str | None:
+        """The top choice, or None when the decision abstained."""
+        return None if self.abstained else self.top
+
+    def abstain(self, threshold: float) -> bool:
+        """True when the top probability is below `threshold` (confidence gating); also sets `abstained`."""
+        self.abstained = self.confidence < threshold
+        return self.abstained
 
     def as_dict(self) -> dict[str, float]:
         return dict(zip(self.choices, self.probs))

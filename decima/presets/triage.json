@@ -1,0 +1,36 @@
+{
+  "description": "Support and ops tickets: which team, how urgent, how the writer feels",
+  "model": "amyrmahdy/decima-base",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which team should handle this message?",
+      "criteria": {
+        "billing": "charges, refunds, invoices, payment methods",
+        "technical": "bugs, errors, outages, something not working",
+        "account": "login, password, access, account settings",
+        "shipping": "delivery, tracking, damaged or missing parcels",
+        "sales": "prices, plans, upgrades, buying more",
+        "other": "feedback, praise or anything else"
+      }
+    },
+    "urgency": {
+      "type": "score",
+      "instructions": "How urgent is this message?",
+      "criteria": [
+        "Can wait: a question, a request or feedback; nothing is blocked.",
+        "Soon: something is wrong or broken, but the writer can still work.",
+        "Now: the writer or their business is blocked, losing money or at risk."
+      ]
+    },
+    "sentiment": {
+      "type": "choice",
+      "instructions": "How does the writer feel?",
+      "criteria": {
+        "positive": "pleased, thankful",
+        "neutral": "matter-of-fact or polite, even when reporting a problem",
+        "negative": "frustrated, disappointed or angry"
+      }
+    }
+  }
+}

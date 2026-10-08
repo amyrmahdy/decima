@@ -50,7 +50,7 @@ def _option(key: str, desc) -> str:
 
 
 class DecimaEngine(Engine):
-    name = "decima"
+    name = "decima-ai"
     latency = "In-process wall time of one request (all its questions, one after another), tokenisation included; excludes model loading."
 
     def __init__(self, model="amyrmahdy/decima-small", precision="int8", threads=1, **options):

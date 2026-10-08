@@ -52,8 +52,8 @@ def decode(s: str) -> str:
     return re.sub(r"⟦rev:([^⟧]+)⟧", lambda m: m.group(1)[::-1], s)
 
 
-def gold_items():
-    data = tomllib.loads(decode(GOLD.read_text()))
+def gold_items(path=None):
+    data = tomllib.loads(decode((path or GOLD).read_text()))
     for t in data["task"]:
         spec = {"type": t["type"], "instructions": t["question"]["instructions"]}
         if "criteria" in t["question"]:
@@ -89,6 +89,8 @@ def main() -> None:
         model = Decima(a.checkpoint, device=a.device)
     budget = model.cfg.get("max_state_tokens", 512) if isinstance(model.cfg, dict) else model.cfg.max_state_tokens
     sets = {"gold": list(gold_items()) + list(jsonl_items("release/agent/agentbench-gold-dynamic.jsonl"))}
+    if Path("release/agent/agentbench-fresh.toml").exists():   # written after the fact, no copies in any training data
+        sets["fresh"] = list(gold_items(Path("release/agent/agentbench-fresh.toml")))
     if Path("data/agent/proc-test.jsonl").exists():
         sets["proc"] = list(jsonl_items("data/agent/proc-test.jsonl"))[: a.max_proc]
     kg = sorted(Path("data/kg").glob("*-test.jsonl"))       # knowledge-graph judgments (teacher/kg_proc.py, kg_llm.py)

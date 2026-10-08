@@ -1,0 +1,28 @@
+{
+  "description": "User-generated content: which policy it breaks, if any, and how badly",
+  "model": "amyrmahdy/decima-base",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which content policy does the post break, if any?",
+      "criteria": {
+        "none": "acceptable: ordinary opinion, news, questions or jokes",
+        "harassment": "insults, bullies or attacks a specific person",
+        "hate": "attacks a group for who they are: race, religion, gender, nationality, sexuality",
+        "violence": "threatens, plans or praises violence",
+        "sexual": "sexual or explicit content",
+        "self_harm": "encourages or describes self-harm or suicide",
+        "spam": "advertising, scams or links posted for clicks"
+      }
+    },
+    "severity": {
+      "type": "score",
+      "instructions": "How severe is the problem with the post?",
+      "criteria": [
+        "None: the post is fine.",
+        "Mild: rude, borderline or low-quality, but not clearly against the rules.",
+        "Severe: a clear violation that should be removed."
+      ]
+    }
+  }
+}

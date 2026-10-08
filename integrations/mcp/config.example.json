@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "decima": {
+      "command": "decima",
+      "args": ["mcp", "--threads", "2"]
+    }
+  }
+}

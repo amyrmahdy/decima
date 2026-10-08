@@ -14,7 +14,7 @@ from .base import Backend, Prediction
 
 
 class DecimaBackend(Backend):
-  name = "decima"
+  name = "decima-ai"
 
   def __init__(self, model_path: Optional[str] = None, device: Optional[str] = None, precision: str = "int8"):
     self.model = model_path or "amyrmahdy/decima-small"

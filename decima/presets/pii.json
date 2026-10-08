@@ -1,0 +1,22 @@
+{
+  "description": "Personal data in a text: whether there is any, and the most sensitive kind",
+  "model": "amyrmahdy/decima-base",
+  "questions": {
+    "present": {
+      "type": "noul",
+      "instructions": "The text contains personal data: an email address, phone number, home address, ID or passport number, card or bank account number, or health details of a person."
+    },
+    "kind": {
+      "type": "choice",
+      "instructions": "Which kind of personal data does the text contain?",
+      "criteria": {
+        "none": "no personal data",
+        "contact": "a person's email address, phone number, or street or postal address",
+        "identity": "national ID, passport, social security or driver's licence number, date of birth",
+        "financial": "credit card, bank account or IBAN number",
+        "health": "medical conditions, diagnoses or medication",
+        "credentials": "a password, API key or access token"
+      }
+    }
+  }
+}
