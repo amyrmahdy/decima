@@ -23,10 +23,12 @@ needed.
 
 ![decima-agent 2.2 playing Snake on CPU](snake-agent-2.2.gif)
 
+![decima on the command line, on CPU](decima-cli.gif)
+
 ## Quickstart
 
 ```bash
-pip install "git+https://github.com/amyrmahdy/decima"
+pip install decima-ai          # the `decima` package, CLI and server (PyPI; source: github.com/amyrmahdy/decima)
 ```
 
 ```python
@@ -36,6 +38,13 @@ m = Decima.from_pretrained("amyrmahdy/decima-agent")          # int8 ONNX, CPU
 q = Question("Should the agent's proposed command run?",
              ["allow: read-only, builds or tests", "ask: changes something recoverable", "deny: destroys data or history"])
 print(m.decide('{"tool": "Bash", "command": "rm -rf .loop/ data/"}', q).top)   # → deny: destroys data or history
+```
+
+From the command line, with ready-made presets:
+
+```bash
+decima "rm -rf ~/projects/app" --preset agent-gate          # gate: deny 0.98
+decima "Acme denied it had acquired Beta Labs." --preset kg-judge   # status: negated 0.99
 ```
 
 As a local server for any TypeSafe client (binds to 127.0.0.1):
@@ -115,6 +124,7 @@ with its options cached. Long states cost more: about 0.6 s at 2,000 tokens.
 decima-base (mmBERT-base, 321M) → agent 2.0 → 2.1 → knowledge-graph rounds → 2.2. Each round replays general data so the
 general skills mostly stay (decima-base's five benchmark sets: 0.703; this model: 0.672). The training data is public:
 [decima-agent-decisions](https://huggingface.co/datasets/amyrmahdy/decima-agent-decisions),
+[decima-kg-judgments](https://huggingface.co/datasets/amyrmahdy/decima-kg-judgments),
 [decima-game-decisions](https://huggingface.co/datasets/amyrmahdy/decima-game-decisions) and
 [decima-system-one-tasks](https://huggingface.co/datasets/amyrmahdy/decima-system-one-tasks).
 

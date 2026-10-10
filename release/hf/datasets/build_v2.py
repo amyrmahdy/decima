@@ -32,8 +32,8 @@ sys.path.insert(0, str(ROOT))
 A = ROOT / "data/agent"
 
 AGENT = {  # config → [(file stem, tasks or None for all)]
-    "secret": [("proc", {"secret"}), ("proc-secret2", None), ("llm-files", None)],
-    "bash": [("proc", {"bash"}), ("llm-bash", None)],
+    "secret": [("proc", {"secret"}), ("proc-secret2", None), ("proc-secret3", None), ("llm-files", None)],
+    "bash": [("proc", {"bash"}), ("proc-bash3", None), ("proc-shell", None), ("proc-db", None), ("llm-bash", None)],
     "readonly": [("proc-readonly", None)],
     "tool": [("tools", {"tool"}), ("llm-goals", {"tool-para"})],
     "command": [("tools", {"command"}), ("llm-goals", {"command-para"}), ("llm-commands", None)],
@@ -41,7 +41,8 @@ AGENT = {  # config → [(file stem, tasks or None for all)]
     "router": [("llm-router", None)],
     "outcome": [("proc", {"output", "ops"})],
 }
-ORIGIN = {"agent-proc": "procedural", "agent-llm-files": "llm-file+code-slot", "agent-llm-goals": "llm-paraphrase",
+LONG = ("long_context", "data/long")                 # decisions buried in 2k–8k tokens (teacher/long_ctx.py)
+ORIGIN = {"long-ctx": "procedural-long", "agent-proc": "procedural", "agent-llm-files": "llm-file+code-slot", "agent-llm-goals": "llm-paraphrase",
           "agent-llm-commands": "llm+blind-check", "agent-llm-bash": "llm+blind-check", "agent-llm-action": "llm+blind-check",
           "agent-llm-router": "llm+blind-check"}
 
@@ -117,6 +118,12 @@ def build_agent(out):
         stats[cfg] = {s: len(v) for s, v in split_rows.items()} | {
             "origin": dict(Counter(r["origin"] for r in split_rows["train"] + split_rows["test"]))}
 
+    for split in ("train", "test"):
+        p = ROOT / LONG[1] / f"long-{split}.jsonl"
+        if p.exists():
+            rows = [dec_row(r, LONG[0], "procedural-long") for r in jl(p) if not (split == "train" and dc.hit(r))]
+            write(rows, o / LONG[0] / f"{split}.parquet")
+            stats.setdefault(LONG[0], {})[split] = len(rows)
     print("[agent] train rows dropped as copies of a test case:", dict(dropped))
     from bench.agent_eval import GOLD, decode  # hand-written sets, decoded to plain text
     fresh = tomllib.loads(decode((ROOT / "release/agent/agentbench-fresh.toml").read_text()))
@@ -209,6 +216,42 @@ def build_games(out):
     return stats
 
 
+KG = {  # config → [(file stem, tasks or None)]
+    "entity_matching": [("proc", {"em"})],
+    "mention_pairs": [("proc", {"mention"})],
+    "modality": [("proc", {"modality"})],
+    "relation_pairs": [("proc", {"relpair"}), ("proc-relpair2", None)],
+    "documents": [("llm-docs", None)],
+    "support_threads": [("llm-threads", None)],
+}
+
+
+def build_kg(out):
+    """decima-kg-judgments: teacher/kg_proc.py (exact labels) and teacher/kg_llm.py (Gemma-written documents and threads,
+    labels fixed by code and kept only when a blind second call agrees)."""
+    o = out / "decima-kg-judgments"
+    stats = {}
+    for cfg, parts in KG.items():
+        for split in ("train", "test"):
+            rows, seen = [], set()
+            for stem, tasks in parts:
+                p = ROOT / "data/kg" / f"{stem}-{split}.jsonl"
+                if not p.exists():
+                    continue
+                for r in jl(p):
+                    if tasks and r.get("task") not in tasks:
+                        continue
+                    k = (r["state"], r["question"], tuple(r["choices"]))
+                    if k in seen:
+                        continue
+                    seen.add(k)
+                    rows.append(dec_row(r, cfg, "llm+blind-check" if r.get("source") == "kg-llm" else "procedural"))
+            if rows:
+                write(rows, o / cfg / f"{split}.parquet")
+                stats.setdefault(cfg, {})[split] = len(rows)
+    return stats
+
+
 def build_persian(out):
     o = out / "jabr-v2-persian"
     stats = {}
@@ -232,7 +275,7 @@ def build_persian(out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
-    ap.add_argument("--only", nargs="*", default=["agent", "tasks", "games", "persian"])
+    ap.add_argument("--only", nargs="*", default=["agent", "tasks", "games", "persian", "kg"])
     a = ap.parse_args()
     out = Path(a.out).expanduser()
     stats = {}

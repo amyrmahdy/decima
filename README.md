@@ -7,6 +7,8 @@ probabilities in milliseconds, on a CPU, with nothing leaving your machine.
 pip install decima-ai
 ```
 
+![decima on the command line: an agent gate, a knowledge-graph judgment and a custom question, on CPU](release/figures/decima-cli.gif)
+
 ```console
 $ decima "Your API has been returning 500 errors for an hour and our checkout is down!" --preset triage
 decima-base · triage

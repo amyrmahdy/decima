@@ -49,10 +49,12 @@ did not.
 - it wins **9 of 10** levels of a side-scrolling platformer;
 - it averages **22.6 apples** per game of Nokia-style Snake.
 
+![decima on the command line, on CPU](decima-cli.gif)
+
 ## Quickstart
 
 ```bash
-pip install "git+https://github.com/amyrmahdy/decima"
+pip install decima-ai          # the `decima` package, CLI and server (PyPI; source: github.com/amyrmahdy/decima)
 ```
 
 ```python
@@ -62,6 +64,12 @@ m = Decima.from_pretrained("amyrmahdy/decima-base")            # int8 ONNX, CPU
 q = Question("Which team should handle this?", ["billing", "technical support", "sales", "account access"])
 d = m.decide("I was charged twice for the same subscription this month.", q)
 print(d.top, d.probs)
+```
+
+From the command line, with ready-made presets (triage, routing, moderation, pii, guardrails, …):
+
+```bash
+decima "Our checkout is down and customers are leaving" --preset triage
 ```
 
 As a local TypeSafe-compatible server:

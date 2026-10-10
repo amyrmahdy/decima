@@ -58,7 +58,7 @@ lower is better): Decima **0.064** vs Kev-0.5B 0.117 (39 suites) · **0.060** vs
 ## Quickstart
 
 ```bash
-pip install "git+https://github.com/amyrmahdy/decima"      # from source: github.com/amyrmahdy/decima
+pip install decima-ai          # the `decima` package, CLI and server (PyPI; source: github.com/amyrmahdy/decima)
 ```
 
 The runtime (`decima.Decima`) imports no PyTorch — ONNX Runtime, numpy and a tokenizer — but the package

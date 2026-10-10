@@ -60,6 +60,10 @@ configs:
   data_files:
   - {split: train, path: outcome/train.parquet}
   - {split: test, path: outcome/test.parquet}
+- config_name: long_context
+  data_files:
+  - {split: train, path: long_context/train.parquet}
+  - {split: test, path: long_context/test.parquet}
 - config_name: agentbench
   data_files:
   - {split: test, path: agentbench/test.parquet}
@@ -70,7 +74,7 @@ configs:
 
 # Decima Agent Decisions
 
-**About 400k labelled decisions that a coding agent's hooks make on every step**, plus a hand-written test set of 130.
+**About 540k labelled decisions that a coding agent's hooks make on every step**, plus a hand-written test set of 130.
 The questions are the small, frequent ones:
 
 - Is a real secret about to be written to disk?
@@ -90,14 +94,15 @@ Code: [github.com/amyrmahdy/decima](https://github.com/amyrmahdy/decima).
 
 | config | train | test | what the state is → what is decided |
 |---|---:|---:|---|
-| `secret` | 126,111 | 2,111 | a Write/Edit (file, new text, often a diff in a long agent context) → is a live credential written? |
-| `bash` | 77,379 | 2,513 | a proposed shell command, with a policy → allow / ask / deny, and "does it exfiltrate / delete / need root?" |
+| `secret` | 156,111 | 2,111 | a Write/Edit (file, new text, often a diff in a long agent context) → is a live credential written? |
+| `bash` | 153,524 | 5,013 | a proposed shell command, with a policy → allow / ask / deny, and "does it exfiltrate / delete / need root?" |
 | `readonly` | 13,823 | 600 | a command → does it leave every file, setting and remote unchanged? |
 | `tool` | 26,246 | 1,503 | a goal → Read, Glob, Grep, Edit, Write, Bash, WebFetch, WebSearch, Task, TodoWrite, AskUserQuestion or an MCP tool |
 | `command` | 33,810 | 1,637 | a goal → the exact command among near misses (`git reset --soft` vs `--hard`) |
 | `next_step` | 74,246 | 2,258 | a trajectory or a proposed step → the next action |
 | `router` | 11,442 | 768 | a coding task → haiku / sonnet / opus-class tier, or a non-coding model |
 | `outcome` | 39,035 | 1,205 | test output or an ops alert → did the tests pass? does a human need to step in? |
+| `long_context` | 30,000 | 1,200 | any of the above, with the decisive part buried in 2k–8k tokens of unrelated material |
 | `agentbench` | — | 130 | hand-written (see the correction below) |
 | `agentbench_fresh` | — | 40 | hand-written after the fact; no exact or near copy in any training data |
 
@@ -143,6 +148,10 @@ Every agent label is exact or agreed by two different models:
   (26B-A4B) labels each one blind, and only rows where both agree are kept.
 - **`llm-paraphrase`.** Gemma 4 rewrites a procedural goal in natural words; rows that lose a required entity (a
   file name, a flag) are dropped.
+
+Since decima-agent 2.2: real-shape shell commands (`cd … && python -c`, recursive deletes, local services), database
+commands through a client (`DELETE FROM`, `DROP`, `FLUSHALL` vs reads and recoverable writes), credentials passed
+inline (client calls, Bearer headers, curl) and more key formats, destructive cloud and cluster commands.
 
 All fake credentials are random strings in real formats; none is a working key. Invented e-mail addresses at real
 providers were rewritten to reserved `.example` domains.
