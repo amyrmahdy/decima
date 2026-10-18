@@ -30,6 +30,11 @@ answer  billing    ██████████████████▉  0.
 
 (Outputs shortened to the top answer per question; the CLI also prints the runners-up.)
 
+**New in 2.3: [decima-guard](https://huggingface.co/amyrmahdy/decima-guard)**, a guard for LLM apps that covers the
+OWASP LLM Top 10 and common web attacks, in English, Arabic and Persian (Finglish too).
+
+![decima-guard: prompt injection in English, Finglish and Persian, a SQL injection and an injection hidden in a tool result](release/figures/decima-guard-cli.gif)
+
 Decima is the judge, not the writer. Put it next to your LLM, agent or extraction pipeline to decide what is safe, what
 is true, where a request should go, and when the expensive model is really needed. It speaks TypeSafe's
 `/v1/systemone` format (`choice`, `noul`, `score`), so code written for Jev works after a one-line change, and it ships
@@ -47,7 +52,7 @@ in [Ollaya](https://ollaya.dev/library/decima).
 ```bash
 decima "I was charged twice for my subscription" --question "Which team?" --choices billing,technical,sales
 decima --file ticket.txt --preset triage --json
-decima presets                                   # triage, guardrails, moderation, routing, pii, agent-gate, kg-judge
+decima presets                                   # triage, routing, moderation, pii, guard, guard-rag, guard-output, guard-web, agent-gate, kg-judge, …
 ```
 
 **Python**
@@ -85,6 +90,10 @@ The official `typesafe-sdk` works against it unchanged: `TypeSafeClient(api_key=
 | `routing` | cheapest LLM tier that can answer well: small / medium / frontier | decima-base |
 | `moderation` | which policy a post breaks, and how badly | decima-base |
 | `pii` | is there personal data, and of which kind | decima-base |
+| `guard` | prompt injection or jailbreak, harmful request, toxicity, which OWASP LLM risk | decima-guard |
+| `guard-rag` | indirect injection in a document or tool result; answer grounded in the source; tool call beyond the request | decima-guard |
+| `guard-output` | the reply leaks the system prompt or secrets; output unsafe for HTML / SQL / shell; harmful reply | decima-guard |
+| `guard-web` | is this HTTP input an attack, and which kind (SQL injection, XSS, path traversal, …) | decima-guard |
 | `guardrails` | prompt injection or jailbreak, personal data, toxicity before a prompt reaches an LLM | decima-agent |
 | `agent-gate` | allow / ask / deny a shell command, secret in an edit, model tier for a task | decima-agent |
 | `kg-judge` | is a fact asserted, hypothetical, denied or planned; are two records one entity; how two things relate | decima-agent |
@@ -95,8 +104,11 @@ Presets are JSON files in [`decima/presets`](decima/presets); write your own wit
 
 | Model | Size | For |
 |---|---|---|
-| [decima-agent](https://huggingface.co/amyrmahdy/decima-agent) 2.2 | 321M | agent gates and knowledge-graph judgments; states up to 2,048 tokens |
+| [decima-agent](https://huggingface.co/amyrmahdy/decima-agent) 2.3 | 321M | agent gates and knowledge-graph judgments; states up to 8,192 tokens |
+| [decima-guard](https://huggingface.co/amyrmahdy/decima-guard) 1.0 preview | 321M | OWASP LLM Top 10 and web-attack checks; English, Arabic, Persian |
+| [decima-guard-small](https://huggingface.co/amyrmahdy/decima-guard-small) preview | 140M | the same checks, faster, a few points lower |
 | [decima-base](https://huggingface.co/amyrmahdy/decima-base) 2.0 | 321M | general decisions, multilingual |
+| [decima-base-clean](https://huggingface.co/amyrmahdy/decima-base-clean) | 321M | no non-commercial training data; truly zero-shot on BTZSC |
 | [decima-small](https://huggingface.co/amyrmahdy/decima-small) 1.1 | 122M | the smallest CPUs and the browser |
 
 ## How good is it

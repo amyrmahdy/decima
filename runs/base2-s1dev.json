@@ -1,0 +1,151 @@
+{
+  "items": "runs/items-s1/s1dev.jsonl",
+  "preds": {
+    "v1k": "runs/preds/s1dev--v1k.jsonl",
+    "base1": "runs/preds/s1dev--base1.jsonl",
+    "base2": "runs/preds/s1dev--base2.jsonl"
+  },
+  "results": {
+    "v1k": {
+      "s1dev/score": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "score",
+        "lang": "en",
+        "acc": 0.6316455696202532,
+        "macro_f1": 0.5755682054894654,
+        "brier": 0.48171915689390904,
+        "nll": 0.8963854122440797,
+        "ece": 0.026960143055023308,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/choice": {
+        "n": 835,
+        "coverage": 1.0,
+        "choices": 5,
+        "kind": "choose",
+        "lang": "fa",
+        "acc": 0.7868263473053893,
+        "macro_f1": 0.7638336507936507,
+        "brier": 0.29452100374505524,
+        "nll": 0.5701914892028837,
+        "ece": 0.04250049599051045,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/noul": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 2,
+        "kind": "verify",
+        "lang": "en",
+        "acc": 0.7531645569620253,
+        "macro_f1": 0.6776201357653528,
+        "brier": 0.32594563213173827,
+        "nll": 0.48383953213753594,
+        "ece": 0.03764338563039041,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      }
+    },
+    "base1": {
+      "s1dev/score": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "score",
+        "lang": "en",
+        "acc": 0.6329113924050633,
+        "macro_f1": 0.593629205440229,
+        "brier": 0.45823374702490527,
+        "nll": 0.8342831246469696,
+        "ece": 0.04237042275790514,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/choice": {
+        "n": 835,
+        "coverage": 1.0,
+        "choices": 5,
+        "kind": "choose",
+        "lang": "fa",
+        "acc": 0.837125748502994,
+        "macro_f1": 0.8171365079365079,
+        "brier": 0.22671793790284048,
+        "nll": 0.44082050171302606,
+        "ece": 0.03150975277614331,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/noul": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 2,
+        "kind": "verify",
+        "lang": "en",
+        "acc": 0.7784810126582279,
+        "macro_f1": 0.7007918360413093,
+        "brier": 0.2861186738565151,
+        "nll": 0.4329031036050886,
+        "ece": 0.02793700380551333,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      }
+    },
+    "base2": {
+      "s1dev/score": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 4,
+        "kind": "score",
+        "lang": "en",
+        "acc": 0.6734177215189874,
+        "macro_f1": 0.6231474155842163,
+        "brier": 0.42744119772083045,
+        "nll": 0.7598366133997091,
+        "ece": 0.03878992575231075,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/choice": {
+        "n": 835,
+        "coverage": 1.0,
+        "choices": 5,
+        "kind": "choose",
+        "lang": "fa",
+        "acc": 0.8550898203592814,
+        "macro_f1": 0.8420088888888889,
+        "brier": 0.20435039326869736,
+        "nll": 0.39865226844111395,
+        "ece": 0.0309911680660392,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      },
+      "s1dev/noul": {
+        "n": 790,
+        "coverage": 1.0,
+        "choices": 2,
+        "kind": "verify",
+        "lang": "en",
+        "acc": 0.8113924050632911,
+        "macro_f1": 0.756667740771146,
+        "brier": 0.24804502628802585,
+        "nll": 0.38871815341788524,
+        "ece": 0.024077371219897194,
+        "ece_cal": NaN,
+        "T": NaN,
+        "flip": NaN
+      }
+    }
+  }
+}

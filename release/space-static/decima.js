@@ -1,5 +1,6 @@
-// Decima runtime for the browser — a line-for-line port of decima/runtime.py (DecimaOnnx) and
-// decima/normalize.py on ONNX Runtime Web (WASM) + tokenizers.js. No server: everything runs here.
+// Decima runtime for the browser — a line-for-line port of decima/runtime.py (DecimaOnnx), decima/render.py and
+// decima/normalize.py (decima-ai 2.2.0) on ONNX Runtime Web (WASM) + tokenizers.js. No server: everything runs here.
+// Works for every published model: decima-small (multilingual-e5-small) and decima-base / decima-agent (mmBERT-base).
 //
 //   const d = await Decima.load(MODEL_URL, {ort, Tokenizer, onProgress});
 //   d.decide("My card was stolen", {text: "What does the customer want?", choices: ["block card", "check balance"],
@@ -18,6 +19,9 @@ const TO_ARABIC = { "ی": "ي", "ک": "ك" };
 const PY_WS = "\\t\\n\\x0b\\x0c\\r\\x1c-\\x1f \\x85\\xa0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000";
 const PY_STRIP = new RegExp(`^[${PY_WS}]+|[${PY_WS}]+$`, "g");
 const pyStrip = (s) => s.replace(PY_STRIP, "");
+const PY_SPLIT = new RegExp(`[${PY_WS}]+`);
+const pySplit = (s) => s.split(PY_SPLIT).filter(Boolean);              // str.split()
+const pyLen = (s) => [...s].length;                                      // len(str): code points
 const mapChars = (s, table) => s.replace(/./gsu, (c) => table[c] ?? c);
 
 export function normalize(text, lang = "en") {
@@ -59,13 +63,21 @@ const softplus = (x) => Math.max(x, 0) + Math.log1p(Math.exp(-Math.abs(x))); // 
 
 const CACHE_NAME = "decima-small-model-v1.1";   // bump on every model release: cached files are keyed by URL
 
-async function openCache() {
-  try { return typeof caches !== "undefined" ? await caches.open(CACHE_NAME) : null; } catch { return null; }
+async function openCache(name = CACHE_NAME) {
+  try { return typeof caches !== "undefined" ? await caches.open(name) : null; } catch { return null; }
+}
+
+/** True when every URL is in the named cache (a model downloaded on an earlier visit). */
+export async function isCached(urls, name = CACHE_NAME) {
+  const cache = await openCache(name);
+  if (!cache) return false;
+  for (const u of urls) if (!(await cache.match(u).catch(() => null))) return false;
+  return true;
 }
 
 /** Fetch files, reporting combined progress; cached with the Cache API so the next visit skips the network. */
-export async function fetchFiles(files, onProgress = () => {}) {
-  const cache = await openCache();
+export async function fetchFiles(files, onProgress = () => {}, cacheName = CACHE_NAME) {
+  const cache = await openCache(cacheName);
   const state = files.map((f) => ({ loaded: 0, total: f.size || 0, cached: false }));
   const report = () => {
     const loaded = state.reduce((a, s) => a + s.loaded, 0), total = state.reduce((a, s) => a + s.total, 0);
@@ -104,8 +116,17 @@ export async function fetchFiles(files, onProgress = () => {}) {
   }));
 }
 
-export async function clearCache() {
-  try { return await caches.delete(CACHE_NAME); } catch { return false; }
+export async function clearCache(name = CACHE_NAME) {
+  try { return await caches.delete(name); } catch { return false; }
+}
+
+/** Remove every cached Decima model (all caches named decima-*). */
+export async function clearAllCaches() {
+  try {
+    const names = (await caches.keys()).filter((n) => n.startsWith("decima-"));
+    await Promise.all(names.map((n) => caches.delete(n)));
+    return names.length > 0;
+  } catch { return false; }
 }
 
 // ───────────────────────── runtime.py · DecimaOnnx ─────────────────────────
@@ -114,14 +135,16 @@ export async function clearCache() {
 const SIZES = { "encoder.onnx": 122164246, "scorer.onnx": 4915472, "decima.json": 22464,
                 "tokenizer/tokenizer.json": 17100000, "tokenizer/tokenizer_config.json": 700 };
 
+export const MODEL_FILES = ["encoder.onnx", "scorer.onnx", "decima.json", "tokenizer/tokenizer.json", "tokenizer/tokenizer_config.json"];
+
 export class Decima {
-  static async load(baseUrl, { ort, Tokenizer, onProgress, numThreads = 1 } = {}) {
+  static async load(baseUrl, { ort, Tokenizer, onProgress, numThreads = 1, cacheName = CACHE_NAME, sizes = SIZES } = {}) {
     if (!baseUrl.endsWith("/")) baseUrl += "/";
-    const names = ["encoder.onnx", "scorer.onnx", "decima.json", "tokenizer/tokenizer.json", "tokenizer/tokenizer_config.json"];
+    const names = MODEL_FILES;
     const t0 = performance.now();
     let fromCache = true;
     const progress = (p) => { fromCache = p.cached; onProgress?.(p); };
-    const bufs = await fetchFiles(names.map((n) => ({ url: baseUrl + n, size: SIZES[n] })), progress);
+    const bufs = await fetchFiles(names.map((n) => ({ url: baseUrl + n, size: sizes[n] })), progress, cacheName);
     const tDownload = performance.now() - t0;
     // The Hub counts a model download when the repo's config.json is requested; do that once per real download.
     const repoRoot = baseUrl.match(/^(.*\/resolve\/[^/]+\/)/)?.[1];
@@ -132,25 +155,79 @@ export class Decima {
     ort.env.wasm.numThreads = numThreads;
     const enc = await ort.InferenceSession.create(new Uint8Array(bufs[0]), opts);
     const sc = await ort.InferenceSession.create(new Uint8Array(bufs[1]), opts);
-    const d = new Decima(ort, enc, sc, json(bufs[2]), new Tokenizer(json(bufs[3]), json(bufs[4])));
+    // The runtime truncates explicitly (as transformers does per call); a truncation or padding setting saved
+    // inside tokenizer.json (mmBERT's has max_length 64) must not apply to plain encodes.
+    const tj = json(bufs[3]);
+    delete tj.truncation;
+    delete tj.padding;
+    const tc = json(bufs[4]);
+    const d = new Decima(ort, enc, sc, json(bufs[2]), new Tokenizer(tj, tc), tc);
     d.stats = { download_ms: tDownload, init_ms: performance.now() - t0 - tDownload,
-                bytes: bufs.reduce((a, b) => a + b.byteLength, 0) };
+                bytes: bufs.reduce((a, b) => a + b.byteLength, 0), fromCache };
     return d;
   }
 
-  constructor(ort, enc, sc, cfg, tok) {
+  constructor(ort, enc, sc, cfg, tok, tokCfg = {}) {
     this.ort = ort; this.enc = enc; this.sc = sc; this.cfg = cfg; this.tok = tok;
     const o = cfg.ordinal;
     this.ord = [Float64Array.from(o.ord_g_w), o.ord_g_b, Float64Array.from(o.ord_gap_w), o.ord_gap_b];
     this.cache = new Map();
-    this.pad = tok.token_to_id("<pad>") ?? 1;
-    this.eos = tok.token_to_id("</s>") ?? 2;
+    const padTok = typeof tokCfg.pad_token === "string" ? tokCfg.pad_token : tokCfg.pad_token?.content;
+    this.pad = (padTok && tok.token_to_id(padTok)) ?? tok.token_to_id("<pad>") ?? 1;
+    // mmBERT (Gemma tokenizer): spaces become "▁" and Metaspace splits before every "▁", so a run of spaces is one
+    // piece per space in the Rust tokenizer, while tokenizers.js keeps the run together. Encoding the text in
+    // segments that each start at the second space of a run gives the Rust pieces (each segment's leading space is
+    // its own prefix, so no extra "▁" is prepended).
+    this.splitRuns = !!cfg.backbone?.includes("mmBERT");
   }
 
-  /** Token ids with special tokens, truncated like HF `truncation=True, max_length` (right side, keep </s>). */
+  /** Token ids with special tokens, as the Python (Rust) tokenizer gives them. */
+  encodeIds(text) {
+    if (!this.splitRuns || !text.includes("  ")) return this.tok.encode(text).ids;
+    const segs = text.split(/(?<= )(?= )/);
+    const first = this.tok.encode(segs[0]).ids;
+    const rest = segs.slice(1).flatMap((t) => this.tok.encode(t, { add_special_tokens: false }).ids);
+    return [...first.slice(0, -1), ...rest, first[first.length - 1]];
+  }
+
+  async release() {
+    await Promise.all([this.enc.release?.(), this.sc.release?.()].filter(Boolean)).catch(() => {});
+  }
+
+  /** Number of tokens (with special tokens) the model sees for `text`, untruncated. */
+  count(text) {
+    return this.encodeIds(text).length;
+  }
+
+  /** Token ids with special tokens, truncated like HF `truncation=True, max_length` (right side, keeping the
+   *  closing special token: </s> for XLM-R / e5, <eos> for mmBERT). */
   ids(text, maxLen) {
-    const ids = this.tok.encode(text).ids;
-    return ids.length <= maxLen ? ids : [...ids.slice(0, maxLen - 1), this.eos];
+    const ids = this.encodeIds(text);
+    return ids.length <= maxLen ? ids : [...ids.slice(0, maxLen - 1), ids[ids.length - 1]];
+  }
+
+  /** render.py · choice_texts: "question option", cut to max_choice_tokens. fit (choice_fit models) keeps the
+   *  option whole and shortens only this copy of the question; earlier models keep their right-hand cut unless it
+   *  makes two options identical. */
+  choiceTexts(qt, choices, lang) {
+    const pre = this.cfg.choice_prefix ?? "passage: ", L = this.cfg.max_choice_tokens;
+    if (!this.cfg.choice_fit) {
+      const legacy = choices.map((c) => pre + normalize(pyStrip(`${qt} ${c}`), lang));
+      if (new Set(legacy.map((t) => this.ids(t, L).join(","))).size === legacy.length) return legacy;
+    }
+    return choices.map((c) => {
+      const full = pre + normalize(pyStrip(`${qt} ${c}`), lang);
+      if (this.count(full) <= L) return full;   // token count only (byte fallback: rare scripts and emoji)
+      const opt = normalize(c, lang);
+      const words = pySplit(normalize(qt, lang));
+      let lo = 0, hi = words.length;
+      while (lo < hi) {                                   // the longest question head that fits
+        const mid = (lo + hi + 1) >> 1;
+        if (this.count(`${pre}${words.slice(0, mid).join(" ")} … ${opt}`) <= L) lo = mid;
+        else hi = mid - 1;
+      }
+      return lo ? `${pre}${words.slice(0, lo).join(" ")} … ${opt}` : pre + opt;
+    });
   }
 
   async encode(texts, maxLen) {
@@ -170,9 +247,7 @@ export class Decima {
     const key = JSON.stringify([qt, q.choices, q.lang]);
     if (this.cache.has(key)) return [this.cache.get(key), false];
     if (this.cache.size > 256) this.cache.clear();
-    const pre = this.cfg.choice_prefix ?? "passage: ";
-    const texts = q.choices.map((c) => pre + normalize(pyStrip(`${qt} ${c}`), q.lang));
-    const v = await this.encode(texts, this.cfg.max_choice_tokens);
+    const v = await this.encode(this.choiceTexts(qt, q.choices, q.lang), this.cfg.max_choice_tokens);
     this.cache.set(key, v);
     return [v, true];
   }

@@ -70,7 +70,8 @@ def to_question(qid: str, spec: dict, lang: str = "en") -> tuple[str, Question, 
             raise SystemOneError(f"questions.{qid}: choice needs 2–{MAX_CHOICES} criteria", issues=[{"loc": loc, "msg": "choice needs 2-255 labels", "type": "value_error"}])
         labels = [str(k) for k in crit]
         opts = [f"{k}: {_text(v)}" if _text(v).strip() else k for k, v in zip(labels, crit.values())]
-        return t, Question(text, opts, kind="choose", lang=lang), labels
+        kind = "score" if spec.get("ordinal") is True else "choose"    # Decima extension: a choice scored by the ordinal head it was trained with
+        return t, Question(text, opts, kind=kind, lang=lang), labels
     if t == "score":
         if not isinstance(crit, list) or not (MIN_LEVELS <= len(crit) <= MAX_LEVELS):
             raise SystemOneError(f"questions.{qid}: score needs {MIN_LEVELS}–{MAX_LEVELS} levels", issues=[{"loc": loc, "msg": "score needs 2-10 levels", "type": "value_error"}])

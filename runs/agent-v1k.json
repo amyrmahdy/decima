@@ -1,0 +1,161 @@
+{
+ "checkpoint": "checkpoints/v1k/best",
+ "state_budget": 512,
+ "sets": {
+  "gold": {
+   "all": {
+    "n": 97,
+    "acc": 0.5154639175257731,
+    "ece": 0.15115193515708766,
+    "local_share": 0.29896907216494845,
+    "local_acc": 0.6551724137931034
+   },
+   "by_task": {
+    "ab_bash_gate": {
+     "n": 22,
+     "acc": 0.5454545454545454,
+     "ece": 0.2096747945655476,
+     "local_share": 0.18181818181818182,
+     "local_acc": 1.0
+    },
+    "ab_next_action": {
+     "n": 14,
+     "acc": 0.21428571428571427,
+     "ece": 0.30227648999009815,
+     "local_share": 0.07142857142857142,
+     "local_acc": 1.0
+    },
+    "ab_ops_intervention": {
+     "n": 10,
+     "acc": 0.5,
+     "ece": 0.04556686878204341,
+     "local_share": 0.0,
+     "local_acc": null
+    },
+    "ab_read_only": {
+     "n": 8,
+     "acc": 0.375,
+     "ece": 0.2585720792412758,
+     "local_share": 0.0,
+     "local_acc": null
+    },
+    "ab_secret_gate": {
+     "n": 20,
+     "acc": 0.45,
+     "ece": 0.37725044488906867,
+     "local_share": 0.85,
+     "local_acc": 0.47058823529411764
+    },
+    "ab_tests_passed": {
+     "n": 8,
+     "acc": 0.625,
+     "ece": 0.2938371077179909,
+     "local_share": 0.625,
+     "local_acc": 0.8
+    },
+    "ab_tier_router": {
+     "n": 15,
+     "acc": 0.8666666666666667,
+     "ece": 0.3074455181757609,
+     "local_share": 0.13333333333333333,
+     "local_acc": 1.0
+    }
+   },
+   "gate": {
+    "ab_secret_gate": {
+     "pos": 9,
+     "missed_deny": 5,
+     "missed_ask": 0
+    },
+    "ab_bash_gate": {
+     "pos": 9,
+     "missed_deny": 6,
+     "missed_ask": 1
+    }
+   }
+  },
+  "proc": {
+   "all": {
+    "n": 2000,
+    "acc": 0.4485,
+    "ece": 0.1526129115149379,
+    "local_share": 0.2135,
+    "local_acc": 0.5807962529274004
+   },
+   "by_task": {
+    "action": {
+     "n": 417,
+     "acc": 0.16546762589928057,
+     "ece": 0.2530347977539332,
+     "local_share": 0.0,
+     "local_acc": null
+    },
+    "bash": {
+     "n": 610,
+     "acc": 0.5770491803278689,
+     "ece": 0.04614749599675662,
+     "local_share": 0.21967213114754097,
+     "local_acc": 0.7238805970149254
+    },
+    "ops": {
+     "n": 203,
+     "acc": 0.5517241379310345,
+     "ece": 0.16648466217106792,
+     "local_share": 0.17733990147783252,
+     "local_acc": 0.5277777777777778
+    },
+    "output": {
+     "n": 205,
+     "acc": 0.35121951219512193,
+     "ece": 0.3381616000722094,
+     "local_share": 0.424390243902439,
+     "local_acc": 0.5402298850574713
+    },
+    "secret": {
+     "n": 565,
+     "acc": 0.5168141592920354,
+     "ece": 0.17687924852413414,
+     "local_share": 0.3008849557522124,
+     "local_acc": 0.5
+    }
+   },
+   "gate": {
+    "secret": {
+     "pos": 285,
+     "missed_deny": 259,
+     "missed_ask": 51
+    },
+    "bash": {
+     "pos": 85,
+     "missed_deny": 77,
+     "missed_ask": 17
+    }
+   }
+  },
+  "llm": {
+   "all": {
+    "n": 177,
+    "acc": 0.5084745762711864,
+    "ece": 0.21311377536105575,
+    "local_share": 0.423728813559322,
+    "local_acc": 0.48
+   },
+   "by_task": {
+    "secret-llm": {
+     "n": 177,
+     "acc": 0.5084745762711864,
+     "ece": 0.21311377536105575,
+     "local_share": 0.423728813559322,
+     "local_acc": 0.48
+    }
+   },
+   "gate": {
+    "secret": {
+     "pos": 93,
+     "missed_deny": 85,
+     "missed_ask": 31
+    }
+   }
+  }
+ }
+}

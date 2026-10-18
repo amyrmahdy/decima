@@ -1,0 +1,449 @@
+{
+ "model": "export/guard-latin-int8",
+ "sets": {
+  "data/guard/test-llm.jsonl": {
+   "all": {
+    "n": 24832,
+    "acc": 0.8742348582474226,
+    "ece": 0.029609364805444315,
+    "missed": 1753,
+    "harmful": 9911,
+    "false_alarms": 1156,
+    "benign": 12899
+   },
+   "refused": 0,
+   "by_task": {
+    "harm": {
+     "n": 3646,
+     "acc": 0.8768513439385628,
+     "ece": 0.036307628607265996,
+     "missed": 314,
+     "harmful": 2359,
+     "false_alarms": 135,
+     "benign": 1287
+    },
+    "indirect": {
+     "n": 296,
+     "acc": 1.0,
+     "ece": 0.022235322038869628,
+     "missed": 0,
+     "harmful": 148,
+     "false_alarms": 0,
+     "benign": 148
+    },
+    "inject": {
+     "n": 6532,
+     "acc": 0.9150336803429271,
+     "ece": 0.009900813572113238,
+     "missed": 431,
+     "harmful": 2290,
+     "false_alarms": 124,
+     "benign": 4242
+    },
+    "leak": {
+     "n": 1200,
+     "acc": 0.9966666666666667,
+     "ece": 0.030605992724498075,
+     "missed": 2,
+     "harmful": 537,
+     "false_alarms": 2,
+     "benign": 663
+    },
+    "owasp": {
+     "n": 329,
+     "acc": 0.9574468085106383,
+     "ece": 0.05528835947752723,
+     "missed": 4,
+     "harmful": 329
+    },
+    "resp_harm": {
+     "n": 2400,
+     "acc": 0.7904166666666667,
+     "ece": 0.08925803800423937,
+     "missed": 339,
+     "harmful": 865,
+     "false_alarms": 164,
+     "benign": 1535
+    },
+    "toxic": {
+     "n": 8407,
+     "acc": 0.834185797549661,
+     "ece": 0.057438424619919916,
+     "missed": 663,
+     "harmful": 3383,
+     "false_alarms": 731,
+     "benign": 5024
+    },
+    "toxic_level": {
+     "n": 2022,
+     "acc": 0.8991097922848664,
+     "ece": 0.15075095136734246
+    }
+   },
+   "by_lang": {
+    "ar": {
+     "n": 9831,
+     "acc": 0.8420303122774896,
+     "ece": 0.05577539767395116,
+     "missed": 711,
+     "harmful": 3517,
+     "false_alarms": 638,
+     "benign": 4292
+    },
+    "cs": {
+     "n": 85,
+     "acc": 0.8235294117647058,
+     "ece": 0.10106878070270314,
+     "missed": 8,
+     "harmful": 22,
+     "false_alarms": 7,
+     "benign": 63
+    },
+    "de": {
+     "n": 296,
+     "acc": 0.7567567567567568,
+     "ece": 0.14553969756171506,
+     "missed": 67,
+     "harmful": 162,
+     "false_alarms": 5,
+     "benign": 134
+    },
+    "en": {
+     "n": 11663,
+     "acc": 0.9019977707279431,
+     "ece": 0.019604860353886852,
+     "missed": 723,
+     "harmful": 4812,
+     "false_alarms": 414,
+     "benign": 6851
+    },
+    "es": {
+     "n": 235,
+     "acc": 0.9361702127659575,
+     "ece": 0.052222315301286425,
+     "missed": 6,
+     "harmful": 173,
+     "false_alarms": 9,
+     "benign": 62
+    },
+    "fa": {
+     "n": 399,
+     "acc": 1.0,
+     "ece": 0.034586374921009994,
+     "false_alarms": 0,
+     "benign": 399
+    },
+    "fr": {
+     "n": 78,
+     "acc": 0.8461538461538461,
+     "ece": 0.06400374877147182,
+     "missed": 6,
+     "harmful": 18,
+     "false_alarms": 6,
+     "benign": 60
+    },
+    "hi": {
+     "n": 433,
+     "acc": 0.8660508083140878,
+     "ece": 0.04518640234068412,
+     "missed": 52,
+     "harmful": 283,
+     "false_alarms": 6,
+     "benign": 150
+    },
+    "it": {
+     "n": 75,
+     "acc": 0.8,
+     "ece": 0.10240965366363522,
+     "missed": 7,
+     "harmful": 19,
+     "false_alarms": 8,
+     "benign": 56
+    },
+    "ja": {
+     "n": 103,
+     "acc": 0.8640776699029126,
+     "ece": 0.0687575108796647,
+     "missed": 11,
+     "harmful": 27,
+     "false_alarms": 3,
+     "benign": 76
+    },
+    "ko": {
+     "n": 87,
+     "acc": 0.8735632183908046,
+     "ece": 0.06866679177887136,
+     "missed": 7,
+     "harmful": 24,
+     "false_alarms": 4,
+     "benign": 63
+    },
+    "nl": {
+     "n": 76,
+     "acc": 0.868421052631579,
+     "ece": 0.059287729231934774,
+     "missed": 5,
+     "harmful": 17,
+     "false_alarms": 5,
+     "benign": 59
+    },
+    "pl": {
+     "n": 76,
+     "acc": 0.8289473684210527,
+     "ece": 0.06421869679501181,
+     "missed": 7,
+     "harmful": 23,
+     "false_alarms": 6,
+     "benign": 53
+    },
+    "pt": {
+     "n": 75,
+     "acc": 0.84,
+     "ece": 0.07516609748204545,
+     "missed": 8,
+     "harmful": 16,
+     "false_alarms": 4,
+     "benign": 59
+    },
+    "ru": {
+     "n": 418,
+     "acc": 0.9138755980861244,
+     "ece": 0.03929402811105167,
+     "missed": 23,
+     "harmful": 274,
+     "false_alarms": 13,
+     "benign": 144
+    },
+    "sr": {
+     "n": 177,
+     "acc": 0.9943502824858758,
+     "ece": 0.049545451072649786,
+     "missed": 1,
+     "harmful": 177
+    },
+    "sv": {
+     "n": 77,
+     "acc": 0.8441558441558441,
+     "ece": 0.07681216976859355,
+     "missed": 7,
+     "harmful": 19,
+     "false_alarms": 5,
+     "benign": 58
+    },
+    "th": {
+     "n": 189,
+     "acc": 0.7777777777777778,
+     "ece": 0.1182792312884457,
+     "missed": 35,
+     "harmful": 77,
+     "false_alarms": 7,
+     "benign": 112
+    },
+    "tr": {
+     "n": 64,
+     "acc": 0.90625,
+     "ece": 0.04559117462486028,
+     "missed": 2,
+     "harmful": 64
+    },
+    "zh": {
+     "n": 395,
+     "acc": 0.789873417721519,
+     "ece": 0.11299621923060352,
+     "missed": 67,
+     "harmful": 187,
+     "false_alarms": 16,
+     "benign": 208
+    }
+   }
+  },
+  "data/guard/test-web.jsonl": {
+   "all": {
+    "n": 5139,
+    "acc": 0.6810663553220471,
+    "ece": 0.1689838456863799,
+    "missed": 1076,
+    "harmful": 3239,
+    "false_alarms": 262,
+    "benign": 1900
+   },
+   "refused": 0,
+   "by_task": {
+    "code_owasp": {
+     "n": 1439,
+     "acc": 0.26546212647671996,
+     "ece": 0.47653548204494456,
+     "missed": 714,
+     "harmful": 1139,
+     "false_alarms": 43,
+     "benign": 300
+    },
+    "code_vuln": {
+     "n": 1400,
+     "acc": 0.6871428571428572,
+     "ece": 0.16192202906987302,
+     "missed": 354,
+     "harmful": 700,
+     "false_alarms": 84,
+     "benign": 700
+    },
+    "web_class": {
+     "n": 700,
+     "acc": 0.9971428571428571,
+     "ece": 0.054238626115592235,
+     "missed": 0,
+     "harmful": 400,
+     "false_alarms": 1,
+     "benign": 300
+    },
+    "web_req": {
+     "n": 1600,
+     "acc": 0.91125,
+     "ece": 0.12002381597794336,
+     "missed": 8,
+     "harmful": 1000,
+     "false_alarms": 134,
+     "benign": 600
+    }
+   },
+   "by_lang": {
+    "en": {
+     "n": 5139,
+     "acc": 0.6810663553220471,
+     "ece": 0.1689838456863799,
+     "missed": 1076,
+     "harmful": 3239,
+     "false_alarms": 262,
+     "benign": 1900
+    }
+   }
+  },
+  "data/guard/test-llm-gen-translate.jsonl": {
+   "all": {
+    "n": 624,
+    "acc": 0.7948717948717948,
+    "ece": 0.09240048655714744,
+    "missed": 73,
+    "harmful": 296,
+    "false_alarms": 55,
+    "benign": 328
+   },
+   "refused": 22,
+   "by_task": {
+    "harm": {
+     "n": 208,
+     "acc": 0.8269230769230769,
+     "ece": 0.0753386075106951,
+     "missed": 17,
+     "harmful": 84,
+     "false_alarms": 19,
+     "benign": 124
+    },
+    "inject": {
+     "n": 208,
+     "acc": 0.8413461538461539,
+     "ece": 0.06789119570301126,
+     "missed": 29,
+     "harmful": 128,
+     "false_alarms": 4,
+     "benign": 80
+    },
+    "toxic": {
+     "n": 208,
+     "acc": 0.7163461538461539,
+     "ece": 0.16585199563549113,
+     "missed": 27,
+     "harmful": 84,
+     "false_alarms": 32,
+     "benign": 124
+    }
+   },
+   "by_lang": {
+    "ar": {
+     "n": 384,
+     "acc": 0.8255208333333334,
+     "ece": 0.06645125864694523,
+     "missed": 28,
+     "harmful": 156,
+     "false_alarms": 39,
+     "benign": 228
+    },
+    "fa": {
+     "n": 240,
+     "acc": 0.7458333333333333,
+     "ece": 0.13391925121347112,
+     "missed": 45,
+     "harmful": 140,
+     "false_alarms": 16,
+     "benign": 100
+    }
+   }
+  },
+  "data/guard/test-llm-gen-inject-latin.jsonl": {
+   "all": {
+    "n": 437,
+    "acc": 0.9931350114416476,
+    "ece": 0.03961046650426062,
+    "missed": 3,
+    "harmful": 230,
+    "false_alarms": 0,
+    "benign": 207
+   },
+   "refused": 3,
+   "by_task": {
+    "dos": {
+     "n": 54,
+     "acc": 1.0,
+     "ece": 0.07389236048415858,
+     "false_alarms": 0,
+     "benign": 54
+    },
+    "harm": {
+     "n": 22,
+     "acc": 1.0,
+     "ece": 0.07352301749316124,
+     "false_alarms": 0,
+     "benign": 22
+    },
+    "inject": {
+     "n": 242,
+     "acc": 0.987603305785124,
+     "ece": 0.023529953454151604,
+     "missed": 3,
+     "harmful": 156,
+     "false_alarms": 0,
+     "benign": 86
+    },
+    "owasp": {
+     "n": 119,
+     "acc": 1.0,
+     "ece": 0.05658523826038137,
+     "missed": 0,
+     "harmful": 74,
+     "false_alarms": 0,
+     "benign": 45
+    }
+   },
+   "by_lang": {
+    "ar": {
+     "n": 88,
+     "acc": 1.0,
+     "ece": 0.05148795247077941,
+     "missed": 0,
+     "harmful": 48,
+     "false_alarms": 0,
+     "benign": 40
+    },
+    "fa": {
+     "n": 349,
+     "acc": 0.9914040114613181,
+     "ece": 0.03811769140484004,
+     "missed": 3,
+     "harmful": 182,
+     "false_alarms": 0,
+     "benign": 167
+    }
+   }
+  }
+ }
+}

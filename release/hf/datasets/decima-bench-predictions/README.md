@@ -22,8 +22,10 @@ tags:
 
 # Decima Bench Predictions
 
-This is the reproducibility package for every number in the
-[Decima-small](https://huggingface.co/amyrmahdy/decima-small) model card and technical report.
+This is the reproducibility package for the benchmark numbers in the
+[Decima-small](https://huggingface.co/amyrmahdy/decima-small),
+[Decima-base](https://huggingface.co/amyrmahdy/decima-base) and
+[Decima-agent](https://huggingface.co/amyrmahdy/decima-agent) model cards and the technical report.
 It contains **each system's predicted probability vector for each evaluation item**, the scores computed
 from those predictions, and pointers to the code that rebuilds the items and scores them.
 
@@ -39,14 +41,20 @@ running a model.
 ```
 preds/<set>--<system>.parquet      id: str, probs: list<float64>  — aligned with the item's choices
 preds-x86/<set>--v1i-x86-{fp32,int8}.parquet   ONNX on x86 CPU (int8 = shipped runtime)
+preds-onnx/<set>--<system>-onnx-{fp32,int8}.parquet
+                                   int8-vs-fp32 check of each released model (ONNX on an ARM CPU,
+                                   the eval items of kev, laya and decima; same id/probs schema)
 items/<set>.manifest.parquet       id, suite, split, lang, kind, n_choices, group, perm, sha256
                                    — NO text and NO gold; sha256 = sha256(json [state, question, choices,
                                    gold]) so a rebuilt item can be checked against ours
 results/<system>-<set>.json        bench.score / bench.jdi_index output (per-suite acc, macro-F1, Brier,
                                    NLL, ECE, ECE after temperature, flip rate, T) + the exact inputs used
+results/jabr-<system>-int8.json    jabr/classifier-benchmark runs (the benchmark's own harness; per-case
+                                   expected / predicted / probability, no task text)
 results/phase1*-summary.md, results/latency-*-gx10-indicative.json, results/x86/*.json
 audit/*.json                       overlap, bootstrap CIs, calibration, parameter counts
-determinism.txt                    Decima-small's release re-run vs its development run (max |Δp| per set)
+determinism.txt                    Decima-small's release re-run vs its development run (max |Δp| per set),
+                                   and the int8-vs-fp32 agreement of every released model
 code-ref.json                      repository, tag, commit, item-builder commands, JevBench / JDI kit
                                    commits, and the resolved Hub revision of every source dataset
 files.json                         sha256 and size of every file
@@ -79,7 +87,8 @@ for `ece_cal`.
 
 | system | what | kev | laya | decima | jevtyped | btzsc | jdi-all |
 |---|---|:-:|:-:|:-:|:-:|:-:|:-:|
-| **v1i** | **Decima-small (released)** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **v1k** | **Decima-small 1.1 (released 2026-10-01, current)** | ✓ | ✓ | ✓ | ✓ | ✓ | |
+| **v1i** | **Decima-small 1.0** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | v0 | Decima V0 (teacher data only) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ (+ `jdi`, `jdi-rest`) |
 | v1a, v1a2, v1b, v1c, v1e, v1f, v1g, v1h, v1j | Phase-1 runs (data/curriculum ablations) | ✓ | ✓ | ✓ | ✓ | all but v1a, v1e | v1a2, v1g |
 | v2b, v2c | Decima-base candidates (multilingual-e5-base; not released, see the technical report) | ✓ | ✓ | ✓ | ✓ | ✓ | v2b |
@@ -88,14 +97,54 @@ for `ece_cal`.
 | kev-0.5b / kev-0.8b | `jaredpalmer/kev-*` (Apache-2.0), run with its own code (`bench/external/kev_predict.py`) | ✓ / ✓ | ✓ / – | – / ✓ | ✓ / ✓ | | |
 | laya / laya-multilingual | `convaiinnovations/laya*` (Apache-2.0), run with its own code (`bench/external/laya_predict.py`) | ✓ | ✓ | ✓ | ✓ | | |
 | v1i-x86-fp32 / -int8 | ONNX export on x86 CPU | ✓ | ✓ | ✓ | int8 | int8 | |
+| **base2** | **Decima-base 2.0 (released 2026-10-04)**, mmBERT-base, 321M | ✓ | ✓ | ✓ | ✓ | ✓ | |
+| base1 | Decima-base stage 1 (not released; stage 2 continues it) | ✓ | ✓ | ✓ | ✓ | ✓ | |
+| **agent3** | **Decima-agent 2.2 (released, current)** | ✓ | ✓ | ✓ | ✓ | ✓ | |
+| agent1, agent2 | Decima-agent 2.0, 2.1 (released earlier) | ✓ | ✓ | ✓ | ✓ | ✓ | |
+| kg1, kg2 | knowledge-graph rounds between agent 2.1 and 2.2 (not released) | ✓ | ✓ | ✓ | ✓ | ✓ | |
+| \<system\>-onnx-fp32 / -int8 | v1i, v1k, base2, agent1, agent2, agent3 as ONNX on CPU (`preds-onnx/`) | ✓ | ✓ | ✓ | | | |
 
-That is 104 GPU prediction files plus 8 x86 files: 2.58 M prediction rows. Every ablation ships: the
-negative results are part of the evidence. As zstd-compressed Parquet the whole package is about 275 MB
-(the same predictions are about 1.2 GB as JSONL).
+That is 144 GPU prediction files, 8 x86 files and 36 ONNX-check files: 3.70 M prediction rows. Every
+ablation ships: the negative results are part of the evidence. As zstd-compressed Parquet the whole package
+is about 410 MB (the same predictions are about 1.9 GB as JSONL).
 
 Competitor probabilities are those the competitor's own code produces *as shipped*: Laya with its
 shipped temperatures, Kev raw. Before any comparison, both protocols were verified by reproducing the
 competitors' published numbers (Laya 0.783 / 0.860, Kev 0.799).
+
+### Decima-small 1.1 (v1k)
+
+`preds/<set>--v1k.parquet` and `results/v1k-<set>.json` are 1.1's development run on the same frozen items (PyTorch, GPU). `results/jabr-v1k-int8.json` is 1.1 (int8 ONNX) on [jabr/classifier-benchmark](https://github.com/jabr/classifier-benchmark), run with the benchmark's own harness and the adapter in [jabr/classifier-benchmark#1](https://github.com/jabr/classifier-benchmark/pull/1). 1.1 was selected without looking at jabr; the benchmark was run once, at the end. `results/jabr-v1i-int8.json` and
+`results/jabr-v1i-hf-int8.json` are 1.0 on the same benchmark (local export, and the int8 files as downloaded from the Hub).
+
+### Generation 2: Decima-base and Decima-agent
+
+`preds/<set>--{base1,base2,agent1,agent2,kg1,kg2,agent3}.parquet` and `results/<system>-<set>.json` are the development
+runs (PyTorch, GPU) on the same frozen items as Decima-small, scored by the same code. Lineage: mmBERT-base → base1 →
+**base2** (Decima-base 2.0) → agent1 (Decima-agent 2.0) → agent2 (2.1) → kg1 → kg2 → **agent3** (Decima-agent 2.2). kg1
+and kg2 were intermediate knowledge-graph rounds; they ship because they are part of the path, like the Phase-1 ablations.
+
+The int8 runtime that the cards recommend was checked against fp32 on 22,050 eval items of kev, laya and decima
+(`preds-onnx/`; summary lines with accuracy in `determinism.txt`): top-1 agreement 0.9941 (v1i), 0.9941 (v1k), 0.9929
+(base2), 0.9924 (agent1), 0.9919 (agent2), 0.9898 (agent3).
+
+Unweighted means over the suites of each results file (accuracy; BTZSC = macro-F1 over the clean 18, see the caveats):
+
+| system | kev (8) | laya (29) | decima (12) | JevBench public | typed-decisions | BTZSC clean 18 |
+|---|---:|---:|---:|---:|---:|---:|
+| Decima-small 1.1 (v1k) | 0.762 | 0.761 | 0.786 | 0.571 | 0.427 | 0.558 |
+| base1 | 0.686 | 0.660 | 0.629 | 0.606 | 0.505 | 0.576 |
+| **Decima-base 2.0 (base2)** | **0.790** | **0.793** | **0.794** | 0.602 | 0.484 | **0.594** |
+| Decima-agent 2.0 (agent1) | 0.750 | 0.766 | 0.782 | 0.606 | 0.465 | 0.572 |
+| Decima-agent 2.1 (agent2) | 0.758 | 0.771 | 0.778 | 0.589 | 0.487 | 0.566 |
+| kg1 | 0.761 | 0.753 | 0.765 | 0.576 | 0.486 | 0.564 |
+| kg2 | 0.749 | 0.755 | 0.768 | 0.589 | 0.497 | 0.553 |
+| **Decima-agent 2.2 (agent3)** | 0.753 | 0.759 | 0.762 | 0.606 | 0.459 | 0.551 |
+
+The agent models trade some general accuracy (and calibration on these sets) for their agent and knowledge-graph
+skills, which are measured on separate test sets described in the Decima-agent card, not here. Predictions of models
+that are trained but not released are not included, nor are predictions on our own System One dev split, whose items
+are not public.
 
 ## How to reproduce every table
 
@@ -150,6 +199,10 @@ model-card tables map to results files as follows:
 | Jev Decision Index 0.1 | `results/v1i-jdi.json`, `results/phase0-jdi.json` |
 | Ablations and soups | `results/<run>-<set>.json`, `results/phase1*-summary.md` |
 | int8 vs fp32, x86 | `results/x86/compare-v1i.json` |
+| int8 vs fp32 of v1i, v1k, Decima-base, Decima-agent (ARM CPU) | `preds-onnx/`, `determinism.txt` |
+| Decima-base card: Laya, Kev, Decima bench, BTZSC clean 18 | `results/base2-{laya,kev,decima,btzsc}.json` |
+| Decima-agent card: general skills after the agent rounds | `results/agent3-<set>.json` (and agent1, agent2, kg1, kg2) |
+| jabr/classifier-benchmark (Decima-small 1.0, 1.1) | `results/jabr-v1i-int8.json`, `results/jabr-v1k-int8.json` |
 
 Latency and speed numbers are hardware measurements, not predictions. They live in
 `results/latency-*-gx10-indicative.json` and `results/x86/speed-*.json` and are reproduced with `bench/latency.py` /
@@ -165,6 +218,12 @@ Latency and speed numbers are hardware measurements, not predictions. They live 
 - Some suites use splits that overlap with Decima's training data (AG News and banking77 calib items
   come from train; the Kev calib items come from train). The model card's zero-shot vs
   in-distribution table says which ones.
+- The same holds for generation 2: Decima-base and Decima-agent trained on the MASSIVE and XNLI/MNLI train splits
+  among others, so the laya and decima sets are in-distribution for them (Decima-base card, footnotes ² and ³). For
+  BTZSC quote the clean 18, which leaves out rottentomatoes, banking77, massive and agnews (`scripts/pick_best.py`,
+  `BTZSC_CONTAMINATED`); the all-22 mean in `results/*-btzsc.json` includes them.
+- To regenerate generation-2 predictions from the released weights, use the code at tag `v2.2.0` (each model keeps the
+  choice rendering it was trained with). The items and scoring code are unchanged since `v1.0.0`.
 - GPU predictions are from an NVIDIA GB10 (PyTorch). Other hardware may differ in the last digits. Top-1 ties are rare but possible.
 
 ## Licence

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Decima Playground — open Jev-style decision model</title>
-<meta name="description" content="Decima-small: an open, Jev-style (System One) decision model, 122M, running in your browser. Situation + question + options → calibrated probabilities. Nothing you type leaves your device.">
+<title>Decima Playground — three open decision models</title>
+<meta name="description" content="Try decima-agent 2.2, decima-base 2.0 and decima-small 1.1 with the presets of the decima Python package: pick a preset or write your own question and options, paste text, get calibrated probabilities. The models run in your browser.">
 <meta name="color-scheme" content="light dark">
 <script>
   // theme before first paint: saved choice, else the system setting
@@ -19,7 +19,8 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<script type="module" src="app.js"></script>
+<link rel="stylesheet" href="play.css">
+<script type="module" src="play.js"></script>
 </head>
 <body>
 <div class="dz-page">
@@ -27,8 +28,9 @@
 <header class="dz-header">
   <div class="dz-top">
     <div class="dz-brand">
-      <h1 class="dz-word">Decima<span class="dz-word-sub">small</span></h1>
-      <p class="dz-pitch">Give it a situation, a question and your options.<br>Get back calibrated probabilities — computed right here, in your browser.</p>
+      <h1 class="dz-word">Decima<span class="dz-word-sub">playground</span></h1>
+      <p class="dz-pitch">Three open decision models. Pick a preset or write your own question and options, paste
+        some text, and get calibrated probabilities back. The model runs in your browser.</p>
     </div>
     <button class="dz-theme" id="theme" type="button" aria-label="Switch between light and dark mode" title="Light / dark">
       <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
@@ -37,147 +39,108 @@
   </div>
   <div class="dz-side">
     <div class="dz-chips">
-      <span class="dz-chip"><b>122M</b> parameters</span>
-      <span class="dz-chip"><b>0</b> servers — the model runs on your device</span>
-      <span class="dz-chip"><b>0%</b> answer changes when options are shuffled</span>
+      <span class="dz-chip"><b>3</b> models, Apache-2.0</span>
+      <span class="dz-chip"><b>0</b> servers: nothing you type leaves your device</span>
+      <span class="dz-chip"><b>7</b> presets from <span class="dz-mono">pip install decima-ai</span></span>
     </div>
     <nav class="dz-links">
-      <a href="dispatch.html"><b>▶ Live demo: city dispatch</b></a>
-      <a href="https://huggingface.co/amyrmahdy/decima-small" target="_blank" rel="noopener">Model card</a>
+      <a href="small.html">Decima-small playground: business cases, shuffle test, speed</a>
+      <a href="dispatch.html">Live demo: city dispatch</a>
+      <a href="https://pypi.org/project/decima-ai/" target="_blank" rel="noopener">PyPI</a>
       <a href="https://github.com/amyrmahdy/decima" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://github.com/amyrmahdy/decima/blob/main/docs/TECHNICAL-REPORT.md" target="_blank" rel="noopener">Technical report</a>
     </nav>
   </div>
 </header>
 
-<section class="dz-loader" id="loader" aria-live="polite">
-  <span class="dz-dot" aria-hidden="true"></span>
-  <div class="dz-load-text" id="load-text"><b>Loading the model</b> — about 140 MB the first time, then it is cached on this device.</div>
-  <div class="dz-load-num" id="load-num"></div>
-  <div class="dz-bar is-indeterminate" id="load-bar" role="progressbar" aria-label="Model download" aria-valuemin="0" aria-valuemax="100"><div></div></div>
-  <div class="dz-private">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
-    Runs locally — nothing you type leaves your device.
-  </div>
+<section class="pg-models" aria-labelledby="models-h">
+  <h2 class="sr-only" id="models-h">Model</h2>
+  <div class="pg-model-grid" id="models" role="radiogroup" aria-label="Model"></div>
 </section>
 
-<nav class="dz-tablist" role="tablist" aria-label="Playground sections">
-  <button class="dz-tab" role="tab" id="tab-try" aria-controls="p-try" aria-selected="true" type="button">Try it</button>
-  <button class="dz-tab" role="tab" id="tab-cases" aria-controls="p-cases" aria-selected="false" tabindex="-1" type="button">Business cases</button>
-  <button class="dz-tab" role="tab" id="tab-shuffle" aria-controls="p-shuffle" aria-selected="false" tabindex="-1" type="button">Shuffle test</button>
-  <button class="dz-tab" role="tab" id="tab-route" aria-controls="p-route" aria-selected="false" tabindex="-1" type="button">Auto-route</button>
-  <button class="dz-tab" role="tab" id="tab-speed" aria-controls="p-speed" aria-selected="false" tabindex="-1" type="button">Speed</button>
-</nav>
+<section class="dz-loader pg-loader" id="loader" aria-live="polite" hidden>
+  <span class="dz-dot" aria-hidden="true"></span>
+  <div class="dz-load-text" id="load-text"></div>
+  <div class="dz-load-num" id="load-num"></div>
+  <div class="dz-bar is-indeterminate" id="load-bar" role="progressbar" aria-label="Model download" aria-valuemin="0" aria-valuemax="100"><div></div></div>
+</section>
 
 <main>
-<!-- 1 · try it -->
-<section class="dz-panel" id="p-try" role="tabpanel" aria-labelledby="tab-try">
   <div class="dz-try">
-    <form class="dz-inputs" id="try-form" autocomplete="off">
+    <form class="dz-inputs" id="form" autocomplete="off">
       <div class="dz-box">
-        <div class="dz-field">
-          <label class="dz-lbl" for="in-state">Situation</label>
-          <textarea id="in-state" rows="4" dir="auto" placeholder="A message, a ticket, an excerpt…">Someone logged into my account from another country.</textarea>
+        <div class="pg-seg" role="tablist" aria-label="Questions">
+          <button type="button" role="tab" id="mode-preset-tab" aria-controls="mode-preset" aria-selected="true">Preset</button>
+          <button type="button" role="tab" id="mode-own-tab" aria-controls="mode-own" aria-selected="false" tabindex="-1">Your own question</button>
         </div>
-        <div class="dz-field">
-          <label class="dz-lbl" for="in-question">Question</label>
-          <textarea id="in-question" rows="1" dir="auto">Which team should handle this request?</textarea>
+        <div id="mode-preset" role="tabpanel" aria-labelledby="mode-preset-tab">
+          <div class="dz-field">
+            <label class="dz-lbl" for="preset">Preset</label>
+            <select id="preset"></select>
+          </div>
+          <p class="pg-desc" id="preset-desc"></p>
+          <details class="pg-qs" id="preset-qs"></details>
         </div>
-        <div class="dz-field">
-          <label class="dz-lbl" for="in-options">Options — one per line, any wording, any number</label>
-          <textarea id="in-options" rows="5" dir="auto">billing
+        <div id="mode-own" role="tabpanel" aria-labelledby="mode-own-tab" hidden>
+          <div class="dz-field">
+            <label class="dz-lbl" for="own-q">Question</label>
+            <textarea id="own-q" rows="2" dir="auto">Which team should handle this request?</textarea>
+          </div>
+          <fieldset class="dz-kind pg-kind">
+            <legend>Answer type</legend>
+            <label><input type="radio" name="own-type" value="choice" checked> choice <small>pick one option</small></label>
+            <label><input type="radio" name="own-type" value="noul"> yes / no <small>the question is a statement to check</small></label>
+            <label><input type="radio" name="own-type" value="score"> score <small>ordered levels, low first</small></label>
+          </fieldset>
+          <div class="dz-field" id="own-opts-field">
+            <label class="dz-lbl" for="own-opts">Options, one per line (<span class="dz-mono">label: description</span> works too)</label>
+            <textarea id="own-opts" rows="5" dir="auto">billing
 technical support
 sales
 account security</textarea>
+          </div>
         </div>
       </div>
-      <fieldset class="dz-kind">
-        <legend>Kind of question</legend>
-        <label><input type="radio" name="kind" value="choose" checked> choose <small>— pick one of the options</small></label>
-        <label><input type="radio" name="kind" value="score"> score <small>— ordered levels, list them low → high</small></label>
-        <label><input type="radio" name="kind" value="verify"> verify <small>— yes or no, exactly two options</small></label>
-        <label><input type="radio" name="kind" value="rank"> rank <small>— each option judged on its own</small></label>
-      </fieldset>
-      <div class="dz-actions">
-        <div class="dz-box dz-field">
-          <label class="dz-lbl" for="in-lang">Language of the situation</label>
+      <div class="dz-box">
+        <div class="dz-field">
+          <label class="dz-lbl" for="text">Text</label>
+          <span class="dz-info" id="text-hint"></span>
+          <textarea id="text" rows="5" dir="auto" placeholder="A message, a ticket, a command, a sentence…"></textarea>
+        </div>
+        <div class="dz-field">
+          <label class="dz-lbl" for="lang">Language</label>
           <span class="dz-info">Only Persian and Arabic change the input (script normalization).</span>
-          <select id="in-lang">
-            <option value="auto">auto-detect</option><option value="en">English</option><option value="fa">Persian</option>
-            <option value="ar">Arabic</option><option value="ru">Russian</option><option value="zh">Chinese</option>
-            <option value="es">Spanish</option><option value="de">German</option><option value="fr">French</option>
-            <option value="tr">Turkish</option><option value="hi">Hindi</option><option value="ja">Japanese</option>
-            <option value="ko">Korean</option><option value="ur">Urdu</option><option value="xx">Other</option>
+          <select id="lang">
+            <option value="auto">auto-detect</option><option value="en">English or other</option>
+            <option value="fa">Persian</option><option value="ar">Arabic</option>
           </select>
         </div>
+      </div>
+      <div class="pg-go-row">
+        <span class="dz-info" id="go-note"></span>
         <button class="dz-go" id="go" type="submit">Decide</button>
       </div>
     </form>
     <div class="dz-out" id="out" aria-live="polite"></div>
   </div>
-  <div class="dz-section"><h2>Examples</h2><p>Each one was run before we put it here; the card shows the recorded answer. Click to load it and run it live, in your browser.</p></div>
+
+  <div class="dz-section"><h2>Examples</h2><p id="ex-note">Each one was run with the published Python package before we put it here; the card shows that answer. Click to load it and run it live, in your browser.</p></div>
   <div class="dz-gallery" id="gallery"></div>
-</section>
 
-<!-- 2 · business cases -->
-<section class="dz-panel" id="p-cases" role="tabpanel" aria-labelledby="tab-cases" hidden>
-  <div class="dz-section"><h2>Long cases the model never trained on</h2><p>One situation, several questions about it. Decima answers each question live in your browser; next to it is the answer of the 26B teacher that labelled the training data — including where they disagree.</p></div>
-  <div id="cases-summary"></div>
-  <div class="dz-case-layout">
-    <div class="dz-cases" id="case-list"></div>
-    <div id="case-view"></div>
-  </div>
-</section>
-
-<!-- 3 · shuffle -->
-<section class="dz-panel" id="p-shuffle" role="tabpanel" aria-labelledby="tab-shuffle" hidden>
-  <div class="dz-section"><h2>Reorder the options. The answer stays put.</h2><p>Each option is scored against the situation on its own, so its position never enters the computation. Shuffle as often as you like; the numbers below count every try in this session.</p></div>
-  <div class="dz-row-ctl">
-    <div class="dz-field"><label class="dz-lbl" for="shuf-preset">Question</label><select id="shuf-preset"></select></div>
-    <button class="dz-go" id="shuf-go" type="button">Shuffle options</button>
-  </div>
-  <div class="dz-field">
-    <label class="dz-lbl" for="shuf-state">Situation (you can edit it — press Enter to rerun)</label>
-    <textarea id="shuf-state" rows="2" dir="auto"></textarea>
-  </div>
-  <div id="shuf-out" aria-live="polite" style="margin-top:12px"></div>
-</section>
-
-<!-- 4 · auto-route -->
-<section class="dz-panel" id="p-route" role="tabpanel" aria-labelledby="tab-route" hidden>
-  <div class="dz-section"><h2>Automate the sure cases, hand over the rest</h2><p>Because the probabilities are calibrated, the threshold is a dependable dial: raise it and fewer tickets are automated, and fewer mistakes get through. Twenty realistic tickets in eight languages, expected team written down before the model saw them. Your browser scores them once; after that the slider is instant.</p></div>
-  <div class="dz-slider">
-    <div class="dz-slider-head"><label class="dz-lbl" for="th">Route automatically when confidence is at least</label><output id="th-val" for="th">0.80</output></div>
-    <input type="range" id="th" min="0.5" max="0.95" step="0.01" value="0.8">
-  </div>
-  <div id="route-out"></div>
-  <p class="dz-dim dz-small">Twenty tickets we wrote — a demonstration of the mechanism, not an automation rate. Pick your threshold on your own labelled tickets. A threshold is not an off-topic filter: a message about something else entirely can still score high on one of your options.</p>
-</section>
-
-<!-- 5 · speed -->
-<section class="dz-panel" id="p-speed" role="tabpanel" aria-labelledby="tab-speed" hidden>
-  <div class="dz-section"><h2>Measured on your device, now</h2><p>Time one decision in this browser tab with 4, 20, 77 and 150 options (WebAssembly, option encodings cached). Cost grows with the number of options; the dotted line is our x86 laptop reference, native ONNX Runtime on one core.</p></div>
-  <button class="dz-go dz-go-inline" id="sp-go" type="button">Run the latency sweep</button>
-  <div class="dz-plot" id="sp-plot"></div>
-  <div id="sp-table">
-    <div class="dz-note"><p><b>Reference, x86 laptop</b> (Intel Core Ultra 7 155H, one P-core, int8, native ONNX Runtime):
-    <span class="dz-mono">20 ms</span> with 4 options, <span class="dz-mono">42 ms</span> with 20,
-    <span class="dz-mono">83 ms</span> with 77 (model-card option sets). With short labels, as plotted:
-    <span class="dz-mono">16 ms</span> at 4 options and about 1 ms per extra option; 1,000 options take
-    <span class="dz-mono">1.06 s</span>. A browser tab runs the same int8 model through WebAssembly, usually on one thread, so expect it to be slower.</p></div>
-  </div>
-</section>
+  <div class="dz-section"><h2>The same on your machine</h2><p>The <span class="dz-mono">decima</span> package runs the same models and presets on a CPU, from Python, the command line or a local TypeSafe-compatible server.</p></div>
+  <pre class="pg-code" id="code"></pre>
 </main>
 
 <footer class="dz-footer">
-  <p><b>Read this before you judge the model by this page.</b> The examples are curated: we kept the ones that worked and
-  list the ones that did not in our launch notes. For accuracy, see the benchmarks in the
-  <a href="https://huggingface.co/amyrmahdy/decima-small" target="_blank" rel="noopener">model card</a>.
-  Known limits: long, multi-fact business decisions and knowledge questions (facts, arithmetic) are weak at this size;
-  adding a “none of the above” option can pull real answers into it — use the confidence instead.</p>
-  <p class="dz-dim">Decima-small · Apache-2.0 · int8 ONNX on ONNX Runtime Web (WebAssembly), in this tab — no server sees your text.
-  <span id="load-foot"></span> Synthetic business cases: CC BY 4.0.
-  <button class="dz-linkbtn" id="forget" type="button">Remove the cached model from this device</button></p>
+  <p><b>Before you judge a model by this page.</b> The examples are curated; the model cards have the benchmarks and the
+  known limits. decima-agent was trained for agent gates and knowledge-graph judgments in English; decima-base is the
+  general, multilingual model; decima-small is the first generation, smaller and faster. Numbers are hard for all three
+  (thresholds, dates, counting).</p>
+  <p class="dz-dim">Models: <a href="https://huggingface.co/amyrmahdy/decima-agent" target="_blank" rel="noopener">decima-agent</a> ·
+  <a href="https://huggingface.co/amyrmahdy/decima-base" target="_blank" rel="noopener">decima-base</a> ·
+  <a href="https://huggingface.co/amyrmahdy/decima-small" target="_blank" rel="noopener">decima-small</a> · int8 ONNX on ONNX
+  Runtime Web (WebAssembly), in this tab. It computes the int8 layers with float activations, so a probability can differ
+  from the Python package by a few hundredths on close calls.
+  <button class="dz-linkbtn" id="forget" type="button">Remove the cached models from this device</button></p>
 </footer>
 
 </div>

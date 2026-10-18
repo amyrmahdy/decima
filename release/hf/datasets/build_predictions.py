@@ -12,14 +12,23 @@ Inputs (git-ignored, produced by bench.items / bench.predict / bench.score / scr
     runs/final/                         the clean release re-run of Decima-small (fresh processes, frozen
                                         items). Used instead of the development files it replaces once
                                         runs/final/README.txt exists (written when the re-run completes).
+    runs/final/preds/onnx-<fp32|int8>--<system>.jsonl
+                                        the int8-vs-fp32 check of each released model (ONNX, one file
+                                        spanning the kev, laya and decima sets; split per set on output)
+    runs/jabr-<system>-*.json           jabr/classifier-benchmark results of released models
+
+Systems named in --exclude (trained but not released: their predictions ship with their release) and
+prediction sets without a public item set (s1dev, the dev split of our own System One data) are skipped.
 
 Output layout (the dataset card describes it):
 
     preds/<set>--<system>.parquet       id: str, probs: list<float64>  (aligned with the item's choices)
     preds-x86/<set>--v1i-x86-<fp32|int8>.parquet
+    preds-onnx/<set>--<system>-onnx-<fp32|int8>.parquet   the int8-vs-fp32 check (GPU host, ARM CPU)
     items/<set>.manifest.parquet        id, suite, split, lang, kind, n_choices, group, perm, sha256
                                         (sha256 of [state, question, choices, gold]; see bench/verify_items.py)
     results/<system>-<set>.json         scores, per suite, with the items file and preds map used
+    results/jabr-<system>-*.json        jabr/classifier-benchmark runs of released models
     results/phase1*-summary.md          ablation summaries; results/latency-*-gx10-indicative.json
     results/x86/*.json                  int8-vs-fp32 comparison and x86 speed
     audit/*.json                        overlap, bootstrap CIs, calibration, parameter counts
@@ -52,7 +61,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 from bench.verify_items import manifest_row  # noqa: E402
 
-REPO_URL, TAG = "https://github.com/amyrmahdy/decima", "v1.0.0"
+REPO_URL, TAG = "https://github.com/amyrmahdy/decima", "v2.2.0"
 CARD = ROOT / "release/hf/datasets/decima-bench-predictions/README.md"
 ITEM_SETS = ("kev", "laya", "decima", "jevtyped", "btzsc", "jdi")
 PRED_SET_ITEMS = {"jdi-all": "jdi", "jdi-rest": "jdi"}   # prediction set → item set (default: same name)
@@ -67,6 +76,8 @@ BUILD = {  # how each item set is rebuilt (dataset card, "How to reproduce every
            "--out runs/items/jdi.jsonl",
 }
 RESULT = re.compile(r"^(?P<sys>.+)-(?P<set>kev|laya|decima|jevtyped|btzsc|jdi)\.json$")
+ONNX_CHECK = re.compile(r"^onnx-(?P<prec>fp32|int8)--(?P<sys>.+)\.jsonl$")
+JABR = re.compile(r"^jabr-(?P<sys>v\d\w*|base\d+|agent\d+|kg\d+|small\d+)-.+\.json$")
 
 
 def sha256(path: Path) -> str:
@@ -122,6 +133,9 @@ def main() -> None:
     ap.add_argument("--format", choices=("parquet", "jsonl"), default="parquet")
     ap.add_argument("--dev-only", action="store_true", help="ignore runs/final even if the re-run is complete")
     ap.add_argument("--commit", default=None, help="commit to record in code-ref.json (default: this checkout's HEAD)")
+    ap.add_argument("--tag", default=TAG, help="public release tag recorded with --commit")
+    ap.add_argument("--exclude", nargs="*", default=[], metavar="SYSTEM",
+                    help="systems not to publish (trained, not released)")
     args = ap.parse_args()
 
     out = Path(args.out).expanduser().resolve()
@@ -136,10 +150,11 @@ def main() -> None:
         pa.set_io_thread_count(2)
     runs = ROOT / "runs"
     final = runs / "final"
+    unreleased = set(args.exclude)
     use_final = not args.dev_only and (final / "README.txt").exists()
     if not use_final:
         print("note: runs/final is not complete (no README.txt) — packaging the development predictions")
-    for sub in ("preds", "preds-x86", "items", "results/x86", "audit"):
+    for sub in ("preds", "preds-x86", "preds-onnx", "items", "results/x86", "audit"):
         (out / sub).mkdir(parents=True, exist_ok=True)
 
     # 1. text-free manifests of every item set
@@ -151,11 +166,17 @@ def main() -> None:
         print(f"items/{p.name}: {len(items):,}")
 
     # 2. predictions (release re-run of Decima-small replaces the development file of the same name)
-    sources = {Path(f).name: Path(f) for f in glob.glob(str(runs / "preds" / "*.jsonl"))}
+    def published(name: str) -> bool:
+        pset, system = name.removesuffix(".jsonl").split("--", 1)
+        return PRED_SET_ITEMS.get(pset, pset) in ids and system not in unreleased
+
+    found = {Path(f).name: Path(f) for f in glob.glob(str(runs / "preds" / "*.jsonl"))}
+    sources = {n: p for n, p in found.items() if published(n)}
+    skipped = sorted(set(found) - set(sources))
     replaced = []
     if use_final:
         for f in glob.glob(str(final / "preds" / "*.jsonl")):
-            if Path(f).name.startswith("onnx-"):      # int8-check files mix three item sets; x86 files cover int8/fp32
+            if Path(f).name.startswith("onnx-"):      # int8-check files mix three item sets: split below
                 continue
             replaced.append(Path(f).name)
             sources[Path(f).name] = Path(f)
@@ -172,16 +193,39 @@ def main() -> None:
             write_rows(rows, out / folder / name.removesuffix(".jsonl"), args.format)
             n_rows += len(rows)
     print(f"preds: {len(sources)} GPU files ({len(replaced)} from the release re-run) + {len(x86)} x86 files, "
-          f"{n_rows:,} rows")
+          f"{n_rows:,} rows; skipped {len(skipped)} (unreleased system or no public item set): {', '.join(skipped)}")
+
+    # 2b. int8-vs-fp32 checks of the released models (ONNX on the GB10's ARM CPU): one file per model and
+    #     precision spanning several item sets, written per set (rows keep the file's order)
+    owner = {i: s for s, members in ids.items() for i in members}
+    n_onnx, onnx_files = 0, 0
+    for f in sorted(glob.glob(str(final / "preds" / "onnx-*.jsonl"))):
+        m = ONNX_CHECK.match(Path(f).name)
+        if not m or m["sys"] in unreleased:
+            continue
+        per_set: dict[str, list[dict]] = {}
+        for r in read_jsonl(Path(f)):
+            if r["id"] not in owner:
+                raise SystemExit(f"{f}: id {r['id']} is in no item set")
+            per_set.setdefault(owner[r["id"]], []).append({"id": r["id"], "probs": r["probs"]})
+        for s, rows in sorted(per_set.items()):
+            write_rows(rows, out / "preds-onnx" / f"{s}--{m['sys']}-onnx-{m['prec']}", args.format)
+            n_onnx += len(rows)
+            onnx_files += 1
+    print(f"preds-onnx: {onnx_files} files, {n_onnx:,} rows")
 
     # 3. scores, summaries, audits
-    results = {p.name: p for p in runs.glob("*.json") if RESULT.match(p.name)}
+    results = {p.name: p for p in runs.glob("*.json")
+               if (m := RESULT.match(p.name)) and m["sys"] not in unreleased}
     if use_final:
         results.update({p.name: p for p in final.glob("*.json") if RESULT.match(p.name)})
         if (final / "determinism.txt").exists():
             shutil.copy2(final / "determinism.txt", out / "determinism.txt")
     for name, p in sorted(results.items()):
         shutil.copy2(p, out / "results" / name)
+    for p in runs.glob("jabr-*.json"):
+        if (m := JABR.match(p.name)) and m["sys"] not in unreleased:
+            shutil.copy2(p, out / "results" / p.name)
     for p in [*runs.glob("phase1*-summary.md"), *runs.glob("latency-*-gx10-indicative.json")]:
         shutil.copy2(p, out / "results" / p.name)
     for p in (runs / "x86").glob("*.json"):
@@ -194,13 +238,15 @@ def main() -> None:
 
     commit = args.commit or git("rev-parse", "HEAD")
     ref = {
-        "repository": REPO_URL, "tag": TAG, "commit": commit,
-        "commit_note": None if args.commit else "commit of the checkout this package was built from",
+        "repository": REPO_URL, "tag": args.tag, "commit": commit,
+        "commit_note": (f"public repository commit (tag {args.tag}) whose bench/ code built these items and scores"
+                        if args.commit else "commit of the checkout this package was built from"),
         "dirty_worktree": bool(git("status", "--porcelain", "--untracked-files=no")) if not args.commit else None,
         "decima_small_predictions": "release re-run (fresh processes, frozen items)" if use_final else "development run",
         "replaced_by_release_rerun": sorted(replaced),
         "item_builders": BUILD,
         "jdi_panel_note": "jdi-all = the 19-benchmark panel subset of runs/items/jdi.jsonl (ids in preds/jdi-all--*)",
+        "not_published": "systems trained but not released yet, and prediction sets without a public item set",
         "external_sources": {
             "jevbench": {"repo": "https://github.com/fstandhartinger/jevbench", "commit": JEVBENCH_COMMIT},
             "jdi_kit": {"repo": JDI_KIT_URL, "commit": JDI_KIT_COMMIT},

@@ -19,9 +19,9 @@ needed.
 - **Agent gates:** secret in this edit? Should this command run, ask or be denied? Which tool, which exact command, what next?
 - **Knowledge-graph judgments:** is this extracted fact asserted, hypothetical, denied or planned? Are these two records
   the same entity? Are these two things alternatives? Which relation holds?
-- **It also plays Snake** from text sensors, one decision per move (the median game below: 45 apples, alive after 600 moves).
+- **Long documents:** 2.3 reads up to 8,192 tokens (2.2: 2,048), so a whole contract or report fits in one state.
 
-![decima-agent 2.2 playing Snake on CPU](snake-agent-2.2.gif)
+![decima on the command line, on CPU](decima-cli.gif)
 
 ![decima on the command line, on CPU](decima-cli.gif)
 
@@ -62,16 +62,17 @@ Measured on data the model never trained on.
 
 **Agent decisions: 40 cases written after training, with no exact or near copy in any training data**
 
-| | decima-base | agent 2.0 | agent 2.1 | **agent 2.2** |
-|---|---:|---:|---:|---:|
-| Read-only or not (12) | 7 | 10 | 9 | **9** |
-| Bash gate: allow / ask / deny (18) | 11 | 15 | 15 | **16** |
-| Secret gate (10) | 6 | 8 | 9 | **9** |
-| **All 40** | 0.60 | 0.83 | 0.83 | **0.85** |
+| | decima-base | agent 2.0 | agent 2.1 | agent 2.2 | **agent 2.3** |
+|---|---:|---:|---:|---:|---:|
+| Read-only or not (12) | 7 | 10 | 9 | 9 | **9** |
+| Bash gate: allow / ask / deny (18) | 11 | 15 | 15 | 16 | **17** |
+| Secret gate (10) | 6 | 8 | 9 | 9 | **10** |
+| **All 40** | 0.60 | 0.83 | 0.83 | 0.85 | **0.90** |
 
-The same on the shipped int8 runtime and in full precision: 34 of 40.
+On the shipped int8 runtime 2.3 gets 35 of 40 (one read-only case flips); 2.2 got 34 on both.
 
-**Knowledge-graph judgments: William Lyon's public notebooks**
+**Knowledge-graph judgments: William Lyon's public notebooks** (measured on 2.2; the 2.3 re-run is in progress and will
+be added here)
 ([extraction-knowledge-graph-experiments](https://github.com/johnymontana/extraction-knowledge-graph-experiments)): the
 same pipeline and questions, with Jev swapped for a local Decima. None of the notebooks' documents or Beer pairs were in
 training.
@@ -88,12 +89,27 @@ training.
 Jev is better at deciding whether a support thread is resolved and at filtering wrong facts. decima-agent is better at
 catching hedged facts and at relation selection, and it runs on your CPU for free.
 
-**Games** (text sensors, one decision per move, the games' own wording never in training): Snake, **42 apples** a game
-on average with 6 of 10 games still alive at the 600-move limit (2.1: 32 apples); a side-scrolling platformer, **9 of 10**
-levels.
+**Games** (text sensors, one decision per move, the games' own wording never in training): 2.3 plays Snake worse than
+2.2, at 26.6 apples a game with none of 10 games alive at the 600-move limit (2.2: 42 apples, 6 alive). The long-document
+training cost some of that skill. Platformer: 9 of 10 levels, the same as 2.2. If you want the Snake player, pin
+`revision="v2.2"`.
+
+![decima-agent 2.2 playing Snake on CPU](snake-agent-2.2.gif)
 
 **Speed:** about 50 ms per decision on one CPU thread and 20 ms on four (ARM cores of an NVIDIA GB10) for a short state
-with its options cached. Long states cost more: about 0.6 s at 2,000 tokens.
+with its options cached. Long states cost more: on four busy CPU threads we measured about 0.5 s at 500 words, 5 s at
+2,000 words and 10 s at 4,000 words. For long documents, a GPU or the read-once batching in `decide_many` helps.
+
+## What changed in 2.3
+
+- **8,192-token states.** The question stays inside the document reading, as in 2.2. We tried a "read-once" design that
+  encodes the document without the question. It cost 12 points on claim-specific knowledge-graph judgments
+  (0.959 → 0.835), so it was dropped.
+- Trained on long-context rows whose deciding sentence is buried 2k–8k tokens deep, plus the knowledge-graph document
+  data at full weight.
+- **Fresh agent test:** 0.85 → 0.90. Knowledge-graph test sets: 0.959 → 0.961. Other agent sets are within a point.
+- decima-ai 2.3.0 fixes a choice-window shortcut that could tie both options at 0.5 for short questions in rare scripts
+  or with emoji (thanks to Ollaya for the report).
 
 ## What changed in 2.2
 
@@ -110,9 +126,11 @@ with its options cached. Long states cost more: about 0.6 s at 2,000 tokens.
 - **Never the only line of defence.** Keep hard rules first (the hooks do), plus your sandbox and secret scanning in CI.
   In the fresh test it still calls one unseen key format (Mailgun `key-…`) "not a secret", and sends two destructive
   commands to "ask" instead of "deny".
-- **States up to 2,048 tokens.** Longer input is refused, never silently cut. Split long documents first.
-- **Many questions about one long document are slow:** each question re-reads the document (about 0.6 s per question
-  at 2,000 tokens on CPU).
+- **States up to 8,192 tokens.** Longer input is refused, never silently cut. Split longer documents first.
+- **Many questions about one long document are slow:** each question re-reads the document (seconds per question at
+  thousands of words on CPU).
+- **General classification dropped a little in 2.3:** Kev's protocol 0.753 → 0.737, JevBench 0.606 → 0.584. Typed
+  decisions went up (0.459 → 0.489). For general routing and triage, decima-base is the better pick.
 - **English agent data only.** The backbone is multilingual; the agent and knowledge-graph skills were trained in English.
 - **Small test sets.** 40 fresh agent cases and 8 support threads mean wide error bars.
 - **A correction:** an earlier card reported gains on a 130-case hand-written set that turned out to have near-copies in
@@ -121,8 +139,9 @@ with its options cached. Long states cost more: about 0.6 s at 2,000 tokens.
 
 ## Training
 
-decima-base (mmBERT-base, 321M) → agent 2.0 → 2.1 → knowledge-graph rounds → 2.2. Each round replays general data so the
-general skills mostly stay (decima-base's five benchmark sets: 0.703; this model: 0.672). The training data is public:
+decima-base (mmBERT-base, 321M) → agent 2.0 → 2.1 → knowledge-graph rounds → 2.2 → 2.3 (8k-token states). Each round
+replays general data so the general skills mostly stay (mean of Kev, Laya, Decima bench, JevBench and typed decisions in
+our harness: 2.2 0.668, 2.3 0.664). The training data is public:
 [decima-agent-decisions](https://huggingface.co/datasets/amyrmahdy/decima-agent-decisions),
 [decima-kg-judgments](https://huggingface.co/datasets/amyrmahdy/decima-kg-judgments),
 [decima-game-decisions](https://huggingface.co/datasets/amyrmahdy/decima-game-decisions) and

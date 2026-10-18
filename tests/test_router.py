@@ -10,7 +10,7 @@ from decima import Router, list_presets, load_preset
 from decima.router import applicable, as_state, fill, resolve_model
 from decima.systemone import system_one, to_question
 
-PRESETS = ["agent-gate", "guardrails", "kg-judge", "moderation", "pii", "routing", "triage"]
+PRESETS = ["agent-gate", "guard", "guard-output", "guard-rag", "guard-web", "guardrails", "kg-judge", "moderation", "pii", "routing", "triage"]
 TEAM = {"team": {"type": "choice", "instructions": "Which team?", "criteria": {"billing": "charges, refunds", "tech": "bugs"}},
         "urgent": {"type": "noul", "instructions": "The customer needs an answer today."},
         "anger": {"type": "score", "instructions": "How upset is the customer?", "criteria": ["calm", "annoyed", "furious"]}}
@@ -210,7 +210,7 @@ def test_mcp_session(router):
     assert [r["id"] for r in res] == [1, 2, 3, 4, 5, 6, None]                 # the notification gets no reply
     assert res[0]["result"]["capabilities"] == {"tools": {}}
     names = {t["name"] for t in res[1]["result"]["tools"]}
-    assert names == {"decide", "triage", "guardrails", "moderation", "routing", "pii", "agent_gate", "kg_judge"}
+    assert names == {"decide", "triage", "guardrails", "moderation", "routing", "pii", "agent_gate", "kg_judge", "guard", "guard_output", "guard_rag", "guard_web"}
     assert res[2]["result"]["structuredContent"]["answers"]["gate"]["choice"] == "deny"
     assert json.loads(res[3]["result"]["content"][0]["text"])["answers"]["team"]["type"] == "choice"
     assert res[4]["result"]["isError"] is True

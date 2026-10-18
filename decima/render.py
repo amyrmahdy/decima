@@ -24,7 +24,7 @@ def choice_texts(tok, question: str, choices: list[str], lang: str, prefix: str,
     out = []
     for c in choices:
         full = prefix + normalize(f"{question} {c}".strip(), lang)
-        if len(full) <= max_len - 2 or len(tok(full)["input_ids"]) <= max_len:   # a token is at least one character
+        if len(tok(full)["input_ids"]) <= max_len:   # token count only: byte fallback makes rare scripts and emoji cost more tokens than characters (reported by Ollaya)
             out.append(full)
             continue
         opt = normalize(c, lang)
