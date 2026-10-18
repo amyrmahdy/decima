@@ -71,7 +71,7 @@ Results land in `runs/*.json`.
 1. **Zero-shot baseline** — `decima/baseline.py`: multilingual-e5-small bi-encoder, no training.
    The honest floor, and the backbone we intend to keep. *(this commit)*
 2. **Teacher distillation** — synthetic decisions in EN/FA/AR/RU (+ cross-lingual mixes) with
-   full probability distributions from a teacher model served locally on the GX10 (vLLM).
+   full probability distributions from a teacher model served locally on the training machine (vLLM).
 3. **Student** — e5-small body + late-interaction option scorer (state encoded once, options
    cross-attend to state tokens; options never compete for context window) + ordinal head +
    first-class "none of the above". KL-to-teacher + NLL, then temperature scaling.
@@ -80,7 +80,7 @@ Results land in `runs/*.json`.
 
 ## Teacher distillation data
 
-The teacher is Gemma-4-26B-A4B (NVFP4, vLLM behind LiteLLM, served locally with vLLM on an NVIDIA GB10 box;
+The teacher is Gemma-4-26B-A4B (NVFP4, vLLM behind LiteLLM, served locally with vLLM on our own GPU machine;
 endpoint in `.env`, see `.env.example`). Qwen3-Coder-Next was measured too and rejected: 3 of 6 sample
 calls unparseable, no valid Persian. Two generators write JSONL to `data/teacher/` (git-ignored),
 seeded, resumable, deduplicated by (state, question, choices):
@@ -123,7 +123,7 @@ uv run python -m decima.export checkpoints/v0/best --out export/v0      # encode
 ## Results — V0 (measured 2026-09-23, 1000 examples/task, no bench split used for weights or temperature)
 
 Teacher data: 303,114 examples (87k invented, 216k labeled) from Gemma-4-26B in ~24 h wall time on
-the GX10 (workers at 32 streams). Student: 3 epochs, 2 h 43 min, bf16; hold-out (5 % of teacher
+the training machine (workers at 32 streams). Student: 3 epochs, 2 h 43 min, bf16; hold-out (5 % of teacher
 data, 14,960 examples) accuracy 0.710 (choose 0.728 · score 0.587 · verify 0.853 · rank 0.657);
 temperature 0.95 fitted on that hold-out.
 
@@ -158,12 +158,12 @@ bench/          the bench: datasets (unified loaders) · metrics · run · compa
 runs/           benchmark results (json) and train logs, git-ignored except *.json
 ```
 
-## Training box (GX10 / DGX Spark class, ARM64 + Blackwell)
+## Training box (single-GPU ARM64 workstation)
 
-The bench and baseline run on any CPU. Teacher serving and student training run on the GX10.
+The bench and baseline run on any CPU. Teacher serving and student training run on the training machine.
 
 ```bash
-# on the GX10
+# on the training machine
 git clone https://github.com/amyrmahdy/decima.git && cd decima
 curl -LsSf https://astral.sh/uv/install.sh | sh          # if uv is missing
 uv sync                                                   # on aarch64 this resolves the CUDA torch build
@@ -172,4 +172,4 @@ uv run python -m bench.run --limit 200                    # sanity: same numbers
 ```
 
 The torch source is selected by machine in `pyproject.toml`: x86_64 gets CPU wheels, aarch64 gets
-CUDA 12.8 wheels. CPU latency numbers for the model card are always taken on x86, never on the Grace CPU.
+CUDA 12.8 wheels. CPU latency numbers for the model card are always taken on x86, never on the ARM CPU.

@@ -1,7 +1,7 @@
 """Run a Laya checkpoint over a Decima items JSONL and write per-item probabilities.
 
 Runs in its own venv (Laya pins nothing and pulls its own transformers); never import this
-from the decima package. Setup on the GX10 (aarch64 + GB10, CUDA 12.8 wheels):
+from the decima package. Setup on the training machine (aarch64, CUDA 12.8 wheels):
 
     export PATH=$HOME/.local/bin:$PATH
     V=$HOME/venvs/laya
@@ -104,7 +104,7 @@ def main() -> None:
     a = ap.parse_args()
 
     if a.device.startswith("cuda"):
-        # GB10 quirk: creating the CUDA context *after* Laya has built its model on the CPU fails
+        # GPU quirk: creating the CUDA context *after* Laya has built its model on the CPU fails
         # with "CUDA error: out of memory" when the box is near full, and Laya then silently
         # falls back to CPU. Creating the context first avoids it.
         torch.zeros(1, device=a.device)

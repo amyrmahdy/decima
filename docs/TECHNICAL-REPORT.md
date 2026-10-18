@@ -10,7 +10,7 @@ Code: [github.com/amyrmahdy/decima](https://github.com/amyrmahdy/decima) · Mode
 Source policy for this document: every number is taken from a file in this repository, named next to it
 (an HTML comment, a table "Source" line, or a footnote). Where a number is computed from a file (a sum,
 a slope, a mean over suites) the computation is stated. Claims follow the allowed/forbidden list in
-docs/EVAL.md §5. Numbers are fp32 PyTorch on the GX10 GPU unless the text says otherwise.
+docs/EVAL.md §5. Numbers are fp32 PyTorch on the training machine GPU unless the text says otherwise.
 -->
 
 ---
@@ -362,7 +362,7 @@ were not decontaminated against the evaluation items (§4.5).
 | ambiguous (top ≤ 0.6) | choose 20% · score 31% · verify 7% · rank 14% |
 | state length (chars) | mean 163, p10 32, p90 279 |
 
-Generation took about 23 hours of wall-clock time on the GX10, with both generators running concurrently.
+Generation took about 23 hours of wall-clock time on the training machine, with both generators running concurrently.
 From `data/teacher/usage.jsonl` (summed): `generate` made 9,512 calls (4.50M prompt, 17.31M completion
 tokens) over 22.9 h, and `label` made 11,847 calls (15.29M prompt, 9.73M completion tokens) over 22.7 h.
 
@@ -1103,7 +1103,7 @@ mostly the Python stack, since `transformers` is imported for the tokenizer. Loa
 (`decima.Decima`) imports no PyTorch — ONNX Runtime, numpy and a tokenizer. The package as it stands still
 installs the training stack (torch, sentence-transformers, datasets): today the install is from source,
 `pip install "git+https://github.com/amyrmahdy/decima"`, and a runtime-only package is planned.
-**GPU** (NVIDIA GB10, PyTorch fp32, option encodings cached; `runs/final/speed-v1i.json`). Latency of one call
+**GPU** (PyTorch fp32, option encodings cached; `runs/final/speed-v1i.json`). Latency of one call
 for a batch of B states (p50, ms) and throughput (decisions/s):
 
 | batch | state | 4 options | 20 options | 77 options |
@@ -1114,7 +1114,7 @@ for a batch of B states (p50, ms) and throughput (decisions/s):
 | 10 | long | 26.5 ms · 377/s | 54.7 ms · 183/s | 133.7 ms · 75/s |
 | 50 | short | 33.8 ms · 1,481/s | 129.1 ms · 387/s | 335.0 ms · 149/s |
 | 50 | long | 137.8 ms · 363/s | 297.3 ms · 168/s | 537.7 ms · 93/s |
-GX10 Grace-CPU latency probes exist (`runs/latency-*-gx10-indicative.json`) but are indicative only and not used here.
+ARM-CPU latency probes exist (`runs/latency-*-arm-indicative.json`) but are indicative only and not used here.
 
 ---
 
@@ -1219,8 +1219,8 @@ OMP_NUM_THREADS=1 taskset -c 2 uv run python -m bench.speed --name v1i --export 
 | `export/v1i-int8/scorer.onnx` | 4,915,472 | `39965112de05701e` |
 | `*/tokenizer/tokenizer.json` | 17,082,987 | `255f5e32cb320b4d` |
 
-**Compute.** Training ran on a GX10 (NVIDIA GB10, ARM64 Grace CPU, about 121 GB of unified memory). The
-unified memory was shared with the local vLLM teacher server, which held about 96 GB during Phase 1
+**Compute.** Training ran on a single-GPU workstation. The
+GPU was shared with the local vLLM teacher server during Phase 1
 <!-- src: scripts/phase1i_auto.sh header -->. Per-run wall time (`done.elapsed_s` in `runs/train-*.jsonl`):
 
 | run | h | run | h | run | h |

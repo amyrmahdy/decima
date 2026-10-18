@@ -1,4 +1,4 @@
-"""x86 CPU (ONNX fp32 / int8) vs the GX10 reference (PyTorch fp32 on CUDA) for Decima-small v1i.
+"""x86 CPU (ONNX fp32 / int8) vs the GPU reference (PyTorch fp32 on CUDA) for Decima-small v1i.
 
     uv run python runs/x86/compare_x86.py        # after runs/x86/run_acc.sh → runs/x86/compare-v1i.json
 
@@ -27,7 +27,7 @@ def load(p):
 out = {}
 for s in SETS:
     items = [i for i in read(f"runs/items/{s}.jsonl") if i["split"] == "eval" and "group" not in i]
-    systems = {"gx10-gpu-fp32": load(f"runs/preds/{s}--v1i.jsonl"),
+    systems = {"gpu-fp32": load(f"runs/preds/{s}--v1i.jsonl"),
                "x86-cpu-fp32": load(f"runs/x86/preds/{s}--v1i-x86-fp32.jsonl"),
                "x86-cpu-int8": load(f"runs/x86/preds/{s}--v1i-x86-int8.jsonl")}
     systems = {k: v for k, v in systems.items() if v}
@@ -45,8 +45,8 @@ for s in SETS:
             e["clean18_macro_f1"] = float(np.mean([v[metric] for su, v in r.items() if v.get("n") and not any(d in su for d in BTZSC_DIRTY)]))
         summ[k] = e
     agree = {}
-    ref = systems.get("gx10-gpu-fp32")
-    for a, b in (("x86-cpu-fp32", "gx10-gpu-fp32"), ("x86-cpu-int8", "gx10-gpu-fp32"), ("x86-cpu-int8", "x86-cpu-fp32")):
+    ref = systems.get("gpu-fp32")
+    for a, b in (("x86-cpu-fp32", "gpu-fp32"), ("x86-cpu-int8", "gpu-fp32"), ("x86-cpu-int8", "x86-cpu-fp32")):
         A, B = systems.get(a), systems.get(b)
         if not (A and B):
             continue

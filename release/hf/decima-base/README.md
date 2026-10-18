@@ -120,7 +120,7 @@ Every evaluation set was decontaminated against the training data. Licensing of 
 - **Numbers and rules inside the text** (thresholds, dates, counting) remain its weakest area, as for decima-small.
 - **Persian costs about 5 points** against English on the same tasks (0.616 vs 0.673). Other languages are less tested.
 - **Slower than decima-small**, which is the choice for browsers and the smallest CPUs; a short decision with four options takes about 47 ms on one CPU thread and 21 ms on four (ARM cores of an
-  NVIDIA GB10), vs 14 / 7 ms for decima-small.
+  the GPU), vs 14 / 7 ms for decima-small.
 
 ## License and citation
 

@@ -206,7 +206,7 @@ invoice/AP, fraud, moderation and code review, at 259–433 rows each.
 ## How it was made
 
 Teacher: `google/gemma-4-26B-A4B-it`, run as the NVFP4 build `nvidia/Gemma-4-26B-A4B-NVFP4` on vLLM
-(one NVIDIA GB10), with thinking off and temperature 0.9. JSON mode was used for `short`/`relabel`.
+(one the GPU), with thinking off and temperature 0.9. JSON mode was used for `short`/`relabel`.
 Generation took about 24 h for `short` + `relabel` together and about 25 h for `long`. The code is in the Decima
 repository ([github.com/amyrmahdy/decima](https://github.com/amyrmahdy/decima)):
 

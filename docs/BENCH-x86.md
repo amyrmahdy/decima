@@ -2,12 +2,12 @@
 
 Model: **Decima-small = run `v1i`** (frozen 2026-09-26). Measured 2026-09-26/27 on an x86 laptop, the
 deployment-class machine the model card's "CPU x86" row was waiting for. Companion to
-[EVAL.md](EVAL.md), whose numbers are fp32 PyTorch on the GX10's GPU.
+[EVAL.md](EVAL.md), whose numbers are fp32 PyTorch on the training machine's GPU.
 
 ## Short version
 
-- **x86 reproduces the GX10 exactly.** fp32 ONNX on x86 CPU picks the same answer as fp32 PyTorch on the
-  GB10 GPU on **100 %** of 22,050 eval items (largest probability difference 5 × 10⁻⁶).
+- **x86 reproduces the training machine exactly.** fp32 ONNX on x86 CPU picks the same answer as fp32 PyTorch on the
+  GPU on **100 %** of 22,050 eval items (largest probability difference 5 × 10⁻⁶).
 - **int8 costs nothing measurable in accuracy.** Top-1 agreement with fp32 is **98.6–99.8 %** per set on
   45,850 real eval items (not the 0.93 EVAL.md measured on synthetic latency-probe items), and every
   set-level score moves by ≤ 0.004. EVAL.md's "int8 accuracy equal to these numbers" can move from
@@ -18,15 +18,15 @@ deployment-class machine the model card's "CPU x86" row was waiting for. Compani
   ~1.06 s. The original target "<50 ms at 1,000 choices" is **not** met; <50 ms holds up to roughly
   20–40 options depending on option length. Large option sets need the retrieval tier (README roadmap
   step 5).
-- **Release blocker found:** `export/v1i-int8/tokenizer` is an **absolute symlink** into the GX10's home
+- **Release blocker found:** `export/v1i-int8/tokenizer` is an **absolute symlink** into the training machine's home
   directory, so the int8 export fails to load on any other machine. Fix below.
 
 ## Setup
 
 | | |
 |---|---|
-| Model files | `checkpoints/v1i/best`, `export/v1i` (fp32 ONNX), `export/v1i-int8` — rsynced from the GX10; **all 15 files match the sha256 values in `release/manifest-v1i.json`** |
-| Code | commit `31436ab` (fetched from the GX10) |
+| Model files | `checkpoints/v1i/best`, `export/v1i` (fp32 ONNX), `export/v1i-int8` — rsynced from the training machine; **all 15 files match the sha256 values in `release/manifest-v1i.json`** |
+| Code | commit `31436ab` (fetched from the training machine) |
 | CPU | Intel Core Ultra 7 155H (Meteor Lake, hybrid 6P + 8E + 2LP-E, 22 threads), AVX2 + AVX-VNNI, no AVX-512 |
 | Memory / power | 30 GB, on AC, `balanced` platform profile, `powersave` governor |
 | Runtime | onnxruntime 1.30.0 (CPUExecutionProvider), Python 3.11 |
@@ -36,9 +36,9 @@ deployment-class machine the model card's "CPU x86" row was waiting for. Compani
 ## 1. Accuracy on x86
 
 Set scores are means of per-suite values, computed with `bench.score.score_suite` (the scorer behind
-EVAL.md). "GX10 GPU fp32" is the development predictions `runs/preds/<set>--v1i.jsonl`.
+EVAL.md). "GPU fp32" is the development predictions `runs/preds/<set>--v1i.jsonl`.
 
-| set (suites, items) | metric | GX10 GPU fp32 | x86 CPU fp32 | **x86 CPU int8** | int8 − GPU |
+| set (suites, items) | metric | GPU fp32 | x86 CPU fp32 | **x86 CPU int8** | int8 − GPU |
 |---|---|---:|---:|---:|---:|
 | Decima bench (12, 12,000) | acc | 0.785 | 0.785 | **0.784** | −0.0003 |
 | Kev protocol (8, 1,350) | acc | 0.768 | 0.768 | **0.767** | −0.0017 |
@@ -108,7 +108,7 @@ warm-up.
   single-threaded workers instead.
 - **int8 is 2.2× faster than fp32 once options dominate** (77 options: 83 vs 181 ms); for 4 options and
   long states the encoder dominates and the gain is small.
-- For reference, the GX10's own indicative Grace-CPU probe (`runs/latency-v1i-gx10-indicative.json` on the GX10,
+- For reference, the training machine's own indicative ARM-CPU probe (`runs/latency-v1i-arm-indicative.json` on the training machine,
   int8, 1 thread) gave 16 ms at 4 options and 76 ms at 77: the laptop x86 core is in the same range.
 
 ### Scaling with the number of options (int8 / fp32, 1 thread, short state)
@@ -172,7 +172,7 @@ model. Not measured: loading the tokenizer with the `tokenizers` library alone.
 | CPU x86 (Core Ultra 7 155H, 1 P-core) — short state | int8 | 1 thread | 20 ms | 42 ms | 83 ms |
 | CPU x86 (Core Ultra 7 155H, 1 P-core) — long state (~400 tokens) | int8 | 1 thread | 102 ms | 126 ms | 204 ms |
 
-p50 values; p95 in §2. The GX10 Grace-CPU and GB10-GPU rows still need `bench/speed.py` on a quiet GX10.
+p50 values; p95 in §2. The ARM-CPU and GPU rows still need `bench/speed.py` on a quiet training machine.
 
 ## 4. Reproduce
 

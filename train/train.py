@@ -155,7 +155,7 @@ def main() -> None:
         model = DecimaModel(cfg).to(args.device)
         tok = AutoTokenizer.from_pretrained(cfg.backbone)
     collate = Collator(tok, cfg)
-    # data after the model is on the device: on the GB10 (unified memory) a CUDA context created after
+    # data after the model is on the device: on a unified-memory GPU a CUDA context created after
     # ~1M examples are in RAM has failed to allocate even the weights
     examples = load_examples(paths)
     train_ex, hold_ex = split(examples, args.holdout)

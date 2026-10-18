@@ -23,7 +23,7 @@ langchain = ["langchain-core>=0.3"]
 decima = "decima.cli:main"
 
 # torch wheel source is chosen by machine: x86_64 (laptop, CI, deploy targets) gets the
-# CPU build; aarch64 (the GX10 training box) gets the CUDA 12.8 build. Plain `uv sync`
+# CPU build; aarch64 (the training machine) gets the CUDA 12.8 build. Plain `uv sync`
 # does the right thing on both.
 [tool.uv.sources]
 torch = [

@@ -18,7 +18,7 @@ model's output on the old and new wording), and a fourth informal §2 message wa
 the model was wrong or unconvincing were dropped and are listed in [appendix A](#appendix-a--rejected-scenarios)
 with their real outputs, so nobody can say we hid them.
 
-**About the latencies in this file.** They were measured on the GX10's Grace CPU (aarch64, one thread),
+**About the latencies in this file.** They were measured on the training machine's ARM CPU (aarch64, one thread),
 with other work running on the same box. They are here to show the relative cost
 of each scenario, **not** for public quoting. Public speed claims use only docs/BENCH-x86.md (Intel Core
 Ultra 7 155H, one P-core): **~20 ms per decision (int8, 4 options, short input); with a short state, 16 ms at
@@ -47,7 +47,7 @@ Ultra 7 155H, one P-core): **~20 ms per decision (int8, 4 options, short input);
 **Input.** Question `"Which team should handle this request?"`, kind `choose`, options
 `["billing", "technical support", "sales", "account security"]`.
 
-| message | output (rounded as `repr` prints it) | p50 (GX10) |
+| message | output (rounded as `repr` prints it) | p50 (ARM CPU) |
 |---|---|---:|
 | Someone logged into my account from another country. | `{'billing': 0.004, 'technical support': 0.033, 'sales': 0.001, 'account security': 0.962}` | 9 ms |
 | I was charged twice for my subscription this month. | `{'billing': 0.887, 'technical support': 0.053, 'sales': 0.019, 'account security': 0.041}` | 10 ms |
@@ -74,7 +74,7 @@ natural (fa ×2, ar ×2, zh, es), and the fourth, informal row was added.
 | account security, informal ("…logged into my account from another country and it wasn't me!") | 0.982 | 0.978 | 0.962 | 0.981 | 0.984 | 0.991 | 0.970 |
 
 All 28 routed to the expected team (the cell is the probability of the expected team, which was the top
-answer every time). p50 9–12 ms on the GX10. The exact sentences are in `run_demos.py` (`MULTILINGUAL`).
+answer every time). p50 9–12 ms on the training machine. The exact sentences are in `run_demos.py` (`MULTILINGUAL`).
 
 **Known wording traps (not for the demo, A7).** The Persian informal line uses «حسابم» on purpose: with the
 common loanword «اکانت» (`یکی از یه کشور دیگه وارد اکانتم شده!`) the model answers technical support 0.519
@@ -155,7 +155,7 @@ of context or slow down.
 **Input.** Question `"What is the user's intent? (may be out of scope)"`; the 151 CLINC150 intent names
 (incl. `"none of the above (out of scope)"`); new utterances written by us.
 
-| utterance | top (conf) | runner-up | p50 (GX10) |
+| utterance | top (conf) | runner-up | p50 (ARM CPU) |
 |---|---|---|---:|
 | can you move my dentist reminder to friday at 3 | reminder update (0.943) | calendar update 0.021 | 183 ms |
 | how many calories are in a banana | calories (0.994) | none of the above 0.001 | 181 ms |
@@ -177,7 +177,7 @@ confidence (0.200) that a threshold would catch.
 **Input.** Question `"What does the user want the assistant to do?"`, `lang="fa"`, the 60 MASSIVE intent
 names in English.
 
-| Persian (meaning) | top (conf) | runner-up | p50 (GX10) |
+| Persian (meaning) | top (conf) | runner-up | p50 (ARM CPU) |
 |---|---|---|---:|
 | فردا ساعت هفت صبح بیدارم کن (wake me up at seven tomorrow) | alarm set (0.851) | alarm query 0.062 | 43 ms |
 | چراغ‌های آشپزخانه را خاموش کن (turn off the kitchen lights) | iot hue lightoff (0.935) | iot wemo off 0.024 | 42 ms |
@@ -203,7 +203,7 @@ names in English.
 | I can't log in since this morning and I have a client demo in an hour. | 0.013 | 0.090 | **0.453** | 0.444 |
 | Our checkout page is down and customers can't pay. We're losing sales every minute. | 0.003 | 0.024 | 0.292 | **0.681** |
 
-p50 9–11 ms (GX10).
+p50 9–11 ms (training machine).
 
 **Proves.** The mass sits on adjacent levels, never split between "low" and "critical"; genuinely
 borderline tickets come out borderline.
@@ -218,7 +218,7 @@ borderline tickets come out borderline.
 | Is the customer angry? | This is the THIRD time I'm writing. Nobody answers. Unacceptable. | yes 0.924 |
 | Is the customer angry? | Hi, quick question about my invoice format, no rush. | no 0.899 |
 
-p50 7–9 ms (GX10).
+p50 7–9 ms (training machine).
 
 **Proves.** One-property checks on a message.
 
@@ -235,7 +235,7 @@ Exporting reports to CSV                    0.036
 Updating your billing address               0.024
 ```
 
-p50 15 ms (GX10). **Proves.** Independent per-option probabilities (they do not sum to 1), useful for
+p50 15 ms (training machine). **Proves.** Independent per-option probabilities (they do not sum to 1), useful for
 picking several.
 
 ## 10 · News topic (AG News label names)
@@ -247,12 +247,12 @@ picking several.
 | Researchers unveil a battery chemistry that charges an electric car in ten minutes. | Sci/Tech 0.679 |
 | Ceasefire talks resume in Geneva as both delegations arrive for a second round. | World 0.977 |
 
-p50 11 ms (GX10). Brief B-roll only; AG News is in-distribution. A chipmaker-earnings headline split
+p50 11 ms (training machine). Brief B-roll only; AG News is in-distribution. A chipmaker-earnings headline split
 Business 0.535 / Sci/Tech 0.422 (A6) — a fair split, but not a demo.
 
 ## 11 · Speed vs number of options
 
-**Measured here (GX10 Grace core, int8, 1 thread, short state, cached option set, 30 calls; a GPU training
+**Measured here (one ARM CPU core, int8, 1 thread, short state, cached option set, 30 calls; a GPU training
 run on 2026-09-27):** 4 options 8.3 ms · 20 options 17.4 ms · 77 options 55.0 ms · 150 options 111.8 ms
 (p50). A new option set costs extra once (e.g. ≈ 0.9 s to encode 150 options).
 

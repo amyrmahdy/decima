@@ -364,7 +364,7 @@ reproduction: docs/BENCH-x86.md.
 - Files: int8 ONNX 127 MB, fp32 ONNX 489 MB (+ 17 MB tokenizer). Peak process memory ≈ 1.0 GB (int8),
   mostly the Python stack.
 
-**GPU** (NVIDIA GB10, PyTorch fp32, option encodings cached; `runs/final/speed-v1i.json`). Latency of one call
+**GPU** (PyTorch fp32, option encodings cached; `runs/final/speed-v1i.json`). Latency of one call
 for a batch of B states (p50, ms) and throughput (decisions/s):
 
 | batch | state | 4 options | 20 options | 77 options |

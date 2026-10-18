@@ -96,7 +96,7 @@ training cost some of that skill. Platformer: 9 of 10 levels, the same as 2.2. I
 
 ![decima-agent 2.2 playing Snake on CPU](snake-agent-2.2.gif)
 
-**Speed:** about 50 ms per decision on one CPU thread and 20 ms on four (ARM cores of an NVIDIA GB10) for a short state
+**Speed:** about 50 ms per decision on one CPU thread and 20 ms on four (an ARM CPU) for a short state
 with its options cached. Long states cost more: on four busy CPU threads we measured about 0.5 s at 500 words, 5 s at
 2,000 words and 10 s at 4,000 words. For long documents, a GPU or the read-once batching in `decide_many` helps.
 

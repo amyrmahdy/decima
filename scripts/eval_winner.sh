@@ -10,7 +10,7 @@ say() { echo "$(date '+%F %T') $*" | tee -a runs/logs/auto.log; }
 
 say "export $N"
 uv run python -m decima.export $CK --out export/$N > runs/logs/export-$N.log 2>&1 || say "FAILED export $N"
-nice uv run python -m bench.latency export/$N --threads 1 --choices 4 77 --reps 40 --out runs/latency-$N-gx10-indicative.json \
+nice uv run python -m bench.latency export/$N --threads 1 --choices 4 77 --reps 40 --out runs/latency-$N-arm-indicative.json \
     > runs/logs/latency-$N.log 2>&1 || say "FAILED latency $N"
 
 [ -f runs/items/jdi-panelall.jsonl ] || cat runs/items/jdi-panel.jsonl runs/items/jdi-panel-rest.jsonl > runs/items/jdi-panelall.jsonl

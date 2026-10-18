@@ -1,6 +1,6 @@
 # Many questions, long documents, abstention — runtime notes and benchmark
 
-Measured 2026-10-08 on the GX10 (Grace, 20 Arm cores: Cortex-X925 + A725), onnxruntime 1.30.0,
+Measured 2026-10-08 on an ARM CPU, onnxruntime 1.30.0,
 `export/agent3-int8` (mmBERT-base body, 2,048-token states) and `export/base2-int8` (512), with the code
 and default batch settings of the commit that adds this file. The machine was shared with a GPU training
 run and another CPU job, so treat single numbers as ±10 %; time the process spent stopped by the thermal

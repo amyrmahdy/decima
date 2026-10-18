@@ -5,6 +5,9 @@
     uv run python -m bench.predict --items runs/items/phase0.jsonl --system baseline --out runs/preds/phase0-e5.jsonl
 
 `--system onnx --checkpoint export/v0-int8` scores the exported graphs (fp32 or int8) on CPU.
+`--system decima-lm --checkpoint checkpoints/lm1/best` scores a Decima-LM (decima/lm.py) over all items at once
+(length-batched; two option orders; its per-kind temperatures). On GPU it needs the flash-linear-attention overlay
+(`uv run --with flash-linear-attention python -m bench.predict …`); on CPU run it without.
 Competitors have their own predictors under bench/external/ (own venvs, same output format).
 Items sharing (question, choices, lang, kind) are batched so choice encodings are computed once.
 Probabilities are the system as shipped: Decima with its trained temperature, the baseline at T=0.05.
@@ -30,6 +33,10 @@ def load_system(system: str, checkpoint: str | None, model: str | None, device: 
         from decima.model import Decima
 
         return Decima(checkpoint, device=device), checkpoint
+    if system == "decima-lm":
+        from decima.lm import DecimaLM
+
+        return DecimaLM(checkpoint, device=device, threads=threads if device == "cpu" else None), checkpoint
     if system == "onnx":
         from decima.runtime import DecimaOnnx
 
@@ -40,6 +47,10 @@ def load_system(system: str, checkpoint: str | None, model: str | None, device: 
 
 
 def predict(sys, items: list[dict]) -> list[dict]:
+    if hasattr(sys, "logits_items"):              # batches across questions itself
+        Z = sys.logits_items(items)
+        return [{"id": i["id"], "probs": [float(x) for x in (1 / (1 + np.exp(-z)) if i["kind"] == "rank" else softmax(z))]}
+                for i, z in zip(items, Z)]
     groups: dict[tuple, list[dict]] = defaultdict(list)
     for it in items:
         groups[(it["question"], tuple(it["choices"]), it["lang"], it["kind"])].append(it)
@@ -59,17 +70,17 @@ def predict(sys, items: list[dict]) -> list[dict]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--items", required=True)
-    ap.add_argument("--system", choices=["decima", "onnx", "baseline"], required=True)
+    ap.add_argument("--system", choices=["decima", "decima-lm", "onnx", "baseline"], required=True)
     ap.add_argument("--checkpoint", default=None)
     ap.add_argument("--model", default=None, help="encoder id for --system baseline")
     ap.add_argument("--device", default="cpu")
-    ap.add_argument("--threads", type=int, default=4, help="CPU threads for --system onnx (the GX10 overheats on all 20)")
+    ap.add_argument("--threads", type=int, default=4, help="CPU threads for --system onnx (keeps the machine cool)")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
-    if args.system in ("decima", "onnx") and not args.checkpoint:
+    if args.system in ("decima", "decima-lm", "onnx") and not args.checkpoint:
         ap.error(f"--system {args.system} needs --checkpoint (onnx: an export dir)")
 
-    # model first, then items: on the GB10's unified memory a CUDA context created after a large item
+    # model first, then items: on a unified-memory GPU a CUDA context created after a large item
     # file is in RAM has failed to allocate even the weights
     sys, name = load_system(args.system, args.checkpoint, args.model, args.device, args.threads)
     items = read(args.items)

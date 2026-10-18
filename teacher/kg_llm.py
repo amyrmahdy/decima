@@ -1010,7 +1010,7 @@ def main() -> None:
     if not (a.job and a.out):
         ap.error("--job and --out are required unless --report")
     if a.writer_streams + a.checker_streams > 12:
-        ap.error("keep total streams ≤ 12 (the GX10 is shared)")
+        ap.error("keep total streams ≤ 12 (the training machine is shared)")
     asyncio.run(run(a))
 
 

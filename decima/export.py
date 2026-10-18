@@ -4,7 +4,7 @@
                                                                       once per choice set
     scorer.onnx    (state_h, state_mask, choice_h, choice_mask) → (scores, z)   per decision
 
-int8 quantisation and the CPU latency measurement happen on x86, not here — the Grace
+int8 quantisation and the CPU latency measurement happen on x86, not here — the ARM CPU
 CPU is not the deployment target. The ordinal head is tiny and kept in numpy on the
 runtime side (`ordinal_probs`), so the scorer graph stays one shape for every kind.
 

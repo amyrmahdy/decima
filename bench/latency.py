@@ -5,7 +5,7 @@
 
 One decision = `DecimaOnnx.decide_logits`: tokenize state + encoder + scorer over the cached choices: the
 steady state of an app that asks the same question many times. Numbers for the model card come
-from x86 only; on anything else the output is stamped "indicative" (the GX10's Grace CPU is not a
+from x86 only; on anything else the output is stamped "indicative" (the training machine's ARM CPU is not a
 deployment target). Also reports int8-vs-fp32 top-1 agreement so quantisation damage is visible.
 """
 

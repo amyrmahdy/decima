@@ -5,7 +5,7 @@
     "cpu": "aarch64",
     "x86": false,
     "python": "3.12.3",
-    "gpu": "NVIDIA GB10"
+    "gpu": "NVIDIA GPU"
   },
   "rows": [
     {

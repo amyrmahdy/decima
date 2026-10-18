@@ -2,7 +2,7 @@
   "decima": {
     "metric": "acc",
     "summary": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "mean_acc": 0.7845833333333333,
         "mean_ece": 0.03066179519232201,
         "n_items": 12000,
@@ -22,12 +22,12 @@
       }
     },
     "agreement": {
-      "x86-cpu-fp32 vs gx10-gpu-fp32": {
+      "x86-cpu-fp32 vs gpu-fp32": {
         "items": 12000,
         "top1_agreement": 1.0,
         "max_abs_dp": 2.473592758178711e-06
       },
-      "x86-cpu-int8 vs gx10-gpu-fp32": {
+      "x86-cpu-int8 vs gpu-fp32": {
         "items": 12000,
         "top1_agreement": 0.9940833333333333,
         "max_abs_dp": 0.06600165367126465
@@ -39,7 +39,7 @@
       }
     },
     "per_suite": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "decima/sst5/en": {
           "n": 1000,
           "acc": 0.514,
@@ -266,7 +266,7 @@
   "kev": {
     "metric": "acc",
     "summary": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "mean_acc": 0.7683333333333333,
         "mean_ece": 0.0717855505298712,
         "n_items": 1350,
@@ -286,12 +286,12 @@
       }
     },
     "agreement": {
-      "x86-cpu-fp32 vs gx10-gpu-fp32": {
+      "x86-cpu-fp32 vs gpu-fp32": {
         "items": 1350,
         "top1_agreement": 1.0,
         "max_abs_dp": 5.185604095458984e-06
       },
-      "x86-cpu-int8 vs gx10-gpu-fp32": {
+      "x86-cpu-int8 vs gpu-fp32": {
         "items": 1350,
         "top1_agreement": 0.9977777777777778,
         "max_abs_dp": 0.02808986088562998
@@ -303,7 +303,7 @@
       }
     },
     "per_suite": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "kev/banking77": {
           "n": 150,
           "acc": 0.94,
@@ -458,7 +458,7 @@
   "laya": {
     "metric": "acc",
     "summary": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "mean_acc": 0.7637931034482759,
         "mean_ece": 0.05601371866868274,
         "n_items": 8700,
@@ -478,12 +478,12 @@
       }
     },
     "agreement": {
-      "x86-cpu-fp32 vs gx10-gpu-fp32": {
+      "x86-cpu-fp32 vs gpu-fp32": {
         "items": 8700,
         "top1_agreement": 1.0,
         "max_abs_dp": 2.86102294921875e-06
       },
-      "x86-cpu-int8 vs gx10-gpu-fp32": {
+      "x86-cpu-int8 vs gpu-fp32": {
         "items": 8700,
         "top1_agreement": 0.9927586206896551,
         "max_abs_dp": 0.07685056328773499
@@ -495,7 +495,7 @@
       }
     },
     "per_suite": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "laya/massive-en": {
           "n": 300,
           "acc": 0.9133333333333333,
@@ -1028,7 +1028,7 @@
   "jevtyped": {
     "metric": "acc",
     "summary": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "mean_acc": 0.48496428571428574,
         "mean_ece": 0.1295367463779173,
         "n_items": 2231,
@@ -1042,14 +1042,14 @@
       }
     },
     "agreement": {
-      "x86-cpu-int8 vs gx10-gpu-fp32": {
+      "x86-cpu-int8 vs gpu-fp32": {
         "items": 2231,
         "top1_agreement": 0.9856566562079785,
         "max_abs_dp": 0.03084203600883484
       }
     },
     "per_suite": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "jevbench/public": {
           "n": 231,
           "acc": 0.5714285714285714,
@@ -1082,7 +1082,7 @@
   "btzsc": {
     "metric": "macro_f1",
     "summary": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "mean_macro_f1": 0.6211961649944955,
         "mean_ece": 0.10174738838322263,
         "n_items": 21569,
@@ -1098,14 +1098,14 @@
       }
     },
     "agreement": {
-      "x86-cpu-int8 vs gx10-gpu-fp32": {
+      "x86-cpu-int8 vs gpu-fp32": {
         "items": 21569,
         "top1_agreement": 0.9869256803746117,
         "max_abs_dp": 0.05041998624801636
       }
     },
     "per_suite": {
-      "gx10-gpu-fp32": {
+      "gpu-fp32": {
         "btzsc/amazonpolarity": {
           "n": 1000,
           "acc": 0.903,

@@ -50,7 +50,7 @@ The presets use the exact question wording the model was trained on. Your own wo
 
 ## Results
 
-All tests are frozen held-out sets, built before training from sources or splits the model never saw. Near-duplicates
+All tests are frozen held-out sets ([decima-guard-bench](https://huggingface.co/datasets/amyrmahdy/decima-guard-bench)), built before training from sources or splits the model never saw. Near-duplicates
 of test rows were removed from training. Int8 runtime unless noted.
 
 **Public LLM-safety test: 24,832 examples from 20+ public datasets, in 15 languages**
@@ -103,8 +103,8 @@ zero-shot comparison for either model.
 The web test's attack-class part only covers SQL injection, XSS and "none". The training data has very little SSRF,
 XXE or template injection, so expect weaker results there.
 
-**Speed:** 111 ms per question for a short message on one CPU thread, 44 ms on four (int8, ARM cores of an NVIDIA
-GB10, measured while the machine was busy).
+**Speed:** 111 ms per question for a short message on one CPU thread, 44 ms on four (int8, on an ARM CPU, measured while the machine was
+busy).
 
 ## Limitations
 

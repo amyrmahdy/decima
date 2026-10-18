@@ -23,9 +23,9 @@ data is non-commercial.
 
 ## Results
 
-| | decima-base 2.0 | **decima-base-clean** | e5-base (zero-shot NLI baseline) |
+| | decima-base 2.0 | **decima-base-clean** | multilingual-e5-small, untrained (zero-shot baseline) |
 |---|---:|---:|---:|
-| BTZSC, 22 datasets (macro-F1), zero-shot | 0.639 (not zero-shot) | **0.556** (int8: [check]) | 0.546 |
+| BTZSC, 22 datasets (macro-F1), zero-shot | 0.639 (not zero-shot) | **0.556** (int8: 0.555) | 0.546 |
 | Kev's protocol, 8 suites | 0.790 | 0.648 | — |
 | Laya's MASSIVE + XNLI protocol | 0.793 | 0.616 | — |
 | Decima bench, 12 suites, EN/FA/AR/RU | 0.794 | 0.589 | — |

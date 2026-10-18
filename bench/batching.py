@@ -9,7 +9,7 @@ Inputs are self-contained: a synthetic service agreement of a requested token le
 with varied parties, amounts and deadlines) and TypeSafe-style questions about it (noul, choice, score),
 rendered by decima.systemone. "before" is what serve.py did until now: `decide` once per question;
 "after" is `decide_many`. Choice encodings are warm (cached) unless the row says cold. Times exclude any
-stretch the process spent stopped (the GX10's thermal guard SIGSTOPs bench jobs when the CPU runs hot).
+stretch the process spent stopped (the training machine's thermal guard SIGSTOPs bench jobs when the CPU runs hot).
 """
 
 from __future__ import annotations

@@ -1,7 +1,7 @@
 """Run a Kev checkpoint (github.com/jaredpalmer/kev) over a Decima items JSONL and write per-item probabilities.
 
-Runs in its own venv with Kev's own package; never import this from the decima package. Setup on the GX10
-(aarch64 + GB10). Kev pins torch 2.8.0 / transformers 5.17.0 / peft 0.21.0 (its uv.lock); torch 2.8.0 has
+Runs in its own venv with Kev's own package; never import this from the decima package. Setup on the training machine
+(aarch64 + GPU). Kev pins torch 2.8.0 / transformers 5.17.0 / peft 0.21.0 (its uv.lock); torch 2.8.0 has
 no aarch64 cu128 wheel, the cu129 one is used:
 
     export PATH=$HOME/.local/bin:$PATH
@@ -43,7 +43,7 @@ A record whose branch does not fit is retried with Kev's serving limits (8192/81
 --model: kev-0.5b | kev-0.6b | kev-0.8b | kev-4b | kev-8b | kev-9b (jaredpalmer/<name>), any Hub id
 (optionally @revision) or a local run directory. Qwen3.5 checkpoints (0.8b/4b/9b) run the row form; without
 flash-linear-attention / causal-conv1d installed transformers uses its (exact, slower) PyTorch reference kernels.
-Memory on the GX10 (~18 GB free): kev-0.5b / kev-0.8b fp32 fit; kev-4b needs --dtype bf16 (~9 GB, untested
+Memory on the training machine (~18 GB free): kev-0.5b / kev-0.8b fp32 fit; kev-4b needs --dtype bf16 (~9 GB, untested
 here); kev-8b / kev-9b do not fit alongside the vLLM workers.
 """
 

@@ -12,8 +12,9 @@ dependencies out of this project and makes every comparison literally the same q
     uv run python -m bench.items --suites 'kev/*' 'laya/*' --out runs/items/phase0.jsonl
     uv run python -m bench.items --list
 
-Suites come from four registries: decima/* (our own bench, full label sets), laya/* (Laya's
-published protocol), kev/* (Kev's published protocol), and public ones (btzsc/*, jevbench/*, typed/*).
+Suites come from five registries: decima/* (our own bench, full label sets), laya/* (Laya's
+published protocol), kev/* (Kev's published protocol), public ones (btzsc/*, jevbench/*, typed/*) and
+tasmim/* (Tasmim-Bench's public development split; evaluation only).
 """
 
 from __future__ import annotations
@@ -48,7 +49,7 @@ def _decima_suites() -> dict[str, Loader]:
 
 def registry() -> dict[str, Loader]:
     out = _decima_suites()
-    for mod in ("bench.suites_laya", "bench.suites_kev", "bench.suites_public"):
+    for mod in ("bench.suites_laya", "bench.suites_kev", "bench.suites_public", "bench.suites_tasmim"):
         try:
             out.update(importlib.import_module(mod).SUITES)
         except ModuleNotFoundError as e:

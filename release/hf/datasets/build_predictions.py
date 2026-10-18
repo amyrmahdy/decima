@@ -29,7 +29,7 @@ Output layout (the dataset card describes it):
                                         (sha256 of [state, question, choices, gold]; see bench/verify_items.py)
     results/<system>-<set>.json         scores, per suite, with the items file and preds map used
     results/jabr-<system>-*.json        jabr/classifier-benchmark runs of released models
-    results/phase1*-summary.md          ablation summaries; results/latency-*-gx10-indicative.json
+    results/phase1*-summary.md          ablation summaries; results/latency-*-arm-indicative.json
     results/x86/*.json                  int8-vs-fp32 comparison and x86 speed
     audit/*.json                        overlap, bootstrap CIs, calibration, parameter counts
     determinism.txt                     the release re-run vs the development run (when present)
@@ -195,7 +195,7 @@ def main() -> None:
     print(f"preds: {len(sources)} GPU files ({len(replaced)} from the release re-run) + {len(x86)} x86 files, "
           f"{n_rows:,} rows; skipped {len(skipped)} (unreleased system or no public item set): {', '.join(skipped)}")
 
-    # 2b. int8-vs-fp32 checks of the released models (ONNX on the GB10's ARM CPU): one file per model and
+    # 2b. int8-vs-fp32 checks of the released models (ONNX on the GPU's ARM CPU): one file per model and
     #     precision spanning several item sets, written per set (rows keep the file's order)
     owner = {i: s for s, members in ids.items() for i in members}
     n_onnx, onnx_files = 0, 0
@@ -226,7 +226,7 @@ def main() -> None:
     for p in runs.glob("jabr-*.json"):
         if (m := JABR.match(p.name)) and m["sys"] not in unreleased:
             shutil.copy2(p, out / "results" / p.name)
-    for p in [*runs.glob("phase1*-summary.md"), *runs.glob("latency-*-gx10-indicative.json")]:
+    for p in [*runs.glob("phase1*-summary.md"), *runs.glob("latency-*-arm-indicative.json")]:
         shutil.copy2(p, out / "results" / p.name)
     for p in (runs / "x86").glob("*.json"):
         shutil.copy2(p, out / "results" / "x86" / p.name)

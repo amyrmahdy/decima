@@ -51,7 +51,7 @@ results/<system>-<set>.json        bench.score / bench.jdi_index output (per-sui
                                    NLL, ECE, ECE after temperature, flip rate, T) + the exact inputs used
 results/jabr-<system>-int8.json    jabr/classifier-benchmark runs (the benchmark's own harness; per-case
                                    expected / predicted / probability, no task text)
-results/phase1*-summary.md, results/latency-*-gx10-indicative.json, results/x86/*.json
+results/phase1*-summary.md, results/latency-*-arm-indicative.json, results/x86/*.json
 audit/*.json                       overlap, bootstrap CIs, calibration, parameter counts
 determinism.txt                    Decima-small's release re-run vs its development run (max |Δp| per set),
                                    and the int8-vs-fp32 agreement of every released model
@@ -205,7 +205,7 @@ model-card tables map to results files as follows:
 | jabr/classifier-benchmark (Decima-small 1.0, 1.1) | `results/jabr-v1i-int8.json`, `results/jabr-v1k-int8.json` |
 
 Latency and speed numbers are hardware measurements, not predictions. They live in
-`results/latency-*-gx10-indicative.json` and `results/x86/speed-*.json` and are reproduced with `bench/latency.py` /
+`results/latency-*-arm-indicative.json` and `results/x86/speed-*.json` and are reproduced with `bench/latency.py` /
 `bench/speed.py` on your own hardware.
 
 ### Caveats for reproduction
@@ -224,7 +224,7 @@ Latency and speed numbers are hardware measurements, not predictions. They live 
   `BTZSC_CONTAMINATED`); the all-22 mean in `results/*-btzsc.json` includes them.
 - To regenerate generation-2 predictions from the released weights, use the code at tag `v2.2.0` (each model keeps the
   choice rendering it was trained with). The items and scoring code are unchanged since `v1.0.0`.
-- GPU predictions are from an NVIDIA GB10 (PyTorch). Other hardware may differ in the last digits. Top-1 ties are rare but possible.
+- GPU predictions are from an the GPU (PyTorch). Other hardware may differ in the last digits. Top-1 ties are rare but possible.
 
 ## Licence
 
