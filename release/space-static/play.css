@@ -1,7 +1,7 @@
 /* Decima Playground main page: additions to style.css (same tokens, same type). */
 
 .pg-models { margin: 0 0 14px; }
-.pg-model-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.pg-model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
 .pg-model {
   all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 6px;
   background: var(--dz-panel); border: 1px solid var(--dz-line); border-radius: 8px; padding: 12px 14px; min-width: 0;

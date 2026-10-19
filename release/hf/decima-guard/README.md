@@ -19,6 +19,8 @@ pass it text (or a small JSON object) and it returns calibrated probabilities. N
 
 This is a preview. The numbers below are real, and so are the weak spots. Read the limitations before you rely on it.
 
+**[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html)**: paste a message, a document, a reply or a web request and see the verdict. Nothing is uploaded; the model runs on your device.
+
 ## Quickstart
 
 ```bash
@@ -103,8 +105,7 @@ zero-shot comparison for either model.
 The web test's attack-class part only covers SQL injection, XSS and "none". The training data has very little SSRF,
 XXE or template injection, so expect weaker results there.
 
-**Speed:** 111 ms per question for a short message on one CPU thread, 44 ms on four (int8, on an ARM CPU, measured while the machine was
-busy).
+**Speed:** 111 ms per question for a short message on one CPU thread, 44 ms on four (int8, an ARM CPU, measured while the machine was busy).
 
 ## Limitations
 

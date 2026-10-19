@@ -1,4 +1,4 @@
-// decima.Router for the browser — a port of decima/router.py and decima/systemone.py (decima-ai 2.2.0):
+// decima.Router for the browser — a port of decima/router.py and decima/systemone.py (decima-ai 2.3.0):
 // TypeSafe-style questions (or a preset's) in, `/v1/systemone`-shaped answers out. The model calls go to the
 // worker; everything here is plain data shaping, kept line for line with the Python package so that the same
 // preset on the same text asks the model exactly the same questions.
@@ -65,7 +65,8 @@ export function toQuestion(qid, spec, lang = "en") {
       throw new Error(`questions.${qid}: a choice needs 2–255 options`);
     const labels = Object.keys(crit);
     const opts = labels.map((k) => (pyStrip(text(crit[k])) ? `${k}: ${text(crit[k])}` : k));
-    return { type: t, q: { text: qt, choices: opts, kind: "choose", lang }, keys: labels };
+    const kind = spec.ordinal === true ? "score" : "choose";   // Decima extension: a choice scored by the ordinal head it was trained with
+    return { type: t, q: { text: qt, choices: opts, kind, lang }, keys: labels };
   }
   if (t === "score") {
     if (!Array.isArray(crit) || crit.length < 2 || crit.length > 10) throw new Error(`questions.${qid}: a score needs 2–10 levels`);

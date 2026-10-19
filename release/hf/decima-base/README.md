@@ -51,6 +51,8 @@ did not.
 
 ![decima on the command line, on CPU](decima-cli.gif)
 
+**[Try it in your browser](https://huggingface.co/spaces/amyrmahdy/decima-playground)**, with every preset. Nothing is uploaded; the model runs on your device.
+
 ## Quickstart
 
 ```bash

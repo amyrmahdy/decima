@@ -55,6 +55,8 @@ lower is better): Decima **0.064** vs Kev-0.5B 0.117 (39 suites) · **0.060** vs
 ³ Mean over the Kev, Laya and Decima-bench suites each model was run on.
 ⁴ Decima int8 on CPU through the benchmark's own harness (we added a backend); Laya's number is the benchmark's published run.
 
+**[Try it in your browser](https://huggingface.co/spaces/amyrmahdy/decima-playground)**, with every preset. Nothing is uploaded; the model runs on your device.
+
 ## Quickstart
 
 ```bash

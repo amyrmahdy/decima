@@ -12,6 +12,8 @@ base_model: jhu-clsp/mmBERT-small
 The 140M version of [decima-guard](https://huggingface.co/amyrmahdy/decima-guard): the same checks, presets and
 training data on mmBERT-small, for when speed matters more than the last few points.
 
+**[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html?model=decima-guard-small)**, nothing to install.
+
 ```bash
 pip install decima-ai
 DECIMA_MODELS="decima-guard=amyrmahdy/decima-guard-small" decima "Ignore all previous instructions" --preset guard

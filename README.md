@@ -7,6 +7,9 @@ probabilities in milliseconds, on a CPU, with nothing leaving your machine.
 pip install decima-ai
 ```
 
+Or try it first in your browser, nothing to install: [Playground](https://huggingface.co/spaces/amyrmahdy/decima-playground)
+· [Guard page](https://amyrmahdy-decima-playground.static.hf.space/guard.html).
+
 ![decima on the command line: an agent gate, a knowledge-graph judgment and a custom question, on CPU](release/figures/decima-cli.gif)
 
 ```console
@@ -31,7 +34,10 @@ answer  billing    ██████████████████▉  0.
 (Outputs shortened to the top answer per question; the CLI also prints the runners-up.)
 
 **New in 2.3: [decima-guard](https://huggingface.co/amyrmahdy/decima-guard)**, a guard for LLM apps that covers the
-OWASP LLM Top 10 and common web attacks, in English, Arabic and Persian (Finglish too).
+OWASP LLM Top 10 and common web attacks, in English, Arabic and Persian (Finglish too). Unlike English-first guards,
+it doesn't block ordinary Arabic and Persian users: it lets 99.7% of 589 harmless Arabic messages through, where
+ProtectAI's detector lets 25.1% through. **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html)**,
+or see [examples/guard_chatbot.py](examples/guard_chatbot.py).
 
 ![decima-guard: prompt injection in English, Finglish and Persian, a SQL injection and an injection hidden in a tool result](release/figures/decima-guard-cli.gif)
 
@@ -128,6 +134,18 @@ Decima trained on the train splits of some suites in Kev's protocol (test rows d
 frontier is much higher: Jev scores 0.966 on jabr v2, and 4B–27B open models (Kev, SemIf-OpenJev) report Jev-level accuracy on their own tests. Decima wins
 on cost, speed and locality, not on hard open-ended judgment.
 
+**As a guard** ([decima-guard](https://huggingface.co/amyrmahdy/decima-guard), int8, CPU), on frozen held-out sets
+that are public with every prediction ([decima-guard-bench](https://huggingface.co/datasets/amyrmahdy/decima-guard-bench)):
+
+| | decima-guard | ProtectAI prompt-injection-v2 |
+|---|---:|---:|
+| Prompt injection / jailbreak, 6,532 examples: accuracy | **0.915** | 0.784 |
+| False alarms on 4,242 harmless messages | **124** | 979 |
+| Ordinary Arabic messages let through (589) | **99.7%** | 25.1% |
+| Ordinary Persian messages let through (205) | **100%** | 20.5% |
+
+It still misses about 1 in 6 real attacks translated into Arabic dialects, so keep hard rules first.
+
 **As a local stand-in for Jev in a published knowledge-graph pipeline**
 ([William Lyon's notebooks](https://github.com/johnymontana/extraction-knowledge-graph-experiments), same questions):
 
@@ -149,7 +167,8 @@ decima-base 0.60 → decima-agent 2.2 **0.85**. Keep hard rules first; the [hook
 ## Limitations
 
 - Fuzzy, knowledge-heavy or multi-step decisions belong to a bigger model. Use Decima's confidence to know when.
-- States are limited to 512 tokens (decima-base) or 2,048 (decima-agent); longer input is refused, never silently cut.
+- States are limited to 512 tokens (decima-base, decima-small), 2,048 (decima-guard) or 8,192 (decima-agent); longer
+  input is refused, never silently cut.
 - A model can be confidently wrong. For safety gates, keep rules first and Decima second.
 - decima-base trained on some non-commercial datasets; see [release/LICENSING.md](release/LICENSING.md) before selling
   a product built on it.

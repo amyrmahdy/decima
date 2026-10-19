@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Decima Playground — three open decision models</title>
-<meta name="description" content="Try decima-agent 2.2, decima-base 2.0 and decima-small 1.1 with the presets of the decima Python package: pick a preset or write your own question and options, paste text, get calibrated probabilities. The models run in your browser.">
+<title>Decima Playground — open decision and guard models</title>
+<meta name="description" content="Try decima-guard, decima-agent 2.3, decima-base 2.0 and decima-small 1.1 with the presets of the decima Python package: pick a preset or write your own question and options, paste text, get calibrated probabilities. The models run in your browser.">
 <meta name="color-scheme" content="light dark">
 <script>
   // theme before first paint: saved choice, else the system setting
@@ -29,7 +29,7 @@
   <div class="dz-top">
     <div class="dz-brand">
       <h1 class="dz-word">Decima<span class="dz-word-sub">playground</span></h1>
-      <p class="dz-pitch">Three open decision models. Pick a preset or write your own question and options, paste
+      <p class="dz-pitch">Open decision and guard models. Pick a preset or write your own question and options, paste
         some text, and get calibrated probabilities back. The model runs in your browser.</p>
     </div>
     <button class="dz-theme" id="theme" type="button" aria-label="Switch between light and dark mode" title="Light / dark">
@@ -39,11 +39,12 @@
   </div>
   <div class="dz-side">
     <div class="dz-chips">
-      <span class="dz-chip"><b>3</b> models, Apache-2.0</span>
+      <span class="dz-chip"><b>5</b> models, Apache-2.0</span>
       <span class="dz-chip"><b>0</b> servers: nothing you type leaves your device</span>
-      <span class="dz-chip"><b>7</b> presets from <span class="dz-mono">pip install decima-ai</span></span>
+      <span class="dz-chip"><b>11</b> presets from <span class="dz-mono">pip install decima-ai</span></span>
     </div>
     <nav class="dz-links">
+      <a href="guard.html"><b>New: check a message with decima-guard</b></a>
       <a href="small.html">Decima-small playground: business cases, shuffle test, speed</a>
       <a href="dispatch.html">Live demo: city dispatch</a>
       <a href="https://pypi.org/project/decima-ai/" target="_blank" rel="noopener">PyPI</a>
@@ -132,10 +133,13 @@ account security</textarea>
 
 <footer class="dz-footer">
   <p><b>Before you judge a model by this page.</b> The examples are curated; the model cards have the benchmarks and the
-  known limits. decima-agent was trained for agent gates and knowledge-graph judgments in English; decima-base is the
-  general, multilingual model; decima-small is the first generation, smaller and faster. Numbers are hard for all three
-  (thresholds, dates, counting).</p>
-  <p class="dz-dim">Models: <a href="https://huggingface.co/amyrmahdy/decima-agent" target="_blank" rel="noopener">decima-agent</a> ·
+  known limits. decima-guard checks prompts, documents, replies and web input for attacks and leaks (English, Arabic, Persian), and
+  decima-guard-small does the same faster; decima-agent was trained for agent gates and knowledge-graph judgments in
+  English; decima-base is the general, multilingual model; decima-small is the first generation, smaller and faster.
+  Numbers are hard for all of them (thresholds, dates, counting).</p>
+  <p class="dz-dim">Models: <a href="https://huggingface.co/amyrmahdy/decima-guard" target="_blank" rel="noopener">decima-guard</a> ·
+  <a href="https://huggingface.co/amyrmahdy/decima-guard-small" target="_blank" rel="noopener">decima-guard-small</a> ·
+  <a href="https://huggingface.co/amyrmahdy/decima-agent" target="_blank" rel="noopener">decima-agent</a> ·
   <a href="https://huggingface.co/amyrmahdy/decima-base" target="_blank" rel="noopener">decima-base</a> ·
   <a href="https://huggingface.co/amyrmahdy/decima-small" target="_blank" rel="noopener">decima-small</a> · int8 ONNX on ONNX
   Runtime Web (WebAssembly), in this tab. It computes the int8 layers with float activations, so a probability can differ

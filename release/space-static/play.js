@@ -1,4 +1,4 @@
-// Decima Playground, main page: the three published models and the presets of the `decima` package, in the browser.
+// Decima Playground, main page: the published models and the presets of the `decima` package, in the browser.
 // The model runs in a Web Worker (worker.js → decima.js, ONNX Runtime Web); router.js shapes questions exactly as
 // decima.Router does. Nothing loads until the first decision, and only the chosen model is downloaded.
 
@@ -14,9 +14,19 @@ const params = new URLSearchParams(location.search);
 const HUB = "https://huggingface.co/amyrmahdy";
 const MODELS = {
   "decima-agent": {
-    version: "2.2", params: "321M", url: `${HUB}/decima-agent/resolve/v2.2/onnx/int8/`, cache: "decima-agent-model-v2.2",
-    sizes: { "encoder.onnx": 322447126, "scorer.onnx": 14436752, "decima.json": 40309, "tokenizer/tokenizer.json": 34363440, "tokenizer/tokenizer_config.json": 735 },
-    blurb: "Agent gates and knowledge-graph judgments. English. Reads up to 2,048 tokens.",
+    version: "2.3", params: "321M", url: `${HUB}/decima-agent/resolve/v2.3/onnx/int8/`, cache: "decima-agent-model-v2.3",
+    sizes: { "encoder.onnx": 322447126, "scorer.onnx": 14436752, "decima.json": 40245, "tokenizer/tokenizer.json": 34363440, "tokenizer/tokenizer_config.json": 735 },
+    blurb: "Agent gates and knowledge-graph judgments. English. Reads up to 8,192 tokens (long inputs are slow in a browser).",
+  },
+  "decima-guard": {
+    version: "1.0 preview", params: "321M", url: `${HUB}/decima-guard/resolve/v1.0-preview/onnx/int8/`, cache: "decima-guard-model-v1.0-preview",
+    sizes: { "encoder.onnx": 322447126, "scorer.onnx": 14436752, "decima.json": 40216, "tokenizer/tokenizer.json": 34363440, "tokenizer/tokenizer_config.json": 735 },
+    blurb: "Guard for LLM apps: prompt injection, leaks, unsafe replies, web attacks. English, Arabic, Persian. Reads up to 2,048 tokens.",
+  },
+  "decima-guard-small": {
+    version: "1.0 preview", params: "140M", url: `${HUB}/decima-guard-small/resolve/v1.0-preview/onnx/int8/`, cache: "decima-guard-small-model-v1.0-preview",
+    sizes: { "encoder.onnx": 147364629, "scorer.onnx": 4915472, "decima.json": 20129, "tokenizer/tokenizer.json": 34363440, "tokenizer/tokenizer_config.json": 735 },
+    blurb: "The same guard checks, smaller and faster, a few points less accurate.",
   },
   "decima-base": {
     version: "2.0", params: "321M", url: `${HUB}/decima-base/resolve/v2.0/onnx/int8/`, cache: "decima-base-model-v2.0",
