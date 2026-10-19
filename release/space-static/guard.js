@@ -42,7 +42,8 @@ const KINDS = {
   },
   reply: {
     preset: "guard-output", title: "Model reply",
-    desc: "Your LLM's answer, before it is shown or used. Looks for a leaked system prompt, secrets or personal data.",
+    desc: "Your LLM's answer, before it is shown or used. Looks for a leaked system prompt, secrets or personal data. "
+      + "Tip: paste {\"system_prompt\": \"…\", \"output\": \"…\"} as JSON; with your system prompt the leak check is much stronger.",
   },
   web: {
     preset: "guard-web", title: "Web request", desc: "An HTTP request, URL parameter or form field. Looks for classic web attacks.",
