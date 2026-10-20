@@ -66,6 +66,7 @@ export function toQuestion(qid, spec, lang = "en") {
     const labels = Object.keys(crit);
     const opts = labels.map((k) => (pyStrip(text(crit[k])) ? `${k}: ${text(crit[k])}` : k));
     const kind = spec.ordinal === true ? "score" : "choose";   // Decima extension: a choice scored by the ordinal head it was trained with
+    if (kind === "score" && labels.length > 10) throw new Error(`questions.${qid}: an ordinal choice takes 2–10 labels`);
     return { type: t, q: { text: qt, choices: opts, kind, lang }, keys: labels };
   }
   if (t === "score") {

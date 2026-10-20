@@ -215,3 +215,10 @@ def test_mcp_session(router):
     assert json.loads(res[3]["result"]["content"][0]["text"])["answers"]["team"]["type"] == "choice"
     assert res[4]["result"]["isError"] is True
     assert res[5]["error"]["code"] == -32601 and res[6]["error"]["code"] == -32700
+
+
+def test_ordinal_choice_limited_to_ten_labels():
+    from decima.systemone import SystemOneError, to_question
+    assert to_question("ok", {"type": "choice", "ordinal": True, "criteria": [str(i) for i in range(10)]})[1].kind == "score"
+    with pytest.raises(SystemOneError):
+        to_question("too_many", {"type": "choice", "ordinal": True, "criteria": [str(i) for i in range(11)]})
