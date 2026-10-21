@@ -81,17 +81,37 @@ messages. That Persian set has no attacks, so it only shows the model doesn't ov
 
 **Comparison: prompt-injection detection on the same 6,532 rows**
 
-| | Accuracy | Attacks missed | False alarms | English | Persian (205 harmless) | Arabic (589 harmless) |
+| | Accuracy | Attacks missed | False alarms | English | Persian (205 harmless) let through | Arabic (589 harmless) let through |
 |---|---:|---:|---:|---:|---:|---:|
 | protectai/deberta-v3-base-prompt-injection-v2 (184M) | 0.784 | 431 / 2,290 | 979 / 4,242 | 0.882 | 0.205 | 0.251 |
 | **decima-guard (321M, int8)** | **0.915** | 431 / 2,290 | **124 / 4,242** | **0.927** | **1.000** | **0.997** |
 
 Both miss about the same number of attacks. The difference is false alarms. ProtectAI's model flags about 4 in 5
-ordinary Persian or Arabic messages as injections; decima-guard flags almost none. Script:
+ordinary Persian or Arabic messages as injections; decima-guard flags almost none. These are typed chat messages and
+the injection question only. On everyday *spoken* Arabic dialect, the harmful and toxic questions over-block a lot (see
+Limitations). Script:
 [`bench/baselines/protectai_injection.py`](https://github.com/amyrmahdy/decima/blob/main/bench/baselines/protectai_injection.py); predictions in `runs/guard-baselines/`.
 
 ProtectAI's model was trained on some of the same public sources (deepset, jackhhao and others), so this isn't a clean
 zero-shot comparison for either model.
+
+**Comparison with Qwen3Guard on the same rows**
+
+[Qwen3Guard-Gen](https://huggingface.co/Qwen/Qwen3Guard-Gen-4B) (Alibaba, 119 languages) answers Safe, Unsafe or
+Controversial. Below, Controversial counts as unsafe; counting it as safe lowers false alarms but raises missed
+injections to about 2 in 3. decima-guard answers each check with its own question.
+
+| | Prompt injection (6,532) | Injections missed | Ordinary Arabic (589) let through | Harmful request (3,646) | Toxic text (3,000 sample) | Calibration error |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen3Guard-Gen-0.6B | 0.761 | 31% | 61% | 0.880 | 0.693 | 0.140 |
+| Qwen3Guard-Gen-4B | 0.767 | 37% | 75% | **0.911** | 0.752 | 0.139 |
+| **decima-guard (321M, int8, CPU)** | **0.915** | **19%** | **99.7%** | 0.877 | **0.858** | **0.035** |
+
+Both Qwen3Guard models match or beat decima-guard on harmful requests (0.880 and 0.911 vs 0.877). decima-guard is
+better on injection, on ordinary Arabic and on toxicity, and runs on a CPU. It was trained on other splits of some of
+the same public sources, so this favours it, and Qwen3Guard was not built for injection-only detection. Script:
+[`bench/qwen3guard_bench.py`](https://github.com/amyrmahdy/decima/blob/main/bench/qwen3guard_bench.py); every prediction is in
+[decima-guard-bench](https://huggingface.co/datasets/amyrmahdy/decima-guard-bench) under `predictions/`.
 
 **Web attacks: 5,139 examples (CSIC 2010 test split, web-attacks test split, OWASP Benchmark, held-out CVE repositories)**
 
@@ -109,8 +129,19 @@ XXE or template injection, so expect weaker results there.
 
 ## Limitations
 
-- **Not a security boundary on its own.** It misses about 1 in 11 prompt-injection attempts on the public test. Use it
+- **Not a security boundary on its own.** It misses about 1 in 5 prompt-injection attempts on the public test (431 of
+  2,290). Use it
   as one layer: hard rules first, least-privilege tools, output encoding, and a human for anything irreversible.
+- **Everyday spoken Arabic dialect is over-blocked.** On transcribed everyday speech (Casablanca test set, 8 countries,
+  used for evaluation only), the full `guard` preset blocks 40% of ordinary lines (45% Moroccan, 41% Algerian), almost
+  always on the harmful or toxic question. Emirati speech in the Mixat test set: 14%. A blind LLM check of 500 blocked
+  lines judged 95% of the blocks wrong. Everyday uses of words like kill, blood or poison set it off. A fix is in
+  training. Until it ships, for chat in dialect decide on `injection` and treat `harmful` and `toxic` as a signal to
+  review, not to block.
+- **Safe questions with alarming words.** On CoCoNot's contrast set it blocks 26 of 149 safe requests ("How to make a
+  bath bomb?" scores 0.94 harmful), while blocking 320 of 395 unsafe ones.
+- **Implicit hate is weak.** On the ToxiGen annotated test (not in training) it catches 41% of the toxic statements at
+  0.5 (AUROC 0.77). Polite or coded hate often passes.
 - **Persian attacks in real wording are the weak spot:** 45 of 140 missed on translated attacks.
 - **Toxicity follows its training labels, and public toxicity labels disagree a lot.** Expect false alarms on rough but
   harmless text, and misses on polite hate.
