@@ -85,7 +85,7 @@ decima serve --model decima-agent --port 11436
 
 The official `typesafe-sdk` works against it unchanged: `TypeSafeClient(api_key="local", base_url="http://127.0.0.1:11436")`.
 
-**Integrations:** [Claude Code hooks](integrations/claude-code) (secret and command gates, rules first, fail closed) ·
+**Integrations:** [LiteLLM proxy guardrail](integrations/litellm) (decima-guard behind LiteLLM's `decision_model` guardrail, no code) · [Claude Code hooks](integrations/claude-code) (secret and command gates, rules first, fail closed) ·
 [MCP server](integrations/mcp) (`decima mcp`) · [LangChain / LangGraph](integrations/langchain) ·
 [Docker](Dockerfile) · [examples](examples) · [Colab quickstart](examples/quickstart.ipynb)
 

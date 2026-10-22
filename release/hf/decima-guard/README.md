@@ -125,7 +125,9 @@ the same public sources, so this favours it, and Qwen3Guard was not built for in
 The web test's attack-class part only covers SQL injection, XSS and "none". The training data has very little SSRF,
 XXE or template injection, so expect weaker results there.
 
-**Speed:** 111 ms per question for a short message on one CPU thread, 44 ms on four (int8, an ARM CPU, measured while the machine was busy).
+**Speed:** for a short message, one question takes about 115 ms on one CPU thread and 45 ms on four; the full `guard` preset (injection, harmful, toxic, OWASP class) takes about 430 ms on one thread and 150 ms on four (int8, an ARM CPU, measured while the machine was busy). On a GPU it is much faster.
+
+**LiteLLM:** decima-guard works as LiteLLM's `decision_model` guardrail through `decima serve`, with no code; see [integrations/litellm](https://github.com/amyrmahdy/decima/tree/main/integrations/litellm).
 
 ## Limitations
 

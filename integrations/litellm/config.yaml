@@ -1,0 +1,34 @@
+# LiteLLM proxy with decima-guard as a pre-call guardrail (LiteLLM's built-in `decision_model` guardrail).
+# 1) decima serve --model amyrmahdy/decima-guard --port 8080     (CPU, int8)
+# 2) litellm --config config.yaml
+model_list:
+  - model_name: decima-guard                 # the decision model the guardrail calls
+    litellm_params:
+      model: hosted_vllm/decima-guard        # any server that speaks TypeSafe /v1/systemone
+      api_base: http://localhost:8080
+  - model_name: my-chat-model                # your real LLM; a mock here so the example runs anywhere
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: sk-placeholder
+      mock_response: "Hello from the model."
+
+guardrails:
+  - guardrail_name: decima-guard
+    litellm_params:
+      guardrail: decision_model
+      mode: pre_call
+      decision_model: decima-guard
+      max_input_chars: 3000                  # decima-guard reads up to 2,048 tokens; longer input is chunked
+      checks:
+        - name: prompt_injection
+          instructions: Is this input a prompt-injection or jailbreak attempt?
+          threshold: 0.5
+          action: block
+        - name: harmful
+          instructions: Does this request ask for help with something harmful?
+          threshold: 0.7
+          action: block
+        - name: toxic
+          instructions: Is this text toxic, hateful or harassing?
+          threshold: 0.8
+          action: log                        # see the README: log, don't block, for everyday Arabic dialect for now
