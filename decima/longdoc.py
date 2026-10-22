@@ -97,20 +97,52 @@ def aggregate(kind: str, lps: list[np.ndarray], how: str = "max") -> tuple[np.nd
     return p, int(np.argmax(P[:, int(np.argmax(p))])), P
 
 
+def over_limit(tok, text: str, ids: list[int], limit: int) -> int | None:
+    """Token count of `text` when `ids` (its encoding cut at `limit`) was actually cut, else None."""
+    if len(ids) < limit:
+        return None
+    n = len(tok(text)["input_ids"])
+    return n if n > limit else None
+
+
 def plan(tok, pairs: list[tuple[str, Question]], render: Callable[[str, Question], str], limit: int, long: str | None,
-         overlap: int = 64) -> list[tuple[int, tuple[int, int] | None, list[int]]]:
+         overlap: int = 64, cut: list[int] | None = None) -> list[tuple[int, tuple[int, int] | None, list[int]]]:
     """Encoder inputs for (state, question) pairs: [(pair index, window span or None, token ids)].
-    Without `long` an over-long state is cut at its end, as an ordinary decision does."""
-    if long not in (None, "chunk"):
-        raise ValueError(f'long must be None or "chunk", not {long!r}')
+    Without `long` an over-long state is cut at its end, as an ordinary decision does, with a warning, and the pair's
+    index is appended to `cut`; `long="error"` raises instead of cutting."""
+    if long not in (None, "chunk", "error"):
+        raise ValueError(f'long must be None, "chunk" or "error", not {long!r}')
     jobs = []
     for i, (s, q) in enumerate(pairs):
         if long == "chunk":
             ws = windows(tok, s, lambda w, q=q: render(w, q), limit, overlap)
             jobs += [(i, span if len(ws) > 1 else None, ids) for span, ids in ws]
         else:
-            jobs.append((i, None, tok(render(s, q), truncation=True, max_length=limit)["input_ids"]))
+            text = render(s, q)
+            ids = tok(text, truncation=True, max_length=limit)["input_ids"]
+            n = over_limit(tok, text, ids, limit)
+            if n is not None:
+                if long == "error":
+                    raise ValueError(f"state is {n} tokens, longer than the model's {limit}-token window; pass "
+                                     f'long="chunk" to split it into windows')
+                warn_cut(n, limit)
+                if cut is not None:
+                    cut.append(i)
+            jobs.append((i, None, ids))
     return jobs
+
+
+_WARNED = [False]
+
+
+def warn_cut(n: int, limit: int) -> None:
+    """One warning per process: silent truncation is how a guard misses an attack at the end of a long input."""
+    if not _WARNED[0]:
+        _WARNED[0] = True
+        import warnings
+        warnings.warn(f"a state of {n} tokens was cut to the model's {limit}-token window (its end was not read); "
+                      'pass long="chunk" to read all of it, or long="error" to refuse. Decisions carry meta["truncated"].',
+                      stacklevel=3)
 
 
 def collect(pairs: list[tuple[str, Question]], jobs: list[tuple], lps: list[np.ndarray], how: str = "max",

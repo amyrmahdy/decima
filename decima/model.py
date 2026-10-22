@@ -346,7 +346,8 @@ class Decima:
             raise ValueError(f"aggregate must be one of {AGGREGATES}, not {aggregate!r}")
         t0 = time.perf_counter()
         render = lambda s, q: self.cfg.state_of(s, q.text, q.lang)
-        jobs = plan(self.tok, pairs, render, self.cfg.max_state_tokens, long, overlap)
+        cut: list[int] = []
+        jobs = plan(self.tok, pairs, render, self.cfg.max_state_tokens, long, overlap, cut)
         order = sorted(range(len(jobs)), key=lambda j: len(jobs[j][2]))
         lps: list = [None] * len(jobs)
         for b0 in range(0, len(order), batch_size):          # length-sorted batches; each row scored at its own length
@@ -363,4 +364,7 @@ class Decima:
                 owner = torch.zeros(len(q.choices), dtype=torch.long, device=self.device)
                 sc, z = self.model.choice_scores(Hs[k : k + 1, :n], mask[k : k + 1, :n].to(self.device), Hc, mc, owner)
                 lps[j] = self.model.log_probs(sc, z, owner, 1, [q.kind], self.cfg.temperature)[0].float().cpu().numpy()
-        return collect(pairs, jobs, lps, aggregate, min_confidence, (time.perf_counter() - t0) * 1e3 / max(1, len(pairs)))
+        out = collect(pairs, jobs, lps, aggregate, min_confidence, (time.perf_counter() - t0) * 1e3 / max(1, len(pairs)))
+        for i in cut:
+            out[i].meta["truncated"] = True
+        return out

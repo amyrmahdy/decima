@@ -23,7 +23,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .longdoc import AGGREGATES, collect, plan, probs
+from .longdoc import AGGREGATES, collect, over_limit, plan, probs, warn_cut
 from .normalize import normalize
 from .render import choice_texts
 from .types import Decision, Question
@@ -154,14 +154,17 @@ class DecimaOnnx:
         return _log_softmax(s)
 
     @classmethod
-    def from_pretrained(cls, name_or_path: str | Path, precision: str = "int8", threads: int = 1) -> "DecimaOnnx":
+    def from_pretrained(cls, name_or_path: str | Path, precision: str = "int8", threads: int = 1,
+                        local_files_only: bool = False) -> "DecimaOnnx":
         """Local export dir, or a Hugging Face repo laid out as onnx/<precision>/{encoder.onnx, scorer.onnx,
-        decima.json, tokenizer/}. One thread is the fastest setting at batch 1 (docs/BENCH-x86.md)."""
+        decima.json, tokenizer/}. One thread is the fastest setting at batch 1 (docs/BENCH-x86.md).
+        local_files_only=True (or HF_HUB_OFFLINE=1) never touches the network: a repo id must already be cached."""
         p = Path(name_or_path)
         if not p.exists():
             from huggingface_hub import snapshot_download
 
-            root = Path(snapshot_download(str(name_or_path), allow_patterns=["config.json", f"onnx/{precision}/*", f"onnx/{precision}/tokenizer/*"]))
+            root = Path(snapshot_download(str(name_or_path), allow_patterns=["config.json", f"onnx/{precision}/*", f"onnx/{precision}/tokenizer/*"],
+                                          local_files_only=local_files_only))
             p = root / "onnx" / precision
         return cls(p, threads=threads)
 
@@ -174,6 +177,12 @@ class DecimaOnnx:
         t0 = time.perf_counter()
         p = probs(self.decide_logits(state, question), question.kind)
         d = Decision(probs=[float(x) for x in p], choices=list(question.choices), latency_ms=(time.perf_counter() - t0) * 1e3)
+        text = self._state(state, question)
+        n = over_limit(self.tok, text, self.tok(text, truncation=True, max_length=self.cfg["max_state_tokens"])["input_ids"],
+                       self.cfg["max_state_tokens"])
+        if n is not None:
+            warn_cut(n, self.cfg["max_state_tokens"])
+            d.meta["truncated"] = True
         if min_confidence is not None:
             d.abstain(min_confidence)
         return d
@@ -201,7 +210,8 @@ class DecimaOnnx:
         if aggregate not in AGGREGATES:
             raise ValueError(f"aggregate must be one of {AGGREGATES}, not {aggregate!r}")
         t0 = time.perf_counter()
-        jobs = plan(self.tok, pairs, self._state, self.cfg["max_state_tokens"], long, overlap)
+        cut: list[int] = []
+        jobs = plan(self.tok, pairs, self._state, self.cfg["max_state_tokens"], long, overlap, cut)
         self._prefetch_choices([q for _, q in pairs])
         lps: list[np.ndarray] = [None] * len(jobs)
         # identical encoder inputs are encoded once: with question_in_state off (read-once models) every question
@@ -217,7 +227,10 @@ class DecimaOnnx:
             for j in users[r]:
                 q = pairs[jobs[j][0]][1]
                 lps[j] = self._score(h[None], np.ones((1, len(h)), np.int64), *self._choices(q), q)
-        return collect(pairs, jobs, lps, aggregate, min_confidence, (time.perf_counter() - t0) * 1e3 / max(1, len(pairs)))
+        out = collect(pairs, jobs, lps, aggregate, min_confidence, (time.perf_counter() - t0) * 1e3 / max(1, len(pairs)))
+        for i in cut:
+            out[i].meta["truncated"] = True
+        return out
 
     def logits(self, states: list[str], q: Question) -> np.ndarray:
         """Log-probabilities [n_states, n_choices], like `Decima.logits`."""
