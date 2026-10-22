@@ -9,6 +9,8 @@ base_model: intfloat/multilingual-e5-small
 
 # Decima-small — an open, CPU-sized Jev-style decision model
 
+> **Commercial use:** decima-small's training data includes non-commercial sets (ANLI, XNLI; see [License](#license)). If you need weights trained with no non-commercial data, use [decima-base-clean](https://huggingface.co/amyrmahdy/decima-base-clean); for guards and agent gates, [decima-guard](https://huggingface.co/amyrmahdy/decima-guard) and [decima-agent](https://huggingface.co/amyrmahdy/decima-agent) fit better.
+
 **Give it a situation, a question and your options. Get back probabilities that are well calibrated as shipped.**
 Like TypeSafe's Jev, Decima is a *System One* model: it returns typed decisions (choose one, yes/no, an ordered
 score, rank) with probabilities instead of generating text. Unlike Jev, it is open (Apache-2.0), has 122M
