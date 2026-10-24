@@ -83,7 +83,7 @@ of test rows were removed from training. Int8 runtime unless noted.
 |---|---:|---:|---:|---:|
 | Prompt injection / jailbreak | 6,532 | **0.910** | 425 / 2,290 | 160 / 4,242 |
 | System-prompt or secret leak | 1,200 | **0.998** | 2 / 537 | 1 / 663 |
-| Indirect injection in tool results | 296 | **1.000** | 0 / 148 | 0 / 148 |
+| Indirect injection in tool results (teacher-written, easy case; see Limitations) | 296 | 1.000 | 0 / 148 | 0 / 148 |
 | Which OWASP LLM risk | 329 | 0.948 | | |
 | Harmful request | 3,646 | 0.880 | 309 / 2,359 | 127 / 1,287 |
 | Toxic text | 8,407 | 0.831 | 684 / 3,383 | 740 / 5,024 |
@@ -156,6 +156,12 @@ XXE or template injection, so expect weaker results there.
 - **Not a security boundary on its own.** It misses about 1 in 5 prompt-injection attempts on the public test (425 of
   2,290). Use it
   as one layer: hard rules first, least-privilege tools, output encoding, and a human for anything irreversible.
+- **Indirect injection in real documents is weak.** On public benchmarks of instructions hidden in emails, web pages and
+  tables it catches only about 1 in 5 attacks: BIPIA 21%, PIArena 18.5%, LLMail-Inject phase 2 20.7% (scored as one
+  detector, the higher of its injection and indirect-injection checks, on the Horizon-Labs prompt-injection suite). The
+  1.000 above is on teacher-written cases that turned out to be the easy ones. It also flags 25–30% of safe but
+  edgy prompts (NotInject, OR-Bench-hard). A fix is in training. Until then, do not rely on it alone for documents an
+  agent reads; keep tool permissions narrow.
 - **Everyday spoken Arabic dialect is still over-blocked, though half as much as 1.0.** On transcribed everyday speech
   (Casablanca, 8 countries) the full `guard` preset blocks 19.5% of ordinary lines (1.0: 39.6%), now mostly on the
   toxic question; Egypt and Mauritania are the worst at about 25%. On Emirati speech in the Mixat test set it got
