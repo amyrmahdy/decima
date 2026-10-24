@@ -35,9 +35,9 @@ answer  billing    ██████████████████▉  0.
 
 **New in 2.3: [decima-guard](https://huggingface.co/amyrmahdy/decima-guard)**, a guard for LLM apps that covers the
 OWASP LLM Top 10 and common web attacks, in English, Arabic and Persian (Finglish too). Unlike English-first guards,
-its injection check doesn't block ordinary Arabic and Persian chat: it lets 99.7% of 589 harmless Arabic messages
-through, where ProtectAI's detector lets 25.1% through. Its harmful and toxic checks still over-block everyday spoken
-dialect; a fix is in training (see the card's limitations). **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html)**,
+its injection check doesn't block ordinary Arabic and Persian chat: it lets 99.5% of 589 harmless Arabic messages
+through, where ProtectAI's detector lets 25.1% through. **decima-guard 1.1** halves the wrong blocks on everyday spoken
+dialect (Casablanca test set: 39.6% → 19.5% of ordinary lines blocked) with the same public-test score. **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html)**,
 or see [examples/guard_chatbot.py](examples/guard_chatbot.py).
 
 ![decima-guard: prompt injection in English, Finglish and Persian, a SQL injection and an injection hidden in a tool result](release/figures/decima-guard-cli.gif)
@@ -140,14 +140,15 @@ that are public with every prediction ([decima-guard-bench](https://huggingface.
 
 | | decima-guard | ProtectAI prompt-injection-v2 |
 |---|---:|---:|
-| Prompt injection / jailbreak, 6,532 examples: accuracy | **0.915** | 0.784 |
-| False alarms on 4,242 harmless messages | **124** | 979 |
-| Ordinary Arabic chat messages, injection check: let through (589) | **99.7%** | 25.1% |
+| Prompt injection / jailbreak, 6,532 examples: accuracy | **0.910** | 0.784 |
+| False alarms on 4,242 harmless messages | **160** | 979 |
+| Ordinary Arabic chat messages, injection check: let through (589) | **99.5%** | 25.1% |
 | Ordinary Persian chat messages, injection check: let through (205) | **100%** | 20.5% |
 
-Against [Qwen3Guard-Gen-4B](https://huggingface.co/Qwen/Qwen3Guard-Gen-4B) on the same rows: injection 0.915 vs 0.767,
-harmful requests 0.877 vs **0.911**. It still misses about 1 in 6 real attacks translated into Arabic dialects, and on
-everyday spoken dialect (Casablanca test set) the full guard blocks 40% of ordinary lines, almost all wrongly. Keep hard
+Against [Qwen3Guard-Gen-4B](https://huggingface.co/Qwen/Qwen3Guard-Gen-4B) on the same rows: injection 0.910 vs 0.767,
+harmful requests 0.880 vs **0.911**. It still misses about 1 in 6 real attacks translated into Arabic dialects, and on
+everyday spoken dialect (Casablanca test set) the full guard still blocks 19.5% of ordinary lines (1.0: 39.6%), mostly
+on the toxic question. Keep hard
 rules first, and see the [limitations](https://huggingface.co/amyrmahdy/decima-guard#limitations).
 
 **As a local stand-in for Jev in a published knowledge-graph pipeline**

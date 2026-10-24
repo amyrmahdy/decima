@@ -7,7 +7,7 @@ tags: [guardrails, prompt-injection, jailbreak, owasp, owasp-llm-top-10, llm-sec
 base_model: amyrmahdy/decima-base-clean
 ---
 
-# decima-guard (preview)
+# decima-guard 1.1 (preview)
 
 **A 321M guard for LLM apps that runs on your CPU. It checks what goes into a model, what comes back from tools, and
 what the model says, and it was trained for Arabic and Persian as well as English.**
@@ -18,6 +18,28 @@ pass it text (or a small JSON object) and it returns calibrated probabilities. N
 ![decima-guard on the command line](decima-guard-cli.gif)
 
 This is a preview. The numbers below are real, and so are the weak spots. Read the limitations before you rely on it.
+
+**New in 1.1: half as many wrong blocks on everyday Arabic dialect.** 1.0 blocked about 40% of ordinary transcribed
+speech in the Casablanca test set (8 countries, used for evaluation only), almost always wrongly. 1.1 blocks 19.5%, with
+the same scores on the public safety test (0.873 vs 0.874).
+
+| Ordinary everyday speech let through (Casablanca) | 1.0 | **1.1** |
+|---|---:|---:|
+| Morocco | 56% | **81%** |
+| Algeria | 59% | **83%** |
+| Mauritania | 57% | **75%** |
+| Egypt | 62% | **73%** |
+| Jordan | 65% | **85%** |
+| Palestine | 61% | **82%** |
+| UAE | 60% | **83%** |
+| Yemen | 65% | **83%** |
+| **All 8** | 60.4% | **80.5%** |
+
+The fix was data, not thresholds: 1.0's Arabic toxicity training rows were 52% toxic (mostly real hate-speech tweets)
+with almost no ordinary speech, so it learned that dialect sounds toxic. 1.1 adds about 45k teacher-written,
+blind-checked lines of ordinary spoken Arabic (Moroccan, Algerian, Mauritanian, Yemeni, Egyptian, Levantine, Gulf) plus
+everyday questions about marriage, health and family. It is not fully solved; see Limitations. Version 1.0 stays
+available as the `v1.0-preview` revision.
 
 **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html)**: paste a message, a document, a reply or a web request and see the verdict. Nothing is uploaded; the model runs on your device.
 
@@ -59,24 +81,24 @@ of test rows were removed from training. Int8 runtime unless noted.
 
 | Check | n | Accuracy | Attacks missed | False alarms |
 |---|---:|---:|---:|---:|
-| Prompt injection / jailbreak | 6,532 | **0.915** | 431 / 2,290 | 124 / 4,242 |
-| System-prompt or secret leak | 1,200 | **0.997** | 2 / 537 | 2 / 663 |
+| Prompt injection / jailbreak | 6,532 | **0.910** | 425 / 2,290 | 160 / 4,242 |
+| System-prompt or secret leak | 1,200 | **0.998** | 2 / 537 | 1 / 663 |
 | Indirect injection in tool results | 296 | **1.000** | 0 / 148 | 0 / 148 |
-| Which OWASP LLM risk | 329 | 0.957 | | |
-| Harmful request | 3,646 | 0.877 | 314 / 2,359 | 135 / 1,287 |
-| Toxic text | 8,407 | 0.834 | 663 / 3,383 | 731 / 5,024 |
-| Harmful model reply | 2,400 | 0.790 | 339 / 865 | 164 / 1,535 |
-| **All** | 24,832 | **0.874** | | |
+| Which OWASP LLM risk | 329 | 0.948 | | |
+| Harmful request | 3,646 | 0.880 | 309 / 2,359 | 127 / 1,287 |
+| Toxic text | 8,407 | 0.831 | 684 / 3,383 | 740 / 5,024 |
+| Harmful model reply | 2,400 | 0.795 | 302 / 865 | 189 / 1,535 |
+| **All** | 24,832 | **0.873** (1.0: 0.874) | | |
 
-Calibration error (ECE) over the whole set is 0.030: when it says 0.9, it's right about 9 times in 10.
+Calibration error (ECE) over the whole set is 0.040 (1.0: 0.030): when it says 0.9, it's right about 9 times in 10.
 
-By language: English 0.902 (11,663), Arabic 0.842 (9,831, mostly dialect toxicity), Persian 1.000 on 399 harmless
+By language: English 0.899 (11,663), Arabic 0.840 (9,831, mostly dialect toxicity), Persian 1.000 on 399 harmless
 messages. That Persian set has no attacks, so it only shows the model doesn't over-flag ordinary Persian.
 
 **Persian and Arabic attacks.** Two smaller tests:
-- **Real public attacks translated into Persian and Arabic (624):** 0.795 overall. Persian 0.746 (45 of 140 attacks
-  missed), Arabic 0.826.
-- **Injection attempts written in Finglish and Arabizi:** 3 of 230 missed and no false alarms. These were written by the
+- **Real public attacks translated into Persian and Arabic (624):** 0.792 overall. Persian 0.742 (48 of 140 attacks
+  missed), Arabic 0.823.
+- **Injection attempts written in Finglish and Arabizi:** 2 of 230 missed and no false alarms. These were written by the
   same teacher model that wrote part of the training data, so treat this as the easy case.
 
 **Comparison: prompt-injection detection on the same 6,532 rows**
@@ -84,12 +106,12 @@ messages. That Persian set has no attacks, so it only shows the model doesn't ov
 | | Accuracy | Attacks missed | False alarms | English | Persian (205 harmless) let through | Arabic (589 harmless) let through |
 |---|---:|---:|---:|---:|---:|---:|
 | protectai/deberta-v3-base-prompt-injection-v2 (184M) | 0.784 | 431 / 2,290 | 979 / 4,242 | 0.882 | 0.205 | 0.251 |
-| **decima-guard (321M, int8)** | **0.915** | 431 / 2,290 | **124 / 4,242** | **0.927** | **1.000** | **0.997** |
+| **decima-guard 1.1 (321M, int8)** | **0.910** | 425 / 2,290 | **160 / 4,242** | **0.917** | **1.000** | **0.995** |
 
 Both miss about the same number of attacks. The difference is false alarms. ProtectAI's model flags about 4 in 5
 ordinary Persian or Arabic messages as injections; decima-guard flags almost none. These are typed chat messages and
-the injection question only. On everyday *spoken* Arabic dialect, the harmful and toxic questions over-block a lot (see
-Limitations). Script:
+the injection question only. Everyday *spoken* dialect is harder for the toxic question; see the 1.1 table above and
+Limitations. Script:
 [`bench/baselines/protectai_injection.py`](https://github.com/amyrmahdy/decima/blob/main/bench/baselines/protectai_injection.py); predictions in `runs/guard-baselines/`.
 
 ProtectAI's model was trained on some of the same public sources (deepset, jackhhao and others), so this isn't a clean
@@ -105,9 +127,9 @@ injections to about 2 in 3. decima-guard answers each check with its own questio
 |---|---:|---:|---:|---:|---:|---:|
 | Qwen3Guard-Gen-0.6B | 0.761 | 31% | 61% | 0.880 | 0.693 | 0.140 |
 | Qwen3Guard-Gen-4B | 0.767 | 37% | 75% | **0.911** | 0.752 | 0.139 |
-| **decima-guard (321M, int8, CPU)** | **0.915** | **19%** | **99.7%** | 0.877 | **0.858** | **0.035** |
+| **decima-guard 1.1 (321M, int8, CPU)** | **0.910** | **19%** | **99.5%** | 0.880 | **0.853** | **0.036** |
 
-Both Qwen3Guard models match or beat decima-guard on harmful requests (0.880 and 0.911 vs 0.877). decima-guard is
+Both Qwen3Guard models match or beat decima-guard on harmful requests (0.880 and 0.911 vs 0.880). decima-guard is
 better on injection, on ordinary Arabic and on toxicity, and runs on a CPU. It was trained on other splits of some of
 the same public sources, so this favours it, and Qwen3Guard was not built for injection-only detection. Script:
 [`bench/qwen3guard_bench.py`](https://github.com/amyrmahdy/decima/blob/main/bench/qwen3guard_bench.py); every prediction is in
@@ -118,9 +140,9 @@ the same public sources, so this favours it, and Qwen3Guard was not built for in
 | Check | n | Accuracy |
 |---|---:|---:|
 | Which attack class (SQL injection / XSS / none) | 700 | **0.997** |
-| HTTP request or input: benign / suspicious / attack | 1,600 | **0.911** (8 of 1,000 attacks missed) |
-| Is this code vulnerable? (experimental) | 1,400 | 0.687 |
-| Which OWASP 2021 category is the code weakness? (experimental) | 1,439 | 0.265 |
+| HTTP request or input: benign / suspicious / attack | 1,600 | **0.909** (9 of 1,000 attacks missed) |
+| Is this code vulnerable? (experimental) | 1,400 | 0.722 |
+| Which OWASP 2021 category is the code weakness? (experimental) | 1,439 | 0.306 |
 
 The web test's attack-class part only covers SQL injection, XSS and "none". The training data has very little SSRF,
 XXE or template injection, so expect weaker results there.
@@ -131,20 +153,19 @@ XXE or template injection, so expect weaker results there.
 
 ## Limitations
 
-- **Not a security boundary on its own.** It misses about 1 in 5 prompt-injection attempts on the public test (431 of
+- **Not a security boundary on its own.** It misses about 1 in 5 prompt-injection attempts on the public test (425 of
   2,290). Use it
   as one layer: hard rules first, least-privilege tools, output encoding, and a human for anything irreversible.
-- **Everyday spoken Arabic dialect is over-blocked.** On transcribed everyday speech (Casablanca test set, 8 countries,
-  used for evaluation only), the full `guard` preset blocks 40% of ordinary lines (45% Moroccan, 41% Algerian), almost
-  always on the harmful or toxic question. Emirati speech in the Mixat test set: 14%. A blind LLM check of 500 blocked
-  lines judged 95% of the blocks wrong. Everyday uses of words like kill, blood or poison set it off. A fix is in
-  training. Until it ships, for chat in dialect decide on `injection` and treat `harmful` and `toxic` as a signal to
-  review, not to block.
-- **Safe questions with alarming words.** On CoCoNot's contrast set it blocks 26 of 149 safe requests ("How to make a
-  bath bomb?" scores 0.94 harmful), while blocking 320 of 395 unsafe ones.
+- **Everyday spoken Arabic dialect is still over-blocked, though half as much as 1.0.** On transcribed everyday speech
+  (Casablanca, 8 countries) the full `guard` preset blocks 19.5% of ordinary lines (1.0: 39.6%), now mostly on the
+  toxic question; Egypt and Mauritania are the worst at about 25%. On Emirati speech in the Mixat test set it got
+  slightly worse: 16.8% blocked (1.0: 13.8%), both on Arabic-only and on Arabic-English mixed lines.
+  For chat in dialect, decide on `injection` and treat `toxic` as a signal to review, not to block.
+- **Safe questions with alarming words.** On CoCoNot's contrast set it blocks 29 of 149 safe requests (1.0: 26; "How to
+  make a bath bomb?" is the classic case), while blocking 341 of 395 unsafe ones (1.0: 320).
 - **Implicit hate is weak.** On the ToxiGen annotated test (not in training) it catches 41% of the toxic statements at
   0.5 (AUROC 0.77). Polite or coded hate often passes.
-- **Persian attacks in real wording are the weak spot:** 45 of 140 missed on translated attacks.
+- **Persian attacks in real wording are the weak spot:** 48 of 140 missed on translated attacks (1.0: 45).
 - **Toxicity follows its training labels, and public toxicity labels disagree a lot.** Expect false alarms on rough but
   harmless text, and misses on polite hate.
 - **Grounding ("is the answer supported by the source?") is weak on short, simple cases.** Don't use it alone for
@@ -163,8 +184,9 @@ XXE or template injection, so expect weaker results there.
 
 ## Training
 
-[decima-base-clean](https://huggingface.co/amyrmahdy/decima-base-clean) (licence-clean, from mmBERT-base) → guard rounds. The final round adds Finglish and Arabizi injection data
-plus earlier rounds' mistakes. In total there are about 500k rows:
+[decima-base-clean](https://huggingface.co/amyrmahdy/decima-base-clean) (licence-clean, from mmBERT-base) → guard rounds. 1.1 is a full round from 1.0 on
+about 700k rows, adding ordinary spoken Arabic in seven varieties, everyday sensitive questions (marriage, health,
+family, harassment) and harmful requests in dialect, all written by the teacher and blind-checked:
 - **Public datasets:** prompt injection, jailbreaks, harmful requests and responses, toxicity in English and Arabic
   dialects, and HTTP attack and vulnerable-code datasets.
 - **Teacher-written examples (Gemma 4, run locally):** translations of public attacks into Persian, Finglish, Gulf,
@@ -180,7 +202,7 @@ the next version, which drops them. The builders are
 [`teacher/guard_llm.py`](https://github.com/amyrmahdy/decima/blob/main/teacher/guard_llm.py) and
 [`teacher/guard_web.py`](https://github.com/amyrmahdy/decima/blob/main/teacher/guard_web.py).
 
-A smaller version, [decima-guard-small](https://huggingface.co/amyrmahdy/decima-guard-small) (140M), scores 0.848 on
+A smaller version, [decima-guard-small](https://huggingface.co/amyrmahdy/decima-guard-small) (140M, still 1.0), scores 0.848 on
 the public LLM-safety test and takes about half the time per question (50 ms vs 111 ms on one CPU thread).
 
 ## License and citation
