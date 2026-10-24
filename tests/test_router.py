@@ -222,3 +222,23 @@ def test_ordinal_choice_limited_to_ten_labels():
     assert to_question("ok", {"type": "choice", "ordinal": True, "criteria": [str(i) for i in range(10)]})[1].kind == "score"
     with pytest.raises(SystemOneError):
         to_question("too_many", {"type": "choice", "ordinal": True, "criteria": [str(i) for i in range(11)]})
+
+
+def test_label_blind_choice_ignores_labels():
+    from decima.systemone import to_question
+    spec = {"type": "choice", "instructions": "Should the agent run this tool call?",
+            "criteria": {"allow": "the call is within policy", "block": "the call breaks a policy"}}
+    _, q, keys = to_question("gate", spec)
+    assert q.choices == ["allow: the call is within policy", "block: the call breaks a policy"] and keys == ["allow", "block"]
+    renamed = {**spec, "label_blind": True, "criteria": {"forbid": "the call is within policy", "block": "the call breaks a policy"}}
+    _, q2, keys2 = to_question("gate", renamed)
+    _, q3, _ = to_question("gate", {**spec, "label_blind": True})
+    assert q2.choices == q3.choices == ["the call is within policy", "the call breaks a policy"]
+    assert keys2 == ["forbid", "block"]                      # answer keys keep the caller's labels
+
+
+def test_label_blind_rejects_duplicate_renderings():
+    import pytest
+    from decima.systemone import SystemOneError, to_question
+    with pytest.raises(SystemOneError):
+        to_question("g", {"type": "choice", "label_blind": True, "criteria": {"a": "same", "b": "same"}})

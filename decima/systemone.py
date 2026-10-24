@@ -15,6 +15,10 @@ Mapping (the renderings Decima 1.1 was trained on):
   noul   → verify: the statement itself, followed by "True if: … / False if: …" when criteria give them;
            options yes / no; the answer is P(yes);
   score  → score over the level descriptions, level 0 first; the answer is the expected level Σ i·pᵢ.
+Label-blind choices (Decima extension, 2026-10-24): `"label_blind": true` on a choice question, or DECIMA_LABEL_BLIND=1 for
+every choice, encodes only each option's description (the label alone when it has none) and keeps the labels as answer
+keys. The label never reaches the model, so renaming an option cannot move the decision: the option-channel attack of
+arXiv 2610.12292 drove decima-agent 2.3 to 62% fail-open through labels, 27% label-blind (no accuracy cost on its tests).
 A question without instructions uses its id, as Ollaya does. Answer fields, their order, the
 4-decimal rounding and `confidence = (K·p_max − 1) / (K − 1)` follow TypeSafe's schema.
 """
@@ -22,6 +26,7 @@ A question without instructions uses its id, as Ollaya does. Answer fields, thei
 from __future__ import annotations
 
 import json
+import os
 from typing import Any
 
 import numpy as np
@@ -69,7 +74,13 @@ def to_question(qid: str, spec: dict, lang: str = "en") -> tuple[str, Question, 
         if not isinstance(crit, dict) or not (2 <= len(crit) <= MAX_CHOICES):
             raise SystemOneError(f"questions.{qid}: choice needs 2–{MAX_CHOICES} criteria", issues=[{"loc": loc, "msg": "choice needs 2-255 labels", "type": "value_error"}])
         labels = [str(k) for k in crit]
-        opts = [f"{k}: {_text(v)}" if _text(v).strip() else k for k, v in zip(labels, crit.values())]
+        blind = spec.get("label_blind", os.environ.get("DECIMA_LABEL_BLIND") == "1") is True
+        if blind:                                                      # description only: the label never reaches the model
+            opts = [_text(v) if _text(v).strip() else k for k, v in zip(labels, crit.values())]
+        else:
+            opts = [f"{k}: {_text(v)}" if _text(v).strip() else k for k, v in zip(labels, crit.values())]
+        if len(set(opts)) < len(opts):
+            raise SystemOneError(f"questions.{qid}: two options render to the same text", issues=[{"loc": loc, "msg": "duplicate option text", "type": "value_error"}])
         kind = "score" if spec.get("ordinal") is True else "choose"    # Decima extension: a choice scored by the ordinal head it was trained with
         if kind == "score" and len(labels) > MAX_LEVELS:              # the ordinal head was trained with at most 10 levels
             raise SystemOneError(f"questions.{qid}: an ordinal choice takes 2–{MAX_LEVELS} labels",
