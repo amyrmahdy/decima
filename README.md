@@ -46,7 +46,9 @@ or see [examples/guard_chatbot.py](examples/guard_chatbot.py).
 IDs, IBANs, cards, addresses ...) in Arabic, Persian, Urdu, Turkish and English, including numbers in Persian and
 Arabic-Indic digits. 140M, int8 ONNX, about 13 ms per message on a CPU. On an outside clinical test set it never saw
 (MultiGraSCCo), it scores 0.870 F1 against 0.647 for OpenAI's privacy filter: Persian 0.805 vs 0.508, Arabic 0.843 vs
-0.581, Turkish 0.889 vs 0.626, English 0.957 vs 0.901. Preview; limits on the model card.
+0.581, Turkish 0.889 vs 0.626, English 0.957 vs 0.901. Preview; limits on the model card. **New in 2.4:** it ships
+inside `decima-ai` ([find and redact](#personal-data-decima-pii)), with a [LiteLLM guardrail](integrations/litellm-pii)
+and a [Presidio recognizer](integrations/presidio).
 **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/pii.html)**: the model runs in the tab.
 
 ![decima-pii in the browser: an Arabic and a Persian message, each item marked, and the redacted copy](release/figures/decima-pii-browser.gif)
@@ -91,6 +93,30 @@ answer = router.predict(
 print(answer["answers"]["team"]["choice"], answer["answers"]["urgent"]["noul"])     # security 0.72
 ```
 
+<a id="personal-data-decima-pii"></a>**Personal data (decima-pii)**: find and redact names, phones, emails, national IDs, IBANs, cards,
+passports, addresses, dates of birth and IP addresses in Arabic, Persian, Urdu, Turkish and English.
+
+```bash
+pip install decima-ai
+```
+
+```python
+from decima import PII                             # also importable as DecimaPII
+
+pii = PII.from_pretrained()                        # amyrmahdy/decima-pii, int8 ONNX, 148 MB, downloaded once
+print(pii.redact("اسمي محمود الشمري ورقم جوالي ٠٥٥١٢٣٤٥٦٧"))   # اسمي [PERSON_NAME] ورقم جوالي [PHONE]
+```
+
+```bash
+decima pii "سلام، من سارا احمدی هستم. کد ملی من ۰۰۱۲۳۴۵۶۷۸ است."     # spans, then the redacted text
+cat letter.txt | decima pii --redact-only                          # or --json for {"spans": [...], "redacted": "..."}
+```
+
+`pii.find(text)` returns `[{"start", "end", "label", "text"}]`. This is not the `pii` preset: the preset asks
+decima-base a yes/no question ("does this text contain personal data, and which kind?"); `decima.pii` returns the exact
+spans so you can mask them. In front of an LLM: [LiteLLM guardrail](integrations/litellm-pii) ·
+[Presidio recognizer](integrations/presidio). `pip install decima-pii` installs the same package with a `decima-pii` command.
+
 **HTTP server** (TypeSafe-compatible, binds to 127.0.0.1)
 
 ```bash
@@ -99,7 +125,9 @@ decima serve --model decima-agent --port 11436
 
 The official `typesafe-sdk` works against it unchanged: `TypeSafeClient(api_key="local", base_url="http://127.0.0.1:11436")`.
 
-**Integrations:** [LiteLLM proxy guardrail](integrations/litellm) (decima-guard behind LiteLLM's `decision_model` guardrail, no code) · [Claude Code hooks](integrations/claude-code) (secret and command gates, rules first, fail closed) ·
+**Integrations:** [LiteLLM proxy guardrail](integrations/litellm) (decima-guard behind LiteLLM's `decision_model` guardrail, no code) ·
+[LiteLLM PII masking](integrations/litellm-pii) (decima-pii masks Arabic/Persian/Urdu/Turkish/English personal data before the model sees it) ·
+[Presidio recognizer](integrations/presidio) (decima-pii under Presidio's entity names) · [Claude Code hooks](integrations/claude-code) (secret and command gates, rules first, fail closed) ·
 [MCP server](integrations/mcp) (`decima mcp`) · [LangChain / LangGraph](integrations/langchain) ·
 [Docker](Dockerfile) · [examples](examples) · [Colab quickstart](examples/quickstart.ipynb)
 
@@ -110,7 +138,7 @@ The official `typesafe-sdk` works against it unchanged: `TypeSafeClient(api_key=
 | `triage` | team, urgency, sentiment of a ticket or message | decima-base |
 | `routing` | cheapest LLM tier that can answer well: small / medium / frontier | decima-base |
 | `moderation` | which policy a post breaks, and how badly | decima-base |
-| `pii` | is there personal data, and of which kind | decima-base |
+| `pii` | is there personal data, and of which kind (yes/no; to find and mask the values, use [decima-pii](#personal-data-decima-pii)) | decima-base |
 | `guard` | prompt injection or jailbreak, harmful request, toxicity, which OWASP LLM risk | decima-guard |
 | `guard-rag` | indirect injection in a document or tool result; answer grounded in the source; tool call beyond the request | decima-guard |
 | `guard-output` | the reply leaks the system prompt or secrets; output unsafe for HTML / SQL / shell; harmful reply | decima-guard |

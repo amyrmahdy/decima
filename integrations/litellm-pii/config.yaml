@@ -1,0 +1,23 @@
+# LiteLLM proxy with decima-pii masking personal data before a request reaches the model.
+# 1) pip install decima-ai "litellm[proxy]"
+# 2) python echo_server.py --port 9000          (a stand-in model that shows what it received; replace with yours)
+# 3) litellm --config config.yaml                (decima_pii_guardrail.py must sit next to this file)
+model_list:
+  - model_name: my-chat-model
+    litellm_params:
+      model: openai/echo                       # your real LLM here
+      api_base: http://127.0.0.1:9000/v1
+      api_key: sk-placeholder
+
+guardrails:
+  - guardrail_name: decima-pii
+    litellm_params:
+      guardrail: decima_pii_guardrail.DecimaPIIGuardrail
+      mode: pre_call                           # mask the request; add a second entry with mode: post_call to mask replies
+      default_on: true                         # every request; set false and pass "guardrails": ["decima-pii"] per request
+      # optional, passed to DecimaPIIGuardrail:
+      # model: amyrmahdy/decima-pii            # Hub repo or a local directory
+      # threads: 4
+      # entities: [PHONE, EMAIL, NATIONAL_ID, IBAN, CARD, PASSPORT]   # default: all ten labels
+      # mask_format: "[{label}]"
+      # pii_action: mask                       # or block: HTTP 400 with the labels found

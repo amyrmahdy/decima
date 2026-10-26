@@ -7,6 +7,7 @@
     decima presets [name]                                       # list presets / show one preset's questions
     decima serve [--model decima-base] [--port 11436]           # TypeSafe-compatible HTTP server
     decima mcp [--model …]                                      # MCP server over stdio
+    decima pii "text" [--redact-only] [--json]                  # decima-pii: find and redact personal data
 """
 
 from __future__ import annotations
@@ -135,6 +136,66 @@ def cmd_serve(argv: list[str]) -> int:
     return 0
 
 
+def cmd_pii(argv: list[str], prog: str = "decima pii") -> int:
+    """Personal-data spans and the redacted text (decima-pii). Not the `pii` preset, which only answers yes/no."""
+    ap = argparse.ArgumentParser(prog=prog, description="Find and redact personal data (names, phones, emails, national IDs, "
+                                 "IBANs, cards, passports, addresses, dates of birth, IPs) in Arabic, Persian, Urdu, Turkish "
+                                 "and English, with decima-pii on CPU.")
+    ap.add_argument("text", nargs="*", help="the text; default: --file or stdin")
+    ap.add_argument("-f", "--file", help="read the text from a file ('-' = stdin)")
+    ap.add_argument("--redact-only", action="store_true", help="print only the redacted text")
+    ap.add_argument("--json", action="store_true", help='print JSON: {"spans": [...], "redacted": "..."} (only "redacted" with --redact-only)')
+    ap.add_argument("--format", default="[{label}]", help="replacement for each span; {label} and {text} are filled in (default: [{label}])")
+    ap.add_argument("-m", "--model", default=None, help="Hub repo or local directory (default: amyrmahdy/decima-pii)")
+    ap.add_argument("--onnx", default=None, help="ONNX file inside onnx/ (default: model_nbits8.onnx)")
+    ap.add_argument("-t", "--threads", type=int, default=4)
+    a = ap.parse_args(argv)
+
+    if a.text:
+        text = " ".join(a.text)
+    elif a.file and a.file != "-":
+        text = Path(a.file).read_text()
+    elif a.file == "-" or not sys.stdin.isatty():
+        text = sys.stdin.read()
+    else:
+        ap.print_usage(sys.stderr)
+        print(f"{prog}: give a text, --file or stdin", file=sys.stderr)
+        return 2
+    from .pii import DEFAULT_ONNX, DEFAULT_REPO, DecimaPII, redact_spans
+
+    try:
+        pii = DecimaPII.from_pretrained(a.model or os.environ.get("DECIMA_PII_MODEL", DEFAULT_REPO), onnx=a.onnx or DEFAULT_ONNX,
+                                        threads=a.threads)
+        spans = pii.find(text)
+        redacted = redact_spans(text, spans, a.format)
+    except (ValueError, OSError, KeyError) as e:
+        print(f"{prog}: {e}", file=sys.stderr)
+        return 2
+    if a.json:
+        print(json.dumps({"redacted": redacted} if a.redact_only else {"spans": spans, "redacted": redacted}, ensure_ascii=False, indent=2))
+        return 0
+    end = "" if redacted.endswith("\n") else "\n"
+    if a.redact_only:
+        print(redacted, end=end)
+        return 0
+    if spans:
+        lw = max(len(s["label"]) for s in spans)
+        for s in spans:
+            where = f"{s['start']}-{s['end']}"
+            print(f"{_c('36;1', s['label'].ljust(lw))}  {s['text']}  {_c('2', where)}")
+    else:
+        print(_c("2", "no personal data found"))
+    print()
+    print(redacted, end=end)
+    return 0
+
+
+def pii_main(argv: list[str] | None = None) -> int:
+    """The `decima-pii` command (installed by the decima-pii alias package)."""
+    os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")
+    return cmd_pii(sys.argv[1:] if argv is None else argv, prog="decima-pii")
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")     # "PyTorch was not found": the runtime never needs it
@@ -143,6 +204,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_presets(argv[1:])
     if argv and argv[0] == "serve":
         return cmd_serve(argv[1:])
+    if argv and argv[0] == "pii":
+        return cmd_pii(argv[1:])
     if argv and argv[0] == "mcp":
         from .mcp_server import main as mcp_main
 
@@ -151,7 +214,8 @@ def main(argv: list[str] | None = None) -> int:
         argv = argv[1:]
 
     ap = argparse.ArgumentParser(prog="decima", description="Calibrated decisions on CPU: text + questions → probabilities.",
-                                 epilog="Also: `decima presets [name]`, `decima serve [--model M] [--port P]`, `decima mcp`.")
+                                 epilog="Also: `decima presets [name]`, `decima serve [--model M] [--port P]`, `decima mcp`, "
+                                        "`decima pii TEXT` (find and redact personal data).")
     ap.add_argument("text", nargs="*", help="the state (text or a JSON object); default: --file or stdin")
     ap.add_argument("-p", "--preset", help=f"one of: {', '.join(list_presets())} (or a preset .json file)")
     ap.add_argument("-q", "--question", help="your own question: a yes/no statement (noul) unless --choices or --levels is given")

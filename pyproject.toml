@@ -1,6 +1,6 @@
 [project]
 name = "decima-ai"
-version = "2.3.0"
+version = "2.4.0"
 description = "Decima — a small, calibrated, multilingual decision model: situation + question + your options → probabilities. CPU-first."
 readme = "README.md"
 license = "Apache-2.0"

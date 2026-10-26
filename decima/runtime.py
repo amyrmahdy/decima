@@ -18,15 +18,23 @@ states longer than the model's window (decima/longdoc.py); `min_confidence` gate
 from __future__ import annotations
 
 import json
+import os
 import time
 from pathlib import Path
 
 import numpy as np
 
 from .longdoc import AGGREGATES, collect, over_limit, plan, probs, warn_cut
+from .decode import decode_obfuscation
 from .normalize import normalize
 from .render import choice_texts
 from .types import Decision, Question
+
+
+def _maybe_decode(state: str, decode: bool | None) -> tuple[str, list[str]]:
+    if decode is None:
+        decode = os.environ.get("DECIMA_DECODE") == "1"
+    return decode_obfuscation(state) if decode else (state, [])
 
 
 def _log_softmax(x: np.ndarray) -> np.ndarray:
@@ -169,11 +177,13 @@ class DecimaOnnx:
         return cls(p, threads=threads)
 
     def decide(self, state: str, question: Question, long: str | None = None, aggregate: str = "max",
-               min_confidence: float | None = None) -> Decision:
+               min_confidence: float | None = None, decode: bool | None = None) -> Decision:
         """Probabilities over the question's choices (independent sigmoids for `rank`). A state longer than
         the model's window is cut at its end, unless `long="chunk"` (see `decide_many`)."""
         if long is not None:
-            return self.decide_many(state, [question], long=long, aggregate=aggregate, min_confidence=min_confidence)[0]
+            return self.decide_many(state, [question], long=long, aggregate=aggregate, min_confidence=min_confidence,
+                                    decode=decode)[0]
+        state, kinds = _maybe_decode(state, decode)
         t0 = time.perf_counter()
         p = probs(self.decide_logits(state, question), question.kind)
         d = Decision(probs=[float(x) for x in p], choices=list(question.choices), latency_ms=(time.perf_counter() - t0) * 1e3)
@@ -183,6 +193,8 @@ class DecimaOnnx:
         if n is not None:
             warn_cut(n, self.cfg["max_state_tokens"])
             d.meta["truncated"] = True
+        if kinds:
+            d.meta["decoded"] = kinds
         if min_confidence is not None:
             d.abstain(min_confidence)
         return d
@@ -197,6 +209,8 @@ class DecimaOnnx:
           ("max" | "mean" | "sum", decima/longdoc.py). Chunked decisions carry meta["window"] (index of the
           deciding window), meta["windows"] (character spans of the state) and meta["window_probs"].
         min_confidence: mark decisions whose top probability is below it as `abstained`.
+        decode: undo percent / hex / base64 encodings in the state before judging it (decima/decode.py); None reads
+          DECIMA_DECODE=1. Decisions on a decoded state carry meta["decoded"] (the encodings undone).
         latency_ms is the call's wall time divided by the number of decisions."""
         return self._decide_pairs([(state, q) for q in questions], **kw)
 
@@ -206,9 +220,12 @@ class DecimaOnnx:
 
     def _decide_pairs(self, pairs: list[tuple[str, Question]], batch_size: int = 16, max_batch_tokens: int = 512,
                       long: str | None = None, aggregate: str = "max", overlap: int = 64,
-                      min_confidence: float | None = None) -> list[Decision]:
+                      min_confidence: float | None = None, decode: bool | None = None) -> list[Decision]:
         if aggregate not in AGGREGATES:
             raise ValueError(f"aggregate must be one of {AGGREGATES}, not {aggregate!r}")
+        memo: dict[str, tuple[str, list[str]]] = {}
+        decoded = [memo[st] if st in memo else memo.setdefault(st, _maybe_decode(st, decode)) for st, _ in pairs]
+        pairs = [(st, q) for (st, _), (_, q) in zip(decoded, pairs)]
         t0 = time.perf_counter()
         cut: list[int] = []
         jobs = plan(self.tok, pairs, self._state, self.cfg["max_state_tokens"], long, overlap, cut)
@@ -230,6 +247,9 @@ class DecimaOnnx:
         out = collect(pairs, jobs, lps, aggregate, min_confidence, (time.perf_counter() - t0) * 1e3 / max(1, len(pairs)))
         for i in cut:
             out[i].meta["truncated"] = True
+        for d, (_, kinds) in zip(out, decoded):
+            if kinds:
+                d.meta["decoded"] = kinds
         return out
 
     def logits(self, states: list[str], q: Question) -> np.ndarray:
