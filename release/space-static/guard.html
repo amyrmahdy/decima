@@ -46,6 +46,7 @@
     </div>
     <nav class="dz-links">
       <a href="./"><b>← All models and presets</b></a>
+      <a href="pii.html">Find personal data (decima-pii)</a>
       <a href="https://huggingface.co/amyrmahdy/decima-guard" target="_blank" rel="noopener">Model card</a>
       <a href="https://huggingface.co/datasets/amyrmahdy/decima-guard-bench" target="_blank" rel="noopener">Test sets</a>
       <a href="https://github.com/amyrmahdy/decima" target="_blank" rel="noopener">GitHub</a>
@@ -97,15 +98,17 @@
     <table class="dz-table">
       <thead><tr><th></th><th>decima-guard</th><th>ProtectAI prompt-injection-v2</th></tr></thead>
       <tbody>
-        <tr><td>Ordinary Arabic messages let through (589)</td><td><b>99.7%</b></td><td>25.1%</td></tr>
-        <tr><td>Ordinary Persian messages let through (205)</td><td><b>100%</b></td><td>20.5%</td></tr>
-        <tr><td>Prompt-injection test, 6,532 rows: accuracy</td><td><b>0.915</b></td><td>0.784</td></tr>
-        <tr><td>False alarms on 4,242 harmless messages</td><td><b>124</b></td><td>979</td></tr>
+        <tr><td>Ordinary Arabic chat messages let through by the injection check (589)</td><td><b>99.7%</b></td><td>25.1%</td></tr>
+        <tr><td>Ordinary Persian chat messages let through by the injection check (205)</td><td><b>100%</b></td><td>20.5%</td></tr>
+        <tr><td>Prompt-injection test, 6,532 rows: accuracy</td><td><b>0.902</b></td><td>0.784</td></tr>
+        <tr><td>False alarms on 4,242 harmless messages</td><td><b>125</b></td><td>979</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="dz-dim gd-note">Weak spot: it misses about 1 in 6 real attacks translated into Arabic dialects, and about 1 in
-    3 translated into Persian. Keep hard rules first and use the guard as one layer. Every test row and prediction is
+  <p class="dz-dim gd-note">Version 1.2 catches about half of the instructions hidden in BIPIA's emails and tables and 63% of PIArena's, up
+    from about 1 in 5 in 1.1. Weak spots: it misses about 1 in 5 real attacks translated into Arabic dialects, and about
+    1 in 3 translated into Persian. Its toxic check still over-blocks some everyday spoken dialect: it blocks 20.0% of
+    ordinary lines in the Casablanca test set (1.0: 39.6%). Keep hard rules first and use the guard as one layer. Every test row and prediction is
     public in <a href="https://huggingface.co/datasets/amyrmahdy/decima-guard-bench" target="_blank" rel="noopener">decima-guard-bench</a>.</p>
 </main>
 

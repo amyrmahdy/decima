@@ -36,8 +36,12 @@ answer  billing    ██████████████████▉  0.
 **New in 2.3: [decima-guard](https://huggingface.co/amyrmahdy/decima-guard)**, a guard for LLM apps that covers the
 OWASP LLM Top 10 and common web attacks, in English, Arabic and Persian (Finglish too). Unlike English-first guards,
 its injection check doesn't block ordinary Arabic and Persian chat: it lets 99.5% of 589 harmless Arabic messages
-through, where ProtectAI's detector lets 25.1% through. **decima-guard 1.1** halves the wrong blocks on everyday spoken
-dialect (Casablanca test set: 39.6% → 19.5% of ordinary lines blocked) with the same public-test score. **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html)**,
+through, where ProtectAI's detector lets 25.1% through. **decima-guard 1.2** is much better at injections hidden in
+documents and tool results: on the 10 public sets of the Horizon-Labs prompt-injection suite its mean goes from 0.650 to
+0.827 (BIPIA 0.346 → 0.694 F1, PIArena 0.310 → 0.770, LLMail-Inject 21% → 80% caught). Part of that is in-distribution
+(it trained on other splits of BIPIA, LLMail-Inject and OR-Bench); it is not a leaderboard rank, and it gave up a little
+on chat-message injections (0.910 → 0.902). 1.1 halved the wrong blocks on everyday spoken dialect (39.6% → 19.5% of
+ordinary lines, Casablanca test set) and 1.2 keeps that (20.0%). **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html)**,
 or see [examples/guard_chatbot.py](examples/guard_chatbot.py).
 
 ![decima-guard: prompt injection in English, Finglish and Persian, a SQL injection and an injection hidden in a tool result](release/figures/decima-guard-cli.gif)
@@ -154,7 +158,7 @@ Presets are JSON files in [`decima/presets`](decima/presets); write your own wit
 | Model | Size | For |
 |---|---|---|
 | [decima-agent](https://huggingface.co/amyrmahdy/decima-agent) 2.3 | 321M | agent gates and knowledge-graph judgments; states up to 8,192 tokens |
-| [decima-guard](https://huggingface.co/amyrmahdy/decima-guard) 1.1 preview | 321M | OWASP LLM Top 10 and web-attack checks; English, Arabic, Persian |
+| [decima-guard](https://huggingface.co/amyrmahdy/decima-guard) 1.2 preview | 321M | OWASP LLM Top 10 and web-attack checks, injections in documents and tool results; English, Arabic, Persian |
 | [decima-pii](https://huggingface.co/amyrmahdy/decima-pii) preview | 140M | personal-data detection and redaction; Arabic, Persian, Urdu, Turkish, English |
 | [decima-guard-small](https://huggingface.co/amyrmahdy/decima-guard-small) preview | 140M | the same checks, faster, a few points lower |
 | [decima-base](https://huggingface.co/amyrmahdy/decima-base) 2.0 | 321M | general decisions, multilingual |
@@ -183,15 +187,17 @@ that are public with every prediction ([decima-guard-bench](https://huggingface.
 
 | | decima-guard | ProtectAI prompt-injection-v2 |
 |---|---:|---:|
-| Prompt injection / jailbreak, 6,532 examples: accuracy | **0.910** | 0.784 |
-| False alarms on 4,242 harmless messages | **160** | 979 |
-| Ordinary Arabic chat messages, injection check: let through (589) | **99.5%** | 25.1% |
+| Prompt injection / jailbreak, 6,532 examples: accuracy | **0.902** | 0.784 |
+| Attacks missed, of 2,290 | 515 | **431** |
+| False alarms on 4,242 harmless messages | **125** | 979 |
+| Ordinary Arabic chat messages, injection check: let through (589) | **99.7%** | 25.1% |
 | Ordinary Persian chat messages, injection check: let through (205) | **100%** | 20.5% |
 
-Against [Qwen3Guard-Gen-4B](https://huggingface.co/Qwen/Qwen3Guard-Gen-4B) on the same rows: injection 0.910 vs 0.767,
-harmful requests 0.880 vs **0.911**. It still misses about 1 in 6 real attacks translated into Arabic dialects, and on
-everyday spoken dialect (Casablanca test set) the full guard still blocks 19.5% of ordinary lines (1.0: 39.6%), mostly
-on the toxic question. Keep hard
+Against [Qwen3Guard-Gen-4B](https://huggingface.co/Qwen/Qwen3Guard-Gen-4B) on the same rows: injection 0.902 vs 0.767,
+harmful requests 0.878 vs **0.911**. On injections hidden in documents (Horizon-Labs suite, 10 public sets) it catches
+53% of BIPIA's attacks and 63% of PIArena's, up from about 1 in 5 in 1.1. It still misses a fifth of real attacks
+translated into Arabic dialects, and on everyday spoken dialect (Casablanca test set) the full guard still blocks 20.0%
+of ordinary lines (1.0: 39.6%), mostly on the toxic question. Keep hard
 rules first, and see the [limitations](https://huggingface.co/amyrmahdy/decima-guard#limitations).
 
 **As a local stand-in for Jev in a published knowledge-graph pipeline**
