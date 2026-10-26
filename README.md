@@ -40,13 +40,21 @@ through, where ProtectAI's detector lets 25.1% through. **decima-guard 1.1** hal
 dialect (Casablanca test set: 39.6% → 19.5% of ordinary lines blocked) with the same public-test score. **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html)**,
 or see [examples/guard_chatbot.py](examples/guard_chatbot.py).
 
+![decima-guard: prompt injection in English, Finglish and Persian, a SQL injection and an injection hidden in a tool result](release/figures/decima-guard-cli.gif)
+
 **New: [decima-pii](https://huggingface.co/amyrmahdy/decima-pii)** finds personal data (names, phones, emails, national
 IDs, IBANs, cards, addresses ...) in Arabic, Persian, Urdu, Turkish and English, including numbers in Persian and
 Arabic-Indic digits. 140M, int8 ONNX, about 13 ms per message on a CPU. On an outside clinical test set it never saw
 (MultiGraSCCo), it scores 0.870 F1 against 0.647 for OpenAI's privacy filter: Persian 0.805 vs 0.508, Arabic 0.843 vs
 0.581, Turkish 0.889 vs 0.626, English 0.957 vs 0.901. Preview; limits on the model card.
+**[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/pii.html)**: the model runs in the tab.
 
-![decima-guard: prompt injection in English, Finglish and Persian, a SQL injection and an injection hidden in a tool result](release/figures/decima-guard-cli.gif)
+![decima-pii in the browser: an Arabic and a Persian message, each item marked, and the redacted copy](release/figures/decima-pii-browser.gif)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="release/figures/pii_outside-dark.png">
+  <img alt="Finding personal data in text the model never saw: MultiGraSCCo relaxed typed F1 (lenient) per language for decima-pii, openai/privacy-filter and Presidio" src="release/figures/pii_outside-light.png">
+</picture>
 
 Decima is the judge, not the writer. Put it next to your LLM, agent or extraction pipeline to decide what is safe, what
 is true, where a request should go, and when the expensive model is really needed. It speaks TypeSafe's
