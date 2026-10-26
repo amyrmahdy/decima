@@ -40,6 +40,12 @@ through, where ProtectAI's detector lets 25.1% through. **decima-guard 1.1** hal
 dialect (Casablanca test set: 39.6% → 19.5% of ordinary lines blocked) with the same public-test score. **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/guard.html)**,
 or see [examples/guard_chatbot.py](examples/guard_chatbot.py).
 
+**New: [decima-pii](https://huggingface.co/amyrmahdy/decima-pii)** finds personal data (names, phones, emails, national
+IDs, IBANs, cards, addresses ...) in Arabic, Persian, Urdu, Turkish and English, including numbers in Persian and
+Arabic-Indic digits. 140M, int8 ONNX, about 13 ms per message on a CPU. On an outside clinical test set it never saw
+(MultiGraSCCo), it scores 0.870 F1 against 0.647 for OpenAI's privacy filter: Persian 0.805 vs 0.508, Arabic 0.843 vs
+0.581, Turkish 0.889 vs 0.626, English 0.957 vs 0.901. Preview; limits on the model card.
+
 ![decima-guard: prompt injection in English, Finglish and Persian, a SQL injection and an injection hidden in a tool result](release/figures/decima-guard-cli.gif)
 
 Decima is the judge, not the writer. Put it next to your LLM, agent or extraction pipeline to decide what is safe, what
@@ -112,7 +118,8 @@ Presets are JSON files in [`decima/presets`](decima/presets); write your own wit
 | Model | Size | For |
 |---|---|---|
 | [decima-agent](https://huggingface.co/amyrmahdy/decima-agent) 2.3 | 321M | agent gates and knowledge-graph judgments; states up to 8,192 tokens |
-| [decima-guard](https://huggingface.co/amyrmahdy/decima-guard) 1.0 preview | 321M | OWASP LLM Top 10 and web-attack checks; English, Arabic, Persian |
+| [decima-guard](https://huggingface.co/amyrmahdy/decima-guard) 1.1 preview | 321M | OWASP LLM Top 10 and web-attack checks; English, Arabic, Persian |
+| [decima-pii](https://huggingface.co/amyrmahdy/decima-pii) preview | 140M | personal-data detection and redaction; Arabic, Persian, Urdu, Turkish, English |
 | [decima-guard-small](https://huggingface.co/amyrmahdy/decima-guard-small) preview | 140M | the same checks, faster, a few points lower |
 | [decima-base](https://huggingface.co/amyrmahdy/decima-base) 2.0 | 321M | general decisions, multilingual |
 | [decima-base-clean](https://huggingface.co/amyrmahdy/decima-base-clean) | 321M | no non-commercial training data; truly zero-shot on BTZSC |
