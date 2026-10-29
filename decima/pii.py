@@ -1,7 +1,8 @@
 """decima-pii: find and redact personal data in Arabic, Persian, Urdu, Turkish and English text. CPU, ONNX, no PyTorch.
 
     from decima import PII
-    pii = PII.from_pretrained()                 # amyrmahdy/decima-pii, int8 ONNX (148 MB), downloaded once
+    pii = PII.from_pretrained()                 # amyrmahdy/decima-pii at tag v0.2, int8 ONNX (148 MB), downloaded once
+    pii = PII.from_pretrained(revision="v0.1")  # the previous model, with its own decoding (decoder="v1")
     pii.find("My name is Sara Ahmadi, کد ملی من ۰۰۱۲۳۴۵۶۷۸ است")   # [{"start", "end", "label", "text"}, ...]
     pii.redact("...")                           # "My name is [PERSON_NAME], کد ملی من [NATIONAL_ID] است"
 
@@ -16,6 +17,11 @@ The model tags tokens; this module turns the tags into character spans. Two step
 - post-filter: drop spans that cannot be what they claim (a PHONE with 3 digits, an EMAIL without "@", a span that
   starts or ends inside a word).
 Texts longer than the model's window are tagged in overlapping windows.
+
+decoder="v2" (the default, from decima-pii v0.2): a name keeps the period of a final initial ("Anna S."), and number
+words count toward the digit minimum, so a phone or ID written in words survives the post-filter. decoder="v1" gives
+v0.1's output exactly. The Hub model is pinned to a tag (DEFAULT_REVISION) so a model update never changes results
+silently; a new tag comes with a new package version.
 """
 
 from __future__ import annotations
@@ -27,7 +33,9 @@ from pathlib import Path
 import numpy as np
 
 DEFAULT_REPO = "amyrmahdy/decima-pii"
+DEFAULT_REVISION = "v0.2"                  # the model tag this package version was tested with
 DEFAULT_ONNX = "model_nbits8.onnx"
+DECODER_FOR_REVISION = {"v0.1": "v1"}      # every other tag uses decoder v2
 LABELS = ["PERSON_NAME", "PHONE", "EMAIL", "NATIONAL_ID", "IBAN", "CARD", "PASSPORT", "ADDRESS", "DATE_OF_BIRTH", "IP_ADDRESS"]
 TRAIL = set(".,;:!?،؛؟»)\"'۔")
 LEAD = set("«\"'")
@@ -35,18 +43,32 @@ MARKS = "‎‏‌"                     # LRM, RLM, ZWNJ
 DIGITS_RE = re.compile(r"[0-9٠-٩۰-۹]")
 MIN_DIGITS = {"PHONE": 6, "CARD": 12, "IBAN": 10, "NATIONAL_ID": 5, "PASSPORT": 5, "DATE_OF_BIRTH": 2, "IP_ADDRESS": 4}
 CLITICS = set("وبلفكس")
+NUM_WORDS = set("""zero oh one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen
+eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred double triple
+sıfır bir iki üç dört beş altı yedi sekiz dokuz on yirmi otuz kırk elli altmış yetmiş seksen doksan yüz
+صفر واحد اثنين اثنان اتنين ثلاثة تلاتة أربعة اربعة خمسة ستة سبعة ثمانية تمانية تسعة عشرة
+یک دو سه چهار پنج شش هفت هشت نه ده یازده دوازده سیزده چهارده پانزده شانزده هفده هجده نوزده بیست سی چهل پنجاه شصت هفتاد هشتاد نود
+صد دویست سیصد چهارصد پانصد ششصد هفتصد هشتصد نهصد
+ایک تین چار پانچ چھ سات آٹھ نو""".split())
+WORD_RE = re.compile(r"[^\W\d_]+")
 
 
-def _trim(text: str, s: int, e: int) -> tuple[int, int]:
+def _is_initial_period(text: str, s: int, i: int) -> bool:
+    return text[i] == "." and i - 1 >= s and text[i - 1].isalpha() and (i - 1 == s or text[i - 2] in " .\u00a0")
+
+
+def _trim(text: str, s: int, e: int, label: str | None = None, initials: bool = True) -> tuple[int, int]:
     while s < e and (text[s].isspace() or text[s] in LEAD or text[s] in MARKS):
         s += 1
     while e > s and (text[e - 1].isspace() or text[e - 1] in TRAIL or text[e - 1] in MARKS):
+        if initials and label == "PERSON_NAME" and _is_initial_period(text, s, e - 1):
+            break                                                  # "Anna S." keeps the period of the initial
         e -= 1
     return s, e
 
 
-def decode(text: str, offsets: list[tuple[int, int]], tags: list[str]) -> list[dict]:
-    """Token BIO tags -> character spans, bridging bare space tokens inside an entity."""
+def decode(text: str, offsets: list[tuple[int, int]], tags: list[str], initials: bool = True) -> list[dict]:
+    """Token BIO tags -> character spans, bridging bare space tokens inside an entity. initials=False is decoder v1."""
     spans, cur = [], None
     for (a, b), lab in zip(offsets, tags):
         if a == b:
@@ -69,20 +91,28 @@ def decode(text: str, offsets: list[tuple[int, int]], tags: list[str]) -> list[d
         spans.append(cur)
     out = []
     for s in spans:
-        a, b = _trim(text, s["start"], s["end"])
+        a, b = _trim(text, s["start"], s["end"], s["label"], initials)
         if a < b:
             out.append({"start": a, "end": b, "label": s["label"]})
     return out
 
 
-def postfilter(text: str, spans: list[dict]) -> list[dict]:
-    """Drop spans with too few digits for their type, emails without '@', one-character names, and spans that cut
-    through a word (a one-letter Arabic-script clitic such as و before a name is allowed)."""
+def _num_count(v: str, spelled: bool) -> int:
+    n = len(DIGITS_RE.findall(v))
+    if spelled:                                                    # a spelled-out phone / ID: a number word stands for 1-3 digits
+        n += 2 * sum(w.lower() in NUM_WORDS for w in WORD_RE.findall(v))
+    return n
+
+
+def postfilter(text: str, spans: list[dict], spelled: bool = True) -> list[dict]:
+    """Drop spans with too few digits for their type (number words count for PHONE / NATIONAL_ID unless spelled=False,
+    which is decoder v1), emails without '@', one-character names, and spans that cut through a word (a one-letter
+    Arabic-script clitic such as و before a name is allowed)."""
     out = []
     for p in spans:
         a, b, lab = p["start"], p["end"], p["label"]
         v = text[a:b]
-        if lab in MIN_DIGITS and len(DIGITS_RE.findall(v)) < MIN_DIGITS[lab]:
+        if lab in MIN_DIGITS and _num_count(v, spelled and lab in ("PHONE", "NATIONAL_ID")) < MIN_DIGITS[lab]:
             continue
         if (lab == "EMAIL" and "@" not in v) or (lab in ("PERSON_NAME", "ADDRESS") and len(v) < 2):
             continue
@@ -121,7 +151,10 @@ def redact_spans(text: str, spans: list[dict], fmt: str = "[{label}]") -> str:
 class DecimaPII:
     """Token tagger for personal data. `find(text)` -> spans, `redact(text)` -> text with spans replaced."""
 
-    def __init__(self, path: str | Path, onnx: str = DEFAULT_ONNX, threads: int = 4, window: int = 256, stride: int = 192):
+    def __init__(self, path: str | Path, onnx: str = DEFAULT_ONNX, threads: int = 4, window: int = 256, stride: int = 192,
+                 decoder: str = "v2"):
+        if decoder not in ("v1", "v2"):
+            raise ValueError(f"decoder must be 'v1' or 'v2', not {decoder!r}")
         import onnxruntime as ort
         from tokenizers import Tokenizer
 
@@ -135,6 +168,7 @@ class DecimaPII:
         so.intra_op_num_threads, so.inter_op_num_threads = threads, 1
         self.sess = ort.InferenceSession(str(path / "onnx" / onnx), so, providers=["CPUExecutionProvider"])
         self.window, self.stride = window, stride
+        self.decoder = decoder
         self.cls, self.sep = self.tok.token_to_id("[CLS]"), self.tok.token_to_id("[SEP]")
         if self.cls is None or self.sep is None:                       # take them from an encoded empty string
             e = self.tok.encode("")
@@ -142,16 +176,24 @@ class DecimaPII:
 
     @classmethod
     def from_pretrained(cls, name_or_path: str | Path = DEFAULT_REPO, onnx: str = DEFAULT_ONNX, threads: int = 4,
-                        local_files_only: bool = False, **kw) -> "DecimaPII":
+                        local_files_only: bool = False, revision: str | None = None, decoder: str | None = None,
+                        **kw) -> "DecimaPII":
         """A local directory (tokenizer.json, pii_meta.json, onnx/<onnx>) or a Hugging Face repo id.
-        local_files_only=True (or HF_HUB_OFFLINE=1) never touches the network: a repo id must already be cached."""
+        revision: the Hub tag or commit; for the default repo it defaults to DEFAULT_REVISION ("v0.2"), so the files
+        never change under you. revision="v0.1" loads the previous model. decoder: "v1" or "v2"; by default "v1" for
+        v0.1 and "v2" otherwise. local_files_only=True (or HF_HUB_OFFLINE=1) never touches the network: a repo id must
+        already be cached."""
         p = Path(name_or_path)
         if not p.exists():
             from huggingface_hub import snapshot_download
 
-            p = Path(snapshot_download(str(name_or_path), allow_patterns=["tokenizer.json", "pii_meta.json", f"onnx/{onnx}"],
+            if revision is None and str(name_or_path) == DEFAULT_REPO:
+                revision = DEFAULT_REVISION
+            p = Path(snapshot_download(str(name_or_path), revision=revision,
+                                       allow_patterns=["tokenizer.json", "pii_meta.json", f"onnx/{onnx}"],
                                        local_files_only=local_files_only))
-        return cls(p, onnx=onnx, threads=threads, **kw)
+        decoder = decoder or DECODER_FOR_REVISION.get(revision or "", "v2")
+        return cls(p, onnx=onnx, threads=threads, decoder=decoder, **kw)
 
     def _tags(self, ids: list[int]) -> list[int]:
         x = np.array([[self.cls] + ids + [self.sep]], dtype=np.int64)
@@ -167,7 +209,8 @@ class DecimaPII:
             pred = self._tags(ids) if n else []
         else:
             pred = merge_windows(n, w, self.stride, lambda a, b: self._tags(ids[a:b]))
-        spans = postfilter(text, decode(text, offsets, [self.labels[p] for p in pred]))
+        v2 = self.decoder == "v2"
+        spans = postfilter(text, decode(text, offsets, [self.labels[p] for p in pred], initials=v2), spelled=v2)
         for s in spans:
             s["text"] = text[s["start"]:s["end"]]
         return spans

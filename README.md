@@ -46,20 +46,23 @@ or see [examples/guard_chatbot.py](examples/guard_chatbot.py).
 
 ![decima-guard: prompt injection in English, Finglish and Persian, a SQL injection and an injection hidden in a tool result](release/figures/decima-guard-cli.gif)
 
-**New: [decima-pii](https://huggingface.co/amyrmahdy/decima-pii)** finds personal data (names, phones, emails, national
-IDs, IBANs, cards, addresses ...) in Arabic, Persian, Urdu, Turkish and English, including numbers in Persian and
-Arabic-Indic digits. 140M, int8 ONNX, about 13 ms per message on a CPU. On an outside clinical test set it never saw
-(MultiGraSCCo), it scores 0.870 F1 against 0.647 for OpenAI's privacy filter: Persian 0.805 vs 0.508, Arabic 0.843 vs
-0.581, Turkish 0.889 vs 0.626, English 0.957 vs 0.901. Preview; limits on the model card. **New in 2.4:** it ships
-inside `decima-ai` ([find and redact](#personal-data-decima-pii)), with a [LiteLLM guardrail](integrations/litellm-pii)
-and a [Presidio recognizer](integrations/presidio).
+**New: [decima-pii](https://huggingface.co/amyrmahdy/decima-pii) v0.2** finds personal data (names, phones, emails,
+national IDs, IBANs, cards, addresses ...) in Arabic, Persian, Urdu, Turkish and English, including numbers in Persian
+and Arabic-Indic digits. 140M, int8 ONNX, about 13 ms per message on a CPU. On an outside clinical test set it never
+trained on (MultiGraSCCo), v0.2 scores 0.910 F1 against 0.647 for OpenAI's privacy filter: Arabic 0.913 vs 0.581,
+Persian 0.849 vs 0.508, Turkish 0.928 vs 0.626, English 0.957 vs 0.901 (v0.1: 0.870). On an Arabic test set chosen and
+frozen before v0.2 was trained, and run once (Sitr), it scores 0.875 against v0.1's 0.856. Preview; limits on the
+model card. It ships inside `decima-ai` ([find and redact](#personal-data-decima-pii)), with a
+[LiteLLM guardrail](integrations/litellm-pii) and a [Presidio recognizer](integrations/presidio). **New in 2.5:** the
+package loads decima-pii v0.2 and pins that model tag, so a later model update never changes your results silently;
+`revision="v0.1"` gives the previous model.
 **[Try it in your browser](https://amyrmahdy-decima-playground.static.hf.space/pii.html)**: the model runs in the tab.
 
 ![decima-pii in the browser: an Arabic and a Persian message, each item marked, and the redacted copy](release/figures/decima-pii-browser.gif)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="release/figures/pii_outside-dark.png">
-  <img alt="Finding personal data in text the model never saw: MultiGraSCCo relaxed typed F1 (lenient) per language for decima-pii, openai/privacy-filter and Presidio" src="release/figures/pii_outside-light.png">
+  <img alt="Finding personal data in text the model never saw: MultiGraSCCo relaxed typed F1 (lenient) per language for decima-pii v0.2, openai/privacy-filter and Presidio" src="release/figures/pii_outside-light.png">
 </picture>
 
 Decima is the judge, not the writer. Put it next to your LLM, agent or extraction pipeline to decide what is safe, what
@@ -107,7 +110,7 @@ pip install decima-ai
 ```python
 from decima import PII                             # also importable as DecimaPII
 
-pii = PII.from_pretrained()                        # amyrmahdy/decima-pii, int8 ONNX, 148 MB, downloaded once
+pii = PII.from_pretrained()                        # amyrmahdy/decima-pii v0.2, int8 ONNX, 148 MB, downloaded once
 print(pii.redact("اسمي محمود الشمري ورقم جوالي ٠٥٥١٢٣٤٥٦٧"))   # اسمي [PERSON_NAME] ورقم جوالي [PHONE]
 ```
 
@@ -118,8 +121,10 @@ cat letter.txt | decima pii --redact-only                          # or --json f
 
 `pii.find(text)` returns `[{"start", "end", "label", "text"}]`. This is not the `pii` preset: the preset asks
 decima-base a yes/no question ("does this text contain personal data, and which kind?"); `decima.pii` returns the exact
-spans so you can mask them. In front of an LLM: [LiteLLM guardrail](integrations/litellm-pii) ·
-[Presidio recognizer](integrations/presidio). `pip install decima-pii` installs the same package with a `decima-pii` command.
+spans so you can mask them. The model is pinned to tag v0.2; `PII.from_pretrained(revision="v0.1")` or
+`decima pii --revision v0.1` gives the previous model with its exact output. In front of an LLM:
+[LiteLLM guardrail](integrations/litellm-pii) · [Presidio recognizer](integrations/presidio). `pip install decima-pii`
+installs the same package with a `decima-pii` command.
 
 **HTTP server** (TypeSafe-compatible, binds to 127.0.0.1)
 
@@ -159,7 +164,7 @@ Presets are JSON files in [`decima/presets`](decima/presets); write your own wit
 |---|---|---|
 | [decima-agent](https://huggingface.co/amyrmahdy/decima-agent) 2.3 | 321M | agent gates and knowledge-graph judgments; states up to 8,192 tokens |
 | [decima-guard](https://huggingface.co/amyrmahdy/decima-guard) 1.2 preview | 321M | OWASP LLM Top 10 and web-attack checks, injections in documents and tool results; English, Arabic, Persian |
-| [decima-pii](https://huggingface.co/amyrmahdy/decima-pii) preview | 140M | personal-data detection and redaction; Arabic, Persian, Urdu, Turkish, English |
+| [decima-pii](https://huggingface.co/amyrmahdy/decima-pii) 0.2 preview | 140M | personal-data detection and redaction; Arabic, Persian, Urdu, Turkish, English |
 | [decima-guard-small](https://huggingface.co/amyrmahdy/decima-guard-small) preview | 140M | the same checks, faster, a few points lower |
 | [decima-base](https://huggingface.co/amyrmahdy/decima-base) 2.0 | 321M | general decisions, multilingual |
 | [decima-base-clean](https://huggingface.co/amyrmahdy/decima-base-clean) | 321M | no non-commercial training data; truly zero-shot on BTZSC |

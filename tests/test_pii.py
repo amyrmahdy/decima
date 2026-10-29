@@ -1,6 +1,7 @@
-"""decima.pii: span decoding, post-filter and windowing (no model needed), then the model itself when a local export
-(export/pii2, DECIMA_PII_EXPORT) or a cached amyrmahdy/decima-pii is available, and parity with the standalone
-release/hf/decima-pii/decima_pii.py on 50 rows of data/pii/test.jsonl (private data; skipped when absent)."""
+"""decima.pii: span decoding (v1 and v2), post-filter and windowing (no model needed), revision pinning, then the model
+itself when a local export (export/pii4-s0 = v0.2, export/pii2 = v0.1, DECIMA_PII_EXPORT) or a cached
+amyrmahdy/decima-pii is available, parity with the standalone release/hf/decima-pii/decima_pii.py on 50 rows of
+data/pii/test.jsonl, and the published test pack reproduced row for row (private files; skipped when absent)."""
 
 from __future__ import annotations
 
@@ -14,7 +15,8 @@ from pathlib import Path
 import pytest
 from conftest import ROOT
 
-from decima.pii import DecimaPII, decode, merge_windows, postfilter, redact_spans, window_starts
+import decima.pii as pii_mod
+from decima.pii import DEFAULT_REVISION, DecimaPII, decode, merge_windows, postfilter, redact_spans, window_starts
 
 THREADS = 2
 
@@ -61,6 +63,50 @@ def test_postfilter():
     assert postfilter("٠٥٥١٢٣٤٥٦٧", [{"start": 0, "end": 10, "label": "PHONE"}]) != []
 
 
+def test_decoder_v2_keeps_the_period_of_a_final_initial():
+    text = "Anna S. called. Dr. J. Smith too."
+    offsets = [(0, 4), (4, 6), (6, 7), (7, 14), (14, 15), (15, 19), (19, 22), (22, 23), (23, 29), (29, 33)]
+    tags = ["B-PERSON_NAME", "I-PERSON_NAME", "I-PERSON_NAME", "O", "O", "O", "B-PERSON_NAME", "I-PERSON_NAME", "I-PERSON_NAME", "O"]
+    v2 = [(text[s["start"]:s["end"]]) for s in decode(text, offsets, tags)]
+    v1 = [(text[s["start"]:s["end"]]) for s in decode(text, offsets, tags, initials=False)]
+    assert v2 == ["Anna S.", "J. Smith"] and v1 == ["Anna S", "J. Smith"]
+    # a period after a whole word is still trimmed, and only names keep it
+    assert decode("Ali Reza.", [(0, 3), (3, 8), (8, 9)], ["B-PERSON_NAME", "I-PERSON_NAME", "I-PERSON_NAME"]) == [
+        {"start": 0, "end": 8, "label": "PERSON_NAME"}]
+    assert decode("Bld A.", [(0, 3), (3, 5), (5, 6)], ["B-ADDRESS", "I-ADDRESS", "I-ADDRESS"]) == [
+        {"start": 0, "end": 5, "label": "ADDRESS"}]
+
+
+def test_decoder_v2_counts_number_words_for_phones_and_ids():
+    t = "call zero nine one two three four five six seven eight nine now"
+    span = [{"start": 5, "end": 59, "label": "PHONE"}]
+    assert postfilter(t, span) == span                              # v2: 11 number words count as digits
+    assert postfilter(t, span, spelled=False) == []                 # v1: no digits, dropped
+    t2 = "telefonum sıfır beş yüz otuz iki"
+    assert postfilter(t2, [{"start": 10, "end": 32, "label": "PHONE"}]) != []
+    # other types still need real digits
+    assert postfilter("card one two three", [{"start": 5, "end": 18, "label": "CARD"}]) == []
+
+
+def test_from_pretrained_pins_the_model_revision(monkeypatch, tmp_path):
+    import huggingface_hub
+
+    seen = []
+
+    def fake_snapshot(repo, revision=None, **kw):
+        seen.append((repo, revision))
+        return str(tmp_path)
+
+    monkeypatch.setattr(huggingface_hub, "snapshot_download", fake_snapshot)
+    monkeypatch.setattr(DecimaPII, "__init__", lambda self, p, onnx, threads, decoder, **kw: setattr(self, "decoder", decoder))
+    assert DEFAULT_REVISION == "v0.2"
+    assert DecimaPII.from_pretrained().decoder == "v2" and seen[-1] == ("amyrmahdy/decima-pii", "v0.2")
+    assert DecimaPII.from_pretrained(revision="v0.1").decoder == "v1" and seen[-1][1] == "v0.1"
+    assert DecimaPII.from_pretrained(revision="v0.1", decoder="v2").decoder == "v2"
+    assert DecimaPII.from_pretrained("someone/fork").decoder == "v2" and seen[-1] == ("someone/fork", None)
+    assert DecimaPII.from_pretrained(tmp_path).decoder == "v2" and len(seen) == 4      # a local dir: no download
+
+
 def test_postfilter_allows_a_one_letter_clitic_before_a_name():
     t = "جاء ومحمد"                                               # و + محمد: the name starts after the clitic
     assert postfilter(t, [{"start": 5, "end": 9, "label": "PERSON_NAME"}]) != []
@@ -105,7 +151,7 @@ def test_merge_windows_takes_the_most_central_window():
 # --- the model -------------------------------------------------------------------------------------------------------
 
 def _model_dir() -> Path | None:
-    for p in (os.environ.get("DECIMA_PII_EXPORT"), ROOT / "export" / "pii2"):
+    for p in (os.environ.get("DECIMA_PII_EXPORT"), ROOT / "export" / "pii4-s0", ROOT / "export" / "pii2"):
         if p and (Path(p) / "onnx" / "model_nbits8.onnx").exists():
             return Path(p)
     return None
@@ -175,3 +221,18 @@ def test_parity_with_standalone_script(pii):
         assert pii.redact(r["text"]) == ref.redact(r["text"])
         n_spans += len(ours)
     assert n_spans > 50                                  # the rows do contain personal data
+
+
+TESTPACK = ROOT / "release" / "hf" / "decima-pii-testpack"
+
+
+@pytest.mark.parametrize("export,decoder,tag", [("pii4-s0", "v2", "v0.2"), ("pii2", "v1", "v0.1")])
+def test_testpack_reference_output(export, decoder, tag):
+    d, exp = ROOT / "export" / export, TESTPACK / f"expected-decima-pii-{tag}-nbits8.jsonl"
+    if not ((d / "onnx" / "model_nbits8.onnx").exists() and exp.exists()):
+        pytest.skip(f"export/{export} or the {tag} test pack reference not present")
+    m = DecimaPII.from_pretrained(d, threads=THREADS, decoder=decoder)
+    want = {r["id"]: r["spans"] for r in map(json.loads, exp.read_text().splitlines())}
+    rows = [json.loads(line) for line in (TESTPACK / "testpack.jsonl").read_text().splitlines()]
+    got = {r["id"]: [{k: s[k] for k in ("start", "end", "label")} for s in m.find(r["text"])] for r in rows}
+    assert len(rows) == 500 and got == want

@@ -148,6 +148,9 @@ def cmd_pii(argv: list[str], prog: str = "decima pii") -> int:
     ap.add_argument("--format", default="[{label}]", help="replacement for each span; {label} and {text} are filled in (default: [{label}])")
     ap.add_argument("-m", "--model", default=None, help="Hub repo or local directory (default: amyrmahdy/decima-pii)")
     ap.add_argument("--onnx", default=None, help="ONNX file inside onnx/ (default: model_nbits8.onnx)")
+    ap.add_argument("--revision", default=None, help="model tag on the Hub (default: v0.2 for amyrmahdy/decima-pii; "
+                    "v0.1 = the previous model, with its own decoding)")
+    ap.add_argument("--decoder", choices=("v1", "v2"), default=None, help="span decoding (default: v1 for --revision v0.1, else v2)")
     ap.add_argument("-t", "--threads", type=int, default=4)
     a = ap.parse_args(argv)
 
@@ -165,7 +168,8 @@ def cmd_pii(argv: list[str], prog: str = "decima pii") -> int:
 
     try:
         pii = DecimaPII.from_pretrained(a.model or os.environ.get("DECIMA_PII_MODEL", DEFAULT_REPO), onnx=a.onnx or DEFAULT_ONNX,
-                                        threads=a.threads)
+                                        threads=a.threads, revision=a.revision or os.environ.get("DECIMA_PII_REVISION") or None,
+                                        decoder=a.decoder)
         spans = pii.find(text)
         redacted = redact_spans(text, spans, a.format)
     except (ValueError, OSError, KeyError) as e:
