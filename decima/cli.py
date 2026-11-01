@@ -148,9 +148,10 @@ def cmd_pii(argv: list[str], prog: str = "decima pii") -> int:
     ap.add_argument("--format", default="[{label}]", help="replacement for each span; {label} and {text} are filled in (default: [{label}])")
     ap.add_argument("-m", "--model", default=None, help="Hub repo or local directory (default: amyrmahdy/decima-pii)")
     ap.add_argument("--onnx", default=None, help="ONNX file inside onnx/ (default: model_nbits8.onnx)")
-    ap.add_argument("--revision", default=None, help="model tag on the Hub (default: v0.2 for amyrmahdy/decima-pii; "
+    ap.add_argument("--revision", default=None, help="model tag on the Hub (default: v0.2.1 for amyrmahdy/decima-pii; "
                     "v0.1 = the previous model, with its own decoding)")
-    ap.add_argument("--decoder", choices=("v1", "v2"), default=None, help="span decoding (default: v1 for --revision v0.1, else v2)")
+    ap.add_argument("--decoder", choices=("v1", "v2", "v2.1"), default=None,
+                    help="span decoding (default: v1 for --revision v0.1, v2 for v0.2, else v2.1 = v2 + the cue-gated phone backstop)")
     ap.add_argument("-t", "--threads", type=int, default=4)
     a = ap.parse_args(argv)
 

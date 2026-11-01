@@ -121,7 +121,7 @@ cat letter.txt | decima pii --redact-only                          # or --json f
 
 `pii.find(text)` returns `[{"start", "end", "label", "text"}]`. This is not the `pii` preset: the preset asks
 decima-base a yes/no question ("does this text contain personal data, and which kind?"); `decima.pii` returns the exact
-spans so you can mask them. The model is pinned to tag v0.2; `PII.from_pretrained(revision="v0.1")` or
+spans so you can mask them. The model is pinned to tag v0.2.1 (decoder v2.1: a number right after a phone word such as جوالي counts as a phone); `PII.from_pretrained(revision="v0.1")` or
 `decima pii --revision v0.1` gives the previous model with its exact output. In front of an LLM:
 [LiteLLM guardrail](integrations/litellm-pii) · [Presidio recognizer](integrations/presidio). `pip install decima-pii`
 installs the same package with a `decima-pii` command.

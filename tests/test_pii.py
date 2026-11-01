@@ -16,7 +16,7 @@ import pytest
 from conftest import ROOT
 
 import decima.pii as pii_mod
-from decima.pii import DEFAULT_REVISION, DecimaPII, decode, merge_windows, postfilter, redact_spans, window_starts
+from decima.pii import DEFAULT_REVISION, DecimaPII, decode, merge_windows, phone_backstop, postfilter, redact_spans, window_starts
 
 THREADS = 2
 
@@ -99,12 +99,60 @@ def test_from_pretrained_pins_the_model_revision(monkeypatch, tmp_path):
 
     monkeypatch.setattr(huggingface_hub, "snapshot_download", fake_snapshot)
     monkeypatch.setattr(DecimaPII, "__init__", lambda self, p, onnx, threads, decoder, **kw: setattr(self, "decoder", decoder))
-    assert DEFAULT_REVISION == "v0.2"
-    assert DecimaPII.from_pretrained().decoder == "v2" and seen[-1] == ("amyrmahdy/decima-pii", "v0.2")
+    assert DEFAULT_REVISION == "v0.2.1"
+    assert DecimaPII.from_pretrained().decoder == "v2.1" and seen[-1] == ("amyrmahdy/decima-pii", "v0.2.1")
+    assert DecimaPII.from_pretrained(revision="v0.2").decoder == "v2" and seen[-1][1] == "v0.2"
     assert DecimaPII.from_pretrained(revision="v0.1").decoder == "v1" and seen[-1][1] == "v0.1"
     assert DecimaPII.from_pretrained(revision="v0.1", decoder="v2").decoder == "v2"
-    assert DecimaPII.from_pretrained("someone/fork").decoder == "v2" and seen[-1] == ("someone/fork", None)
-    assert DecimaPII.from_pretrained(tmp_path).decoder == "v2" and len(seen) == 4      # a local dir: no download
+    assert DecimaPII.from_pretrained("someone/fork").decoder == "v2.1" and seen[-1] == ("someone/fork", None)
+    assert DecimaPII.from_pretrained(tmp_path).decoder == "v2.1" and len(seen) == 5      # a local dir: no download
+
+
+@pytest.mark.parametrize("text,want", [
+    ("جوالي 0551234567", ["0551234567"]),
+    ("جوالي ٠٥٥١٢٣٤٥٦٧", ["٠٥٥١٢٣٤٥٦٧"]),
+    ("جوالي: 0551234567", ["0551234567"]),
+    ("رقم جوالي 0551234567", ["0551234567"]),
+    ("جوالي 55123456", ["55123456"]),                                     # 8-digit Gulf number
+    ("(+٩٧١) ٥٥ ٦٩٦ ٢٠٤٨ جوالي", ["(+٩٧١) ٥٥ ٦٩٦ ٢٠٤٨"]),               # cue after the number
+    ("رقم جوالي 0551234567 أو 0501234567", ["0551234567", "0501234567"]),
+    ("+44 (0) 7700 900123 mobile", ["+44 (0) 7700 900123"]),
+    ("لطفاً با شماره ۰۹۱۲۳۴۵۶۷۸۹ تماس بگیرید", ["۰۹۱۲۳۴۵۶۷۸۹"]),
+    ("Cep: (0532) 123 45 67", ["(0532) 123 45 67"]),
+    ("Order #12345. My phone: 0551234567", ["0551234567"]),
+    ("رقم طلب الجوال 55123456", []),                                      # blocker: order
+    ("order number for my phone: 55123456", []),
+    ("سعر الجوال 12500000 ريال", []),                                    # price + currency
+    ("اشتريت الجوال بتاريخ 2024-05-12", []),                             # date
+    ("Müşteri hizmetlerini 0850 123 45 67 arayın", []),                  # hotline
+    ("بطاقة 4111 1111 1111 1111 مربوطة بجوالي", []),                     # card
+    ("حول على الآيبان SA03 8000 0000 6080 1016 7519 وارسل على الجوال", []),
+    ("TC kimlik no 12345678901, telefonum yok", []),
+    ("0551234567", []),                                                   # no cue: left to the model
+])
+def test_phone_backstop(text, want):
+    got = phone_backstop(text, [])
+    assert [text[s["start"]:s["end"]] for s in got] == want and all(s["label"] == "PHONE" for s in got)
+
+
+def test_phone_backstop_only_adds_and_never_overlaps():
+    t = "جوالي 0551234567 وهويتي 1012345678"
+    spans = [{"start": 6, "end": 10, "label": "NATIONAL_ID"}]            # a span already there blocks any overlapping phone
+    assert phone_backstop(t, spans) is spans
+    found = [{"start": 0, "end": 5, "label": "PERSON_NAME"}]
+    out = phone_backstop(t, found)
+    assert out[0] == found[0] and [t[s["start"]:s["end"]] for s in out[1:]] == ["0551234567"]
+
+
+@pytest.mark.skipif(not (ROOT / "release" / "hf" / "decima-pii" / "decima_pii.py").exists(), reason="standalone file not present")
+def test_phone_backstop_is_the_same_code_in_the_standalone_file():
+    block = lambda p: p.read_text().split("# ── decoder v2.1: cue-gated phone backstop", 1)[1].split("\n\n\nclass DecimaPII", 1)[0].split("\n\n\ndef window_starts", 1)[0]
+    assert block(ROOT / "decima" / "pii.py") == block(ROOT / "release" / "hf" / "decima-pii" / "decima_pii.py")
+
+
+def test_decoder_names():
+    with pytest.raises(ValueError):
+        DecimaPII(".", decoder="v3")
 
 
 def test_postfilter_allows_a_one_letter_clitic_before_a_name():
